@@ -15,6 +15,11 @@
 #include <sstream>
 #include <bits/stdc++. h> //import all
 using namespace std;
+
+typedef vector<int> vi;
+typedef vector<vi> vii;
+typedef long long int ll;
+
 int main() {
 	setvbuf(stdout, NULL, _IONBF, 0);	 //debugging
 	while(true) {	
