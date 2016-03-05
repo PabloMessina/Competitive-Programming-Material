@@ -70,6 +70,7 @@ while(true) {c = getchar(); if (c == EOF || c== '\n') break;}
 //=====================
 printf("%d",a); //int
 printf("%lld",a); //long long int
+printf("%llu",a); //unsigned long long int
 printf("%c",c); //char
 printf("%s",buffer); //string until \0
 printf("%f",f); //float

@@ -122,7 +122,7 @@ for (int i = topoSort.size()-1; i >= 0; i--)       // we need to print in revers
 
 //c++ version
 //Input : adj_list ->Adjacency list; indegree : indegrees of all nodes .....
-void top_sort(vii & adj_list,  vi &indegree) {
+void topoSort(vii & adj_list,  vi &indegree) {
 
   queue<int> tsort_queue;  
   vector<int> sorted;     
