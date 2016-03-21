@@ -76,6 +76,8 @@ printf("%s",buffer); //string until \0
 printf("%f",f); //float
 printf("%lf",d); //double
 printf("%0*.*f",x,y,f); //padding = 0, width = x, decimals = y
+printf("(%.5s)\n", buffer);// print  at most the first five characters (safe to use on short strings)
+printf("(%.*s)\n", n, buffer);  /* print at most first n characters (safe) */
 puts(buffer); //string + \n
 
 
@@ -165,6 +167,7 @@ struct Edge
     int from, to, weight;
 };
 
+
 //----------------------------------------------
 //method #1: override operator< and/or operator>
 //syntax #1
@@ -224,7 +227,20 @@ priority_queue<int, vector<int>, cmp> pq;
 std::sort (foo, foo+5, std::less<int>());
 std::sort (bar, bar+3, std::less<int>());
 
+//=================
+// functors
+//=================
+// this is a functor
+struct add_x {
+  add_x(int x) : x(x) {}
+  int operator()(int y) const { return x + y; }
+  private:
+    int x;
+};
 
+// Now you can use it like this:
+add_x add42(42); // create an instance of the functor class
+int i = add42(8); // and "call" it
 
 
 

@@ -1,8 +1,5 @@
 /*
- * LandDivisionTax.cpp
- *
- *  Created on: 05-03-2016
- *      Author: Pablo
+ * DP
  */
 
 #include <cstdio>
