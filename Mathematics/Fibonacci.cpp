@@ -1,6 +1,7 @@
-//==========================================
-// Modular Fibonacci with Repeated Squaring
-//==========================================
+//=========================================================
+// Modular Fibonacci with (Modular) Matrix Exponentiation
+//=========================================================
+//source: http://mathoverflow.net/questions/40816/fibonacci-series-mod-a-number
 #include <cstdio>
 #include <vector>
 using namespace std;
