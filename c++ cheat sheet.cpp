@@ -13,12 +13,16 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
-#include <bits/stdc++. h> //import all
 using namespace std;
 
 typedef vector<int> vi;
 typedef vector<vi> vii;
 typedef long long int ll;
+
+// for loop
+#define loop(i,n) for(int i = 0; i < n; ++i)
+// declara a dynamic 2D matrix with the given type, width, height and name
+#define vecMatrix(name,type,w,h) vector<vector<type> > name(h, vector<type>(w));
 
 int main() {
 	setvbuf(stdout, NULL, _IONBF, 0);	 //debugging
