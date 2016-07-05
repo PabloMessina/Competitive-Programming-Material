@@ -20,7 +20,7 @@ typedef vector<vi> vii;
 typedef long long int ll;
 
 // for loop
-#define loop(i,n) for(int i = 0; i < n; ++i)
+#define FOR(i,n) for(int i = 0; i < n; ++i)
 // declara a dynamic 2D matrix with the given type, width, height and name
 #define vecMatrix(name,type,w,h) vector<vector<type> > name(h, vector<type>(w));
 
@@ -173,7 +173,7 @@ struct Edge
 
 
 //----------------------------------------------
-//method #1: override operator< and/or operator>
+//method #1: overlaod operator< and/or operator>
 //syntax #1
 struct Edge
 {
@@ -185,6 +185,9 @@ struct Edge
   bool operator>(const Edge& other) const
   {
       return weight > other.weight;
+  }
+  bool operator== (const Edge& other) {
+   return weight == other.weight;
   }
 };
 //syntax #2
