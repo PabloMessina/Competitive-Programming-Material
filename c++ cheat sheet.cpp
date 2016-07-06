@@ -20,10 +20,11 @@ typedef vector<int> vi;
 typedef vector<vi> vii;
 typedef long long int ll;
 
+/* DEFINES */
 // for loop
 #define FOR(i,n) for(int i = 0; i < n; ++i)
-// declara a dynamic 2D matrix with the given type, width, height and name
-#define vecMatrix(name,type,w,h) vector<vector<type> > name(h, vector<type>(w));
+// declare a dynamic 2D matrix with the given name, type, cols and rows
+#define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
 
 int main() {
 	setvbuf(stdout, NULL, _IONBF, 0);	 //debugging
@@ -33,7 +34,7 @@ int main() {
 }
 
 //=====================
-//Reading from stdin
+// Reading from stdin
 //=====================
 scanf("%d",&a); //int
 scanf("%lld",&a); //long long int
@@ -252,10 +253,10 @@ bool cmp(const Edge& a, const Edge& b)
 //method #3: functor
 struct cmp
 {
-    bool operator()(const Edge& a, const Edge& b)
-    {
-        return occurrences[a] < occurrences[b];
-    }
+  bool operator()(const Edge& a, const Edge& b)
+  {
+    return occurrences[a] < occurrences[b];
+  }
 };
 set<int, cmp> s;
 priority_queue<int, vector<int>, cmp> pq;
@@ -284,5 +285,12 @@ struct add_x {
 add_x add42(42); // create an instance of the functor class
 int i = add42(8); // and "call" it
 
+/* ======================== */
+/* VECTOR UTILITY FUNCTIONS */
+/* ======================== */
 
-
+std::vector<int> myvector;
+myvector.push_back (100);
+myvector.back(); // peek reference to last element
+myvector.pop_back(); // remove last element
+myvector.clear(); // remove all elements

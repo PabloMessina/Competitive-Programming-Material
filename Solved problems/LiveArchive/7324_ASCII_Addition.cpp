@@ -1,14 +1,6 @@
 /**
  * A lot of string manipulation
  */
-const char* plus =
-	"....."
-	"..x.."
-	"..x.."
-	"xxxxx"
-	"..x.."
-	"..x.."
-	".....";
 
 const char* digits[10] = {
 	"xxxxx"
