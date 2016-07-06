@@ -13,6 +13,7 @@
 #include <string>
 #include <cstdlib>
 #include <sstream>
+#include <iostream>
 using namespace std;
 
 typedef vector<int> vi;
@@ -104,6 +105,32 @@ int sprintf ( char * str, const char * format, ... );
 int n=sprintf (buffer, "%d plus %d is %d", a, b, a+b);
 printf ("[%s] is a string %d chars long\n",buffer,n);
 
+//========================
+//Peek last char of stdin
+//=======================
+
+bool peekAndCheck(char c) {
+  char c2 = getchar();
+  ungetc(c2, stdin); // return char to stdin
+  return c == c2;
+}
+
+//==================
+//Reading from cin
+//==================
+
+//------------------------------------
+// reading a line of unknown length
+#include <iostream>
+#include <string>
+int main ()
+{
+  std::string name;
+  std::getline (std::cin,name);
+  std::cout << "Hello, " << name << "!\n";
+  return 0;
+}
+
 
 
 //============================================
@@ -146,6 +173,14 @@ double strtod (const char* str, char** endptr); //similar to strtol
 double atof (const char* str);
 //option #3:
 sscanf(string,"%lf",&d);
+
+//==========================
+// STRING UTILITY FUNCTIONS
+//==========================
+
+//--------------------------
+// lexicographic comparison (-1, 0, 1)
+int strcmp ( const char * str1, const char * str2 );
 
 
 //======================
@@ -248,8 +283,6 @@ struct add_x {
 // Now you can use it like this:
 add_x add42(42); // create an instance of the functor class
 int i = add42(8); // and "call" it
-
-
 
 
 

@@ -2,6 +2,8 @@
 #include <cstring>
 using namespace std;
 
+#define FOR(i,first,n) for(int i=first; i < n; ++i)
+
 int standings[1005];
 int main() {
 	int n;
@@ -13,7 +15,7 @@ int main() {
 		bool valid = true;
 		memset(standings, 0, sizeof(standings));
 
-		for (int i = 0; i < n; ++i) {
+		FOR(i,0,n) {
 			int carnumber;
 			int shift;
 			scanf("%d %d", &carnumber, &shift);
@@ -29,15 +31,9 @@ int main() {
 		}
 
 		if (valid) {
-			bool first = true;
-			for (int i = 0; i < n; ++i) {
-				if (first) {
-					printf("%d", standings[i]);
-					first = false;
-				} else
-					printf(" %d", standings[i]);
-			}
-			printf("\n");
+			printf("%d", standings[0]);
+			FOR(i,1,n) printf(" %d", standings[i]);
+			puts("");
 		} else {
 			printf("-1\n");
 		}

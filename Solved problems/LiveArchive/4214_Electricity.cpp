@@ -88,10 +88,7 @@ int main() {
 		if (n == 0)
 			break;
 
-		consumption before;
-		before.d = 1;
-		before.m = 1;
-		before.y = 0;
+		consumption before = {1, 1, 0, 0};
 
 		int sum = 0;
 		int count = 0;
