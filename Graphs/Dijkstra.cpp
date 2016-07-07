@@ -1,48 +1,87 @@
-//#############################################
-//################ Dijkstra ###################
-//#############################################
+/* ========== */
+/*  DIJKSTRA  */
+/* ========== */
+// complexity: (|E| + |V|) * log |V|
+
+/* pseudo code */
+
+function Dijkstra(Graph, source):
+    // Initialization
+    dist[source] ← 0 
+    create vertex set Q
+    for each vertex v in Graph:           
+        if v ≠ source
+            dist[v] ← INFINITY // Unknown distance from source to v
+            prev[v] ← UNDEFINED // Predecessor of v
+        Q.add_with_priority(v, dist[v])
+    // The main loop
+    while Q is not empty: 
+        u ← Q.extract_min() // Remove and return best vertex
+        for each neighbor v of u:    // only v that is still in Q
+            alt = dist[u] + length(u, v) 
+            if alt < dist[v]
+                dist[v] ← alt
+                prev[v] ← u
+                Q.decrease_priority(v, alt)
+    return dist[], prev[]
+
+/* code */
 
 #include <cstdio>
 #include <vector>
 #include <queue>
 using namespace std;
 
-typedef pair<int, int> ii;
+#define FOR(i,i0,n) for(int i = i0; i < n; ++i)
+#define INF 1e9
+
 typedef vector<int> vi;
-typedef vector<ii> vii;
-#define INF 1000000000
+typedef vector<vi> vii;
+
+struct Edge {
+  int u;
+  int v;
+  int w;
+};
+
+struct Pair {
+  int node;
+  int dist;
+  bool operator<(const Pair& p) {
+    return w > p.w;
+  }
+};
 
 int main() {
-  int V, E, s, u, v, w;
-  vector<vii> AdjList;
-
-  freopen("in_05.txt", "r", stdin);
-
+  int V, E, s;
   scanf("%d %d %d", &V, &E, &s);
-
-  AdjList.assign(V, vii()); // assign blank vectors of pair<int, int>s to AdjList
-  for (int i = 0; i < E; i++) {
-    scanf("%d %d %d", &u, &v, &w);
-    AdjList[u].push_back(ii(v, w));                              // directed graph
+  /* initialization */
+  vector<vector<Edge>> adjList(V);
+  FOR(i,0,E) {
+    Edge e;
+    scanf("%d %d %d",&e.u,&e.v,&e.w);
+    adjList[e.u].push_back(e);
   }
-
-  // Dijkstra routine
-  vi dist(V, INF); dist[s] = 0;                    // INF = 1B to avoid overflow
-  priority_queue< ii, vector<ii>, greater<ii> > pq; pq.push(ii(0, s));
-                             // ^to sort the pairs by increasing distance from s
-  while (!pq.empty()) {                                             // main loop
-    ii front = pq.top(); pq.pop();     // greedy: pick shortest unvisited vertex
-    int d = front.first, u = front.second;
-    if (d > dist[u]) continue;   // this check is important, see the explanation
-    for (int j = 0; j < (int)AdjList[u].size(); j++) {
-      ii v = AdjList[u][j];                       // all outgoing edges from u
-      if (dist[u] + v.second < dist[v.first]) {
-        dist[v.first] = dist[u] + v.second;                 // relax operation
-        pq.push(ii(dist[v.first], v.first));
-  } } }  // note: this variant can cause duplicate items in the priority queue
-
-  for (int i = 0; i < V; i++) // index + 1 for final answer
-    printf("SSSP(%d, %d) = %d\n", s, i, dist[i]);
-
+  vi dist(V,INF);
+  vi parent(V,-1);
+  dist[s] = 0;
+  priority_queue<Pair> pq;
+  pq.push({s,0});
+  /* routine */
+  while (!pq.empty()) {
+    Pair top = pq.top(); pq.pop();
+    int u = top.node;
+    int d = top.dist;
+    if (d > dist[u]) continue; // skip outdated improvements
+    FOR(i,0,adjList[u].size()) {
+      Edge& e = adjList[u][i];
+      int alt = d + e.w;
+      if (alt < dist[e.v]) {
+        dist[e.v] = alt;
+        parent[e.v] = u;
+        pq.push({e.v,alt});
+      }
+    }
+  }
   return 0;
 }
