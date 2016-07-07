@@ -179,9 +179,10 @@ sscanf(string,"%lf",&d);
 // STRING UTILITY FUNCTIONS
 //==========================
 
-//--------------------------
-// lexicographic comparison (-1, 0, 1)
-int strcmp ( const char * str1, const char * str2 );
+#include <cstring>
+int strcmp ( const char * str1, const char * str2 ); // (-1,0,1)
+int memcmp ( const void * ptr1, const void * ptr2, size_t num ); // (-1,0,1)
+void * memcpy ( void * destination, const void * source, size_t num );
 
 
 //======================
