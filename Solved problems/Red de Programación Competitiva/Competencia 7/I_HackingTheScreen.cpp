@@ -151,9 +151,6 @@ struct SqrtNode : Node {
   }
 };
 
-typedef vector<Token*> vtp;
-typedef stack<Node*> snp;
-
 /**
  * Context Free Grammar
  *  form -> comp form2
@@ -167,53 +164,57 @@ typedef stack<Node*> snp;
  *  term2 -> * INTEGER term2 | epsilon
  */
 
-void parseRoot(vtp& tokens, int& offset, snp& nodes);
-void parseFormula1(vtp& tokens, int& offset, snp& nodes);
-void parseFormula2(vtp& tokens, int& offset, snp& nodes);
-void parseComplex(vtp& tokens, int& offset, snp& nodes);
-void parseSimple1(vtp& tokens, int& offset, snp& nodes);
-void parseSimple2(vtp& tokens, int& offset, snp& nodes);
-void parseTerm1(vtp& tokens, int& offset, snp& nodes);
-void parseTerm2(vtp& tokens, int& offset, snp& nodes);
-void parseInt(vtp& tokens, int& offset, snp& nodes);
+vector<Token*> tokens;
+int offset;
+stack<Node*> nodes;
 
-void parseRoot(vtp& tokens, int& offset, snp& nodes) {
-  parseFormula1(tokens, offset, nodes);
+void parseRoot();
+void parseFormula1();
+void parseFormula2();
+void parseComplex();
+void parseSimple1();
+void parseSimple2();
+void parseTerm1();
+void parseTerm2();
+void parseInt();
+
+void parseRoot() {
+  parseFormula1();
 }
-void parseFormula1(vtp& tokens, int& offset, snp& nodes) {
-  parseComplex(tokens, offset, nodes);
-  parseFormula2(tokens, offset, nodes);
+void parseFormula1() {
+  parseComplex();
+  parseFormula2();
 }
-void parseFormula2(vtp& tokens, int& offset, snp& nodes) {
+void parseFormula2() {
   Token* t = tokens[offset];
   switch (t->term) {
     case PLUS: {
       offset++;
-      parseComplex(tokens, offset, nodes);
+      parseComplex();
       Node* right = nodes.top(); nodes.pop();
       Node* left = nodes.top(); nodes.pop();
       nodes.push(new AddNode(left, right));
-      parseFormula2(tokens, offset, nodes);
+      parseFormula2();
       break;
     }
     case MINUS: {
       offset++;
-      parseComplex(tokens, offset, nodes);
+      parseComplex();
       Node* right = nodes.top(); nodes.pop();
       Node* left = nodes.top(); nodes.pop();
       nodes.push(new SubNode(left, right));
-      parseFormula2(tokens, offset, nodes);
+      parseFormula2();
       break;
     }
   }
 }
 
-void parseComplex(vtp& tokens, int& offset, snp& nodes) {
+void parseComplex() {
   Token* t = tokens[offset];
   switch (t->term) {
     case ROOT_BEGIN: {
       offset++;
-      parseSimple1(tokens, offset, nodes);
+      parseSimple1();
       offset++;
       Node* child = nodes.top(); nodes.pop();
       nodes.push(new SqrtNode(child));
@@ -221,9 +222,9 @@ void parseComplex(vtp& tokens, int& offset, snp& nodes) {
     }
     case FRAC_BEGIN: {
       offset++;
-      parseSimple1(tokens, offset, nodes);
+      parseSimple1();
       offset++;
-      parseSimple1(tokens, offset, nodes);
+      parseSimple1();
       offset++;
       Node* right = nodes.top(); nodes.pop();
       Node* left = nodes.top(); nodes.pop();
@@ -231,81 +232,79 @@ void parseComplex(vtp& tokens, int& offset, snp& nodes) {
       break;
     }
     case INTEGER:
-      parseTerm1(tokens, offset, nodes);
+      parseTerm1();
       break;
   }
 }
 
-void parseSimple1(vtp& tokens, int& offset, snp& nodes) {
-  parseTerm1(tokens, offset, nodes);
-  parseSimple2(tokens, offset, nodes);
+void parseSimple1() {
+  parseTerm1();
+  parseSimple2();
 }
 
-void parseSimple2(vtp& tokens, int& offset, snp& nodes) {
+void parseSimple2() {
   Token* t = tokens[offset];
   switch (t->term) {
     case PLUS: {
       offset++;
-      parseTerm1(tokens, offset, nodes);
+      parseTerm1();
       Node* right = nodes.top(); nodes.pop();
       Node* left = nodes.top(); nodes.pop();
       nodes.push(new AddNode(left, right));
-      parseSimple2(tokens, offset, nodes);
+      parseSimple2();
       break;
     }
     case MINUS: {
       offset++;
-      parseTerm1(tokens, offset,  nodes);
+      parseTerm1();
       Node* right = nodes.top(); nodes.pop();
       Node* left = nodes.top(); nodes.pop();
       nodes.push(new SubNode(left, right));
-      parseSimple2(tokens, offset, nodes);
+      parseSimple2();
       break;
     }
   }
 }
 
-void parseTerm1(vtp& tokens, int& offset, snp& nodes) {
-  parseInt(tokens, offset, nodes);
-  parseTerm2(tokens, offset, nodes);
+void parseTerm1() {
+  parseInt();
+  parseTerm2();
 }
 
-void parseTerm2(vtp& tokens, int& offset, snp& nodes) {
+void parseTerm2() {
   if (tokens[offset]->term == MULT) {
     offset++;
-    parseInt(tokens, offset, nodes);
+    parseInt();
     Node* right = nodes.top(); nodes.pop();
     Node* left = nodes.top(); nodes.pop();
     nodes.push(new MultNode(left, right));
-    parseTerm2(tokens, offset, nodes);
+    parseTerm2();
   }
 }
 
-void parseInt(vtp& tokens, int& offset, snp& nodes) {
+void parseInt() {
   ll val = static_cast<IntToken*>(tokens[offset++])->val;
   nodes.push(new IntNode(val));
 }
 
 int main() {
-  setvbuf(stdout, NULL, _IONBF, 0);  //debugging
   while(scanf("%d %d", &R, &C) && R && C) {
     getchar(); // consume \n
     // read input
     FOR(i,0,R) getline(cin, input[i]);
     // collect tokens
-    vtp tokens;
     collectTokens(tokens);
     // generate AST
-    snp nodes;
-    int offset = 0;
-    parseRoot(tokens, offset, nodes);
+    parseRoot();
     Node* root = nodes.top();
     // print answer
     printf("%lld\n", root->eval());
     // clean memory
     FOR(i,0,tokens.size()) delete tokens[i];
     delete root;
-
+    nodes.pop();
+    tokens.clear();
+    offset = 0;
   }
   return 0;
 }
