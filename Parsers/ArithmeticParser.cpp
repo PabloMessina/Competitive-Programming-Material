@@ -7,6 +7,7 @@
 #include <string>
 #include <stack>
 #include <vector>
+#include <cstdlib>
 #include <stdexcept>
 using namespace std;
 
@@ -82,17 +83,56 @@ Token* getNextToken(const char* buffer, int& offset) {
     return new Token(END);
   default:
     if (isDigit(c)) {
-      double num = 0;
-      do {
-        num = num * 10 + c - '0';
-        c = buffer[++offset];
-      } while (isDigit(c));
+      char* endp;
+      double num = strtod(buffer + offset, &endp);
+      offset = endp - buffer;
       return new NumberToken(num);
     }
     sprintf(errorBuffer, "unexpected char '%c' at position %d\n", c, offset);
     throw std::runtime_error(errorBuffer);
   }
 }
+
+struct Node {
+  virtual ~Node() {};
+  virtual double eval() = 0;
+};
+struct DoubleOpNode: Node {
+  Node* left;
+  Node* right;
+  DoubleOpNode(Node* left, Node* right): left(left), right(right) {}
+  ~DoubleOpNode() { delete left; delete right; }
+};
+struct SingleOpNode: Node {
+  Node* child;
+  SingleOpNode(Node* child): child(child) {}
+  ~SingleOpNode() { delete child; }
+};
+struct AddNode : DoubleOpNode {
+  AddNode(Node* left, Node* right) : DoubleOpNode(left, right) {}
+  double eval() { return left->eval() + right->eval(); }
+};
+struct SubNode : DoubleOpNode {
+  SubNode(Node* left, Node* right) : DoubleOpNode(left, right) {}
+  double eval() { return left->eval() - right->eval(); }
+};
+struct MultNode : DoubleOpNode {
+  MultNode(Node* left, Node* right) : DoubleOpNode(left, right) {}
+  double eval() { return left->eval() * right->eval(); }
+};
+struct DivNode : DoubleOpNode {
+  DivNode(Node* left, Node* right) : DoubleOpNode(left, right) {}
+  double eval() { return left->eval() / right->eval(); }
+};
+struct NegNode : SingleOpNode {
+  NegNode(Node* child) : SingleOpNode(child) {}
+  double eval() { return -child->eval(); }
+};
+struct IntegerNode : Node {
+  double value;
+  IntegerNode(double value) : value(value) {}
+  double eval() { return value; }
+};
 
 /**
  * Context Free Grammar:
@@ -104,61 +144,24 @@ Token* getNextToken(const char* buffer, int& offset) {
  *  Term    ->  - Term | (AddSum1) | NUMBER
  */
 
-struct ASTNode {
-  virtual ~ASTNode() {};
-  virtual double eval() = 0;
-};
-struct DoubleOpNode: ASTNode {
-  ASTNode* left;
-  ASTNode* right;
-  DoubleOpNode(ASTNode* left, ASTNode* right): left(left), right(right) {}
-  ~DoubleOpNode() { delete left; delete right; }
-};
-struct SingleOpNode: ASTNode {
-  ASTNode* child;
-  SingleOpNode(ASTNode* child): child(child) {}
-  ~SingleOpNode() { delete child; }
-};
-struct AddNode : DoubleOpNode {
-  AddNode(ASTNode* left, ASTNode* right) : DoubleOpNode(left, right) {}
-  double eval() { return left->eval() + right->eval(); }
-};
-struct SubNode : DoubleOpNode {
-  SubNode(ASTNode* left, ASTNode* right) : DoubleOpNode(left, right) {}
-  double eval() { return left->eval() - right->eval(); }
-};
-struct MultNode : DoubleOpNode {
-  MultNode(ASTNode* left, ASTNode* right) : DoubleOpNode(left, right) {}
-  double eval() { return left->eval() * right->eval(); }
-};
-struct DivNode : DoubleOpNode {
-  DivNode(ASTNode* left, ASTNode* right) : DoubleOpNode(left, right) {}
-  double eval() { return left->eval() / right->eval(); }
-};
-struct NegNode : SingleOpNode {
-  NegNode(ASTNode* child) : SingleOpNode(child) {}
-  double eval() { return -child->eval(); }
-};
-struct IntegerNode : ASTNode {
-  double value;
-  IntegerNode(double value) : value(value) {}
-  double eval() { return value; }
-};
+vector<Token*> tokens;
+int offset;
+stack<Node*> nodes;
 
 void throwUnexpectedTerminalException(Terminal terminal, int offset);
-void matchAndConsume(vtp tokens, int& offset, Terminal terminal);
-void parseTerm(vtp tokens, int& offset, stack<ASTNode*>& nodes);
-void parseMultDiv1(vtp& tokens, int& offset, stack<ASTNode*>& nodes);
-void parseMultDiv2(vtp& tokens, int& offset, stack<ASTNode*>& nodes);
-void parseAddSub1(vtp& tokens, int& offset, stack<ASTNode*>& nodes);
-void parseAddSub2(vtp& tokens, int& offset, stack<ASTNode*>& nodes);
-void parseRoot(vtp& tokens, int& offset, stack<ASTNode*>& nodes);
+void matchAndConsume(Terminal terminal);
+void parseTerm();
+void parseMultDiv1();
+void parseMultDiv2();
+void parseAddSub1();
+void parseAddSub2();
+void parseRoot();
 
 void throwUnexpectedTerminalException(Terminal terminal, int offset) {
   sprintf(errorBuffer, "unexpected terminal %s at position %d\n", terminal2String(terminal), offset);
   throw std::runtime_error(errorBuffer);
 }
-void matchAndConsume(vtp tokens, int& offset, Terminal terminal) {
+void matchAndConsume(Terminal terminal) {
   if (tokens[offset]->terminal != terminal) {
     sprintf(errorBuffer, "expected terminal %s but found %s\n",
       terminal2String(terminal),
@@ -167,21 +170,21 @@ void matchAndConsume(vtp tokens, int& offset, Terminal terminal) {
   }
   offset++;
 }
-void parseTerm(vtp tokens, int& offset, stack<ASTNode*>& nodes) {
+void parseTerm() {
   Token* t = tokens[offset];
   switch (t->terminal) {
     case MINUS: {
       offset++;
-      parseTerm(tokens, offset, nodes);
+      parseTerm();
       // generate node
-      ASTNode* child = nodes.top(); nodes.pop();
+      Node* child = nodes.top(); nodes.pop();
       nodes.push(new NegNode(child));
       break;
     }
     case OPEN_PAREN: {
       offset++;
-      parseAddSub1(tokens, offset, nodes);
-      matchAndConsume(tokens, offset, CLOSE_PAREN);
+      parseAddSub1();
+      matchAndConsume(CLOSE_PAREN);
       break;
     }
     case NUMBER: {
@@ -196,33 +199,33 @@ void parseTerm(vtp tokens, int& offset, stack<ASTNode*>& nodes) {
       break;
   }
 }
-void parseMultDiv1(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
-  parseTerm(tokens, offset, nodes);
-  parseMultDiv2(tokens, offset, nodes);
+void parseMultDiv1() {
+  parseTerm();
+  parseMultDiv2();
 }
-void parseMultDiv2(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
+void parseMultDiv2() {
   Token* t = tokens[offset];
   switch (t->terminal) {
     case MULT: {
       offset++;
-      parseTerm(tokens, offset, nodes);
+      parseTerm();
       // generate node
-      ASTNode* right = nodes.top(); nodes.pop();
-      ASTNode* left = nodes.top(); nodes.pop();
+      Node* right = nodes.top(); nodes.pop();
+      Node* left = nodes.top(); nodes.pop();
       nodes.push(new MultNode(left, right));
       // resume parsing
-      parseMultDiv2(tokens, offset, nodes);
+      parseMultDiv2();
       break;
     }
     case DIV: {
       offset++;
-      parseTerm(tokens, offset, nodes);
+      parseTerm();
       // generate node
-      ASTNode* right = nodes.top(); nodes.pop();
-      ASTNode* left = nodes.top(); nodes.pop();
+      Node* right = nodes.top(); nodes.pop();
+      Node* left = nodes.top(); nodes.pop();
       nodes.push(new DivNode(left, right));
       // resume parsing
-      parseMultDiv2(tokens, offset, nodes);
+      parseMultDiv2();
       break;
     }
     // follow set
@@ -233,29 +236,29 @@ void parseMultDiv2(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
       break;
   }
 }
-void parseAddSub2(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
+void parseAddSub2() {
   Token* t = tokens[offset];
   switch (t->terminal) {
     case PLUS: {
       offset++;
-      parseMultDiv1(tokens, offset, nodes);
+      parseMultDiv1();
       // generate node
-      ASTNode* right = nodes.top(); nodes.pop();
-      ASTNode* left = nodes.top(); nodes.pop();
+      Node* right = nodes.top(); nodes.pop();
+      Node* left = nodes.top(); nodes.pop();
       nodes.push(new AddNode(left, right));
       // resume parsing
-      parseAddSub2(tokens, offset, nodes);
+      parseAddSub2();
       break;
     }
     case MINUS: {
       offset++;
-      parseMultDiv1(tokens, offset, nodes);
+      parseMultDiv1();
       // generate node
-      ASTNode* right = nodes.top(); nodes.pop();
-      ASTNode* left = nodes.top(); nodes.pop();
+      Node* right = nodes.top(); nodes.pop();
+      Node* left = nodes.top(); nodes.pop();
       nodes.push(new SubNode(left, right));
       // resume parsing
-      parseAddSub2(tokens, offset, nodes);
+      parseAddSub2();
       break;
     }
     // follow set
@@ -266,13 +269,13 @@ void parseAddSub2(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
       break;
   }
 }
-void parseAddSub1(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
-  parseMultDiv1(tokens, offset, nodes);
-  parseAddSub2(tokens, offset, nodes);
+void parseAddSub1() {
+  parseMultDiv1();
+  parseAddSub2();
 }
-void parseRoot(vtp& tokens, int& offset, stack<ASTNode*>& nodes) {
-  parseAddSub1(tokens, offset, nodes);
-  matchAndConsume(tokens, offset, END);
+void parseRoot() {
+  parseAddSub1();
+  matchAndConsume(END);
 }
 
 
@@ -284,19 +287,16 @@ int main() {
     if (line == "exit") break;
 
     /* get tokens */
-    vtp tokens;
-    int offset = 0;
+    int index = 0;
     while(true) {
-      Token* t = getNextToken(line.c_str(), offset);
+      Token* t = getNextToken(line.c_str(), index);
       tokens.push_back(t);
       if (t->terminal == END) break;
     }
 
     /* parse tokens to generate AST */
-    stack<ASTNode*> nodes;
-    offset = 0;
-    parseRoot(tokens, offset, nodes);
-    ASTNode* root = nodes.top();
+    parseRoot();
+    Node* root = nodes.top();
 
     /* print result */
     printf("==> %lf\n", root->eval());
@@ -304,6 +304,9 @@ int main() {
     /* clean memory */
     delete root;
     for (int i = 0, l = tokens.size(); i < l; ++i) delete tokens[i];
+    tokens.clear();
+    nodes.pop();
+    offset = 0;
   }
   return 0;
 }

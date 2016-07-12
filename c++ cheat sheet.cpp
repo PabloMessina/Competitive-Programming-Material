@@ -166,6 +166,10 @@ long int atol ( const char * str );
 //option #3:
 sscanf(string,"%ld",&l);
 
+//----------------
+//string to long long int:
+long long int strtoll (const char* str, char** endptr, int base);
+
 //--------------------------
 //string to double:
 //option #1:

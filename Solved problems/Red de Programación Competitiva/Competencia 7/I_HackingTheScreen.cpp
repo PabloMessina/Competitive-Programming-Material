@@ -1,5 +1,7 @@
 /**
- * Algorithms used: LL(1), recursive-descent parser
+ * Algorithms used:
+ *  - while-and-switch tokenizer
+ *  - LL(1), recursive-descent parser
  */
 #include <cstdio>
 #include <vector>
@@ -7,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 using namespace std;
 
 #define FOR(i,i0,n) for(int i = i0; i < n; ++i)
@@ -14,6 +17,10 @@ using namespace std;
 int R,C;
 typedef long long int ll;
 string input[3];
+
+/* ==================== */
+/* Tokenization Section */
+/* ==================== */
 
 enum Terminal {
   PLUS, MINUS, MULT, FRAC_BEGIN, FRAC_MID, FRAC_END, ROOT_BEGIN, ROOT_END, INTEGER, END
@@ -28,13 +35,13 @@ struct IntToken : Token {
   IntToken(ll val) : Token(INTEGER), val(val) {}
 };
 
-typedef vector<Token*> vtp;
-
 bool isDigit(char c) {
   return '0' <= c && c <= '9';
 }
 
-void tokenizeSimple(vtp& tokens, int col, int row, int limit) {
+vector<Token*> tokens;
+
+void tokenizeSimple(int col, int row, int limit) {
   while (col <= limit) {
     char c = input[row][col];
     switch (c) {
@@ -43,11 +50,9 @@ void tokenizeSimple(vtp& tokens, int col, int row, int limit) {
       case '*': tokens.push_back(new Token(MULT)); col++; break;
       default: {
         if (isDigit(c)) { //digit
-          int num = 0;
-          do {
-            num = num * 10 + c - '0';
-            c = input[row][++col];
-          } while (col <= limit && isDigit(c));
+          char* endp;
+          ll num = strtoll(input[row].c_str() + col, &endp, 10);
+          col = endp - input[row].c_str();
           tokens.push_back(new IntToken(num));
         } else { // whitespace
           col++;
@@ -58,7 +63,7 @@ void tokenizeSimple(vtp& tokens, int col, int row, int limit) {
   }
 }
 
-void collectTokens(vtp& tokens) {
+void collectTokens() {
   int mr = R / 2;
   int ur = mr - 1;
   int lr = mr + 1;
@@ -67,12 +72,9 @@ void collectTokens(vtp& tokens) {
   while(true) {
     c = input[mr][col];
     if (isDigit(c)) {
-      int num = c - '0';
-      while (true) {
-        c = input[mr][++col];
-        if (isDigit(c)) num = num * 10 + c - '0';
-        else break;
-      }
+      char* endp;
+      ll num = strtoll(input[mr].c_str() + col, &endp, 10);
+      col = endp - input[mr].c_str();
       tokens.push_back(new IntToken(num));
     } else {
       switch (c) {
@@ -84,7 +86,7 @@ void collectTokens(vtp& tokens) {
           int limit = col;
           while (input[ur][limit+1] == '_') limit++;
           tokens.push_back(new Token(ROOT_BEGIN));
-          tokenizeSimple(tokens, col, mr, limit);
+          tokenizeSimple(col, mr, limit);
           tokens.push_back(new Token(ROOT_END));
           col = limit + 1;
           break;
@@ -93,9 +95,9 @@ void collectTokens(vtp& tokens) {
           int limit = col;
           while (input[mr][limit+1] == '=') limit++;
           tokens.push_back(new Token(FRAC_BEGIN));
-          tokenizeSimple(tokens, col, ur, limit);
+          tokenizeSimple(col, ur, limit);
           tokens.push_back(new Token(FRAC_MID));
-          tokenizeSimple(tokens, col, lr, limit);
+          tokenizeSimple(col, lr, limit);
           tokens.push_back(new Token(FRAC_END));
           col = limit + 1;
           break;
@@ -106,6 +108,10 @@ void collectTokens(vtp& tokens) {
     }
   }
 }
+
+/* ==================== */
+/* AST Node Structure   */
+/* ==================== */
 
 struct Node {
   virtual ~Node() {};
@@ -164,7 +170,6 @@ struct SqrtNode : Node {
  *  term2 -> * INTEGER term2 | epsilon
  */
 
-vector<Token*> tokens;
 int offset;
 stack<Node*> nodes;
 
@@ -293,7 +298,7 @@ int main() {
     // read input
     FOR(i,0,R) getline(cin, input[i]);
     // collect tokens
-    collectTokens(tokens);
+    collectTokens();
     // generate AST
     parseRoot();
     Node* root = nodes.top();
