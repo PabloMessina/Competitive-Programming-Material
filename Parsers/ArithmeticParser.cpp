@@ -9,11 +9,14 @@
 #include <vector>
 #include <cstdlib>
 #include <stdexcept>
+#include <cmath>
 using namespace std;
+
+#define FOR(i,i0,n) for(int i=0; i<n; ++i)
 
 char errorBuffer[200];
 
-enum Terminal { NUMBER, MINUS, PLUS, DIV, MULT, OPEN_PAREN, CLOSE_PAREN, END };
+enum Terminal { NUMBER, MINUS, PLUS, DIV, MULT, SQRT, OPEN_PAREN, CLOSE_PAREN, END };
 
 const char * terminal2String(Terminal t) {
   switch (t) {
@@ -22,6 +25,7 @@ const char * terminal2String(Terminal t) {
   case PLUS: return "PLUS";
   case DIV: return "DIV";
   case MULT: return "MULT";
+  case SQRT: return "SQRT";
   case OPEN_PAREN: return "OPEN_PAREN";
   case CLOSE_PAREN: return "CLOSE_PAREN";
   default: return "END";
@@ -81,6 +85,14 @@ Token* getNextToken(const char* buffer, int& offset) {
     return new Token(MINUS);
   case '\0':
     return new Token(END);
+  case 's':{
+    FOR(i,0,4) if (buffer[offset + i] != "sqrt"[i]) {
+      sprintf(errorBuffer, "unexpected char '%c' at position %d\n", buffer[offset + i], offset + i);
+      throw std::runtime_error(errorBuffer);
+    }
+    offset += 4;
+    return new Token(SQRT);
+  }
   default:
     if (isDigit(c)) {
       char* endp;
@@ -128,6 +140,10 @@ struct NegNode : SingleOpNode {
   NegNode(Node* child) : SingleOpNode(child) {}
   double eval() { return -child->eval(); }
 };
+struct SqrtNode : SingleOpNode {
+  SqrtNode(Node* child) : SingleOpNode(child) {}
+  double eval() { return sqrt(child->eval()); }
+};
 struct IntegerNode : Node {
   double value;
   IntegerNode(double value) : value(value) {}
@@ -141,7 +157,7 @@ struct IntegerNode : Node {
  *  AddSum2   ->  + MultDiv1 AddSum2 | - MultDiv1 AddSum2 | epsilon
  *  MultDiv1  ->  Term MultDiv2
  *  MultDiv2  ->  * Term MultDiv2 | / Term MultiDiv2 | epsilon
- *  Term    ->  - Term | (AddSum1) | NUMBER
+ *  Term    ->  - Term | (AddSum1) | SQRT(AddSum1) | NUMBER
  */
 
 vector<Token*> tokens;
@@ -156,6 +172,19 @@ void parseMultDiv2();
 void parseAddSub1();
 void parseAddSub2();
 void parseRoot();
+
+template<typename T>
+void swap2for1() {
+  Node* r = nodes.top(); nodes.pop();
+  Node* l = nodes.top(); nodes.pop();
+  nodes.push(new T(l,r));
+}
+
+template<typename T>
+void swap1for1() {
+  Node* n = nodes.top(); nodes.pop();
+  nodes.push(new T(n));
+}
 
 void throwUnexpectedTerminalException(Terminal terminal, int offset) {
   sprintf(errorBuffer, "unexpected terminal %s at position %d\n", terminal2String(terminal), offset);
@@ -177,14 +206,21 @@ void parseTerm() {
       offset++;
       parseTerm();
       // generate node
-      Node* child = nodes.top(); nodes.pop();
-      nodes.push(new NegNode(child));
+      swap1for1<NegNode>();
       break;
     }
     case OPEN_PAREN: {
       offset++;
       parseAddSub1();
       matchAndConsume(CLOSE_PAREN);
+      break;
+    }
+    case SQRT: {
+      offset++;
+      matchAndConsume(OPEN_PAREN);
+      parseAddSub1();
+      matchAndConsume(CLOSE_PAREN);
+      swap1for1<SqrtNode>();
       break;
     }
     case NUMBER: {
@@ -210,9 +246,7 @@ void parseMultDiv2() {
       offset++;
       parseTerm();
       // generate node
-      Node* right = nodes.top(); nodes.pop();
-      Node* left = nodes.top(); nodes.pop();
-      nodes.push(new MultNode(left, right));
+      swap2for1<MultNode>();
       // resume parsing
       parseMultDiv2();
       break;
@@ -221,9 +255,7 @@ void parseMultDiv2() {
       offset++;
       parseTerm();
       // generate node
-      Node* right = nodes.top(); nodes.pop();
-      Node* left = nodes.top(); nodes.pop();
-      nodes.push(new DivNode(left, right));
+      swap2for1<DivNode>();
       // resume parsing
       parseMultDiv2();
       break;
@@ -243,9 +275,7 @@ void parseAddSub2() {
       offset++;
       parseMultDiv1();
       // generate node
-      Node* right = nodes.top(); nodes.pop();
-      Node* left = nodes.top(); nodes.pop();
-      nodes.push(new AddNode(left, right));
+      swap2for1<AddNode>();
       // resume parsing
       parseAddSub2();
       break;
@@ -254,9 +284,7 @@ void parseAddSub2() {
       offset++;
       parseMultDiv1();
       // generate node
-      Node* right = nodes.top(); nodes.pop();
-      Node* left = nodes.top(); nodes.pop();
-      nodes.push(new SubNode(left, right));
+      swap2for1<SubNode>();
       // resume parsing
       parseAddSub2();
       break;

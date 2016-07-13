@@ -22,7 +22,7 @@ typedef long long int ll;
 
 /* DEFINES */
 // for loop
-#define FOR(i,n) for(int i = 0; i < n; ++i)
+#define FOR(i,i0,n) for(int i = i0; i < n; ++i)
 // declare a dynamic 2D matrix with the given name, type, cols and rows
 #define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
 
