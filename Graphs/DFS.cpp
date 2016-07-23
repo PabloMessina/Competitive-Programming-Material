@@ -1,7 +1,3 @@
-//#######################################
-//################ DFS ##################
-//#######################################
-
 #include <queue>
 #include <stack>
 #include <vector>
@@ -14,14 +10,15 @@ bool visited[MAXN];
 void dfs(int root) {
 	stack<int> s;
 	s.push(root);
+  visited[root] = true;
 	while (!s.empty()) {
 		int u = s.top();
 		s.pop();
-		visited[u] = true;
 		for (int i = 0; i < adjList[u].size(); ++i) {
 			int v = adjList[u][i];
 			if (visited[v])
 				continue;
+      visited[u] = true;
 			s.push(v);
 		}
 	}
@@ -147,4 +144,27 @@ void topoSort(vii & adj_list,  vi &indegree) {
     printf("%d ",sorted[i]);
   printf("\n");
 }
+
+/* =============================== */
+/* Articulation Points & Cut Edges */
+/* =============================== */
+vi depth(N,-1);
+vi low(N);
+vii graph(N,vi());
+void dfs(int u, int p, int d) {
+  depth[u] = d;
+  low[u] = d;
+  for(int v : graph[u]) {
+    if (v == p) continue; // direct edge to parent is not back edge
+    if (depth[v] == -1) {
+      dfs(v, u, d + 1);
+      if (low[v] >= low[u]) {
+        printf("u = %d is articulation point\n",  u);
+        if (low[v] > low[u])
+          printf("(u,v) = (%d, %d) is cut edge\n", u, v);
+      }
+    }
+  }
+}
+
 

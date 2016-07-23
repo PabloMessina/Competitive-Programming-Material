@@ -22,7 +22,7 @@ typedef long long int ll;
 
 /* DEFINES */
 // for loop
-#define FOR(i,i0,n) for(int i = i0; i < n; ++i)
+#define FOR(i,a,b) for(int i = a; i <= b; ++i)
 // declare a dynamic 2D matrix with the given name, type, cols and rows
 #define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
 
@@ -180,7 +180,7 @@ double atof (const char* str);
 sscanf(string,"%lf",&d);
 
 //==========================
-// STRING UTILITY FUNCTIONS
+// C STRING UTILITY FUNCTIONS
 //==========================
 
 #include <cstring>
@@ -188,6 +188,21 @@ int strcmp ( const char * str1, const char * str2 ); // (-1,0,1)
 int memcmp ( const void * ptr1, const void * ptr2, size_t num ); // (-1,0,1)
 void * memcpy ( void * destination, const void * source, size_t num );
 
+//==============================
+// C++ STRING UTILITY FUNCTIONS
+//==============================
+
+// split a string by a single char delimiter
+#include <string>
+#include <sstream>
+#include <vector>
+void split(const string &s, char delim, vector<string> &elems) {
+  stringstream ss(s);
+  string item;
+  while (getline(ss, item, delim)) {
+    elems.push_back(item);
+  }
+}
 
 //======================
 //Nested Unordered Maps

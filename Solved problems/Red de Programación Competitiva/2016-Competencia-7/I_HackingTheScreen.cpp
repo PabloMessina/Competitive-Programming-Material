@@ -159,14 +159,14 @@ struct SqrtNode : Node {
 
 /**
  * Context Free Grammar
- *  form -> comp form2
- *  form2 -> + comp form2 | - comp form2 | epsilon
- *  comp -> sqrt | fraction | term
- *  sqrt -> ROOT_BEGIN  simple ROOT_END
- *  fraction -> FRAC_BEGIN simple FRAC_MID siple FRAC_END
- *  simple -> term simple2
- *  simple2 -> + term simple2 | - term simple2 | epsilon
- *  term -> INTEGER term2
+ *  formula1-> complex formula2
+ *  formula2 -> + complex formula2 | - complex formula2 | epsilon
+ *  complex -> sqrt | fraction | term1
+ *  sqrt -> ROOT_BEGIN  simple1 ROOT_END
+ *  fraction -> FRAC_BEGIN simple1 FRAC_MID simple1 FRAC_END
+ *  simple1 -> term1 simple2
+ *  simple2 -> + term1 simple2 | - term1 simple2 | epsilon
+ *  term1 -> INTEGER term2
  *  term2 -> * INTEGER term2 | epsilon
  */
 
