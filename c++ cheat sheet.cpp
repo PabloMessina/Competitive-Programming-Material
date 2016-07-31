@@ -314,3 +314,17 @@ myvector.push_back (100);
 myvector.back(); // peek reference to last element
 myvector.pop_back(); // remove last element
 myvector.clear(); // remove all elements
+
+/* =============== */
+/* RANDOM INTEGERS */
+/* =============== */
+#include <cstdlib>
+#include <ctime>
+
+srand(time(NULL));
+// 0-99
+int x = rand() % 100;
+// a-b
+int randBetween(int a, int b) {
+  return (rand() % (1 + b - a)) + a;
+}

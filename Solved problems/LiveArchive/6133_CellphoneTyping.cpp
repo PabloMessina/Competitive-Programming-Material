@@ -1,3 +1,4 @@
+// Tags: string, trie
 #include <cstdio>
 #include <cstring>
 using namespace std;

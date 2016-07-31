@@ -1,3 +1,4 @@
+// Algorithms used: DFS (cut edges) + BFS (reachability)
 #include <cstdio>
 #include <vector>
 #include <set>

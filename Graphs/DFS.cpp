@@ -152,7 +152,8 @@ vi depth(N,-1);
 vi low(N);
 vii graph(N,vi());
 int rootChildren = 0;
-void dfs(int u, int p, int d) {
+
+void dfs(int u, int p, int d) { // (node, parent, depth)
   depth[u] = d;
   low[u] = d;
   for(int v : graph[u]) {
@@ -170,7 +171,7 @@ void dfs(int u, int p, int d) {
         printf("(u,v) = (%d, %d) is cut edge\n", u, v);
 
       if (low[v] < low[u]) low[u] = low[v];
-      
+
     } else if (depth[v] < low[u]) {
       low[u] = depth[v];
     }
