@@ -1,10 +1,10 @@
-//#####################################################
-//################## C++ CHEAT SHEET ##################
-//#####################################################
+/* ========================= */
+/* ==== C++ CHEAT SHEET ==== */
+/* ========================= */
 
-//=========================================
-//Template
-//=========================================
+//==========
+// Template
+//==========
 #include <cstdio>
 #include <vector>
 #include <cmath>
@@ -21,8 +21,9 @@ typedef vector<vi> vii;
 typedef long long int ll;
 
 /* DEFINES */
-// for loop
-#define FOR(i,a,b) for(int i = a; i <= b; ++i)
+// for loops
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define irep(i,b,a) for(int i = b; i >= a; --i)
 // declare a dynamic 2D matrix with the given name, type, cols and rows
 #define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
 
@@ -107,7 +108,7 @@ int n=sprintf (buffer, "%d plus %d is %d", a, b, a+b);
 printf ("[%s] is a string %d chars long\n",buffer,n);
 
 //========================
-//Peek last char of stdin
+// Peek last char of stdin
 //=======================
 
 bool peekAndCheck(char c) {
@@ -135,7 +136,7 @@ int main ()
 
 
 //============================================
-//CONVERTING FROM STRING TO NUMBERS
+// CONVERTING FROM STRING TO NUMBERS
 //============================================
 
 //------------------------

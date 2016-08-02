@@ -1,3 +1,8 @@
+/* ======= */
+/*  DINIC  */
+/* ======= */
+// complexity: |E| * |V|^2
+
 #include <cstdio>
 #include <vector>
 #include <cstring>
