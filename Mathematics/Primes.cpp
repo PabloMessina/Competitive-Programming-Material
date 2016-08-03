@@ -24,7 +24,7 @@ int N = 9999;
 int pcount[N];
 vector<int> primes;
 collect_primes_up_to(N,primes);
-int number = 12312; //the number we want the prime factorization from
+int number = 12312; //the number we want the prime factorization of
 for (int i = 0; i < (int)primes.size() && primes[i] <= N; ++i) {
 	int p = primes[i];
 	pcount[p] = 0;

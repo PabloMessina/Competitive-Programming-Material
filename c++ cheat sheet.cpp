@@ -311,8 +311,9 @@ int i = add42(8); // and "call" it
 /* ======================== */
 
 std::vector<int> myvector;
-myvector.push_back (100);
+myvector.push_back(100);
 myvector.back(); // peek reference to last element
+myvector.front(); // peek reference to first element
 myvector.pop_back(); // remove last element
 myvector.clear(); // remove all elements
 

@@ -1,4 +1,6 @@
-// tags: DP, angle comparison
+// tags: DP bottom-up, angle comparison
+// based on https://page.mi.fu-berlin.de/rote/Papers/pdf/Counting+convex+polygons+in+planar+point+sets.pdf
+
 #include <cstdio>
 #include <vector>
 #include <algorithm>
