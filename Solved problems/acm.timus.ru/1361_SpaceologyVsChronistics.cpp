@@ -104,10 +104,7 @@ int main() {
           double n1 = - (double)(x0 * dt) / (double) T2;
           double n2 = (double)(y0 * dt) / (double) T1;
           ll n = (ll)ceil(max(n1, n2));
-
           ll k1 = r * x0 + (T2 / d) * n;
-          ll t1 = time1[i] + k1 * T1;
-
           t = min(t, time1[i] + T1 * k1);
         }
 
