@@ -10,7 +10,7 @@
 using namespace std;
 
 #define rep(i,a,b) for (int i=a; i<=b; ++i)
-#define irep(i,b,a) for (int i=b; i>=a; --i)
+#define invrep(i,b,a) for (int i=b; i>=a; --i)
 #define MAXN 20000
 #define LCA_MAXJ 16
 #define LA_MAXJ 16
@@ -44,7 +44,7 @@ int farthestFrom(int s) {
   return farthest;
 }
 
-inline int lastBitIndex(int x) {
+inline int log2(int x) {
   int i = 0;
   while (x) x >>= 1, ++i;
   return i-1;
@@ -86,7 +86,7 @@ void dfs_start() {
 }
 
 void buildLCA(int nn) {
-  int mm = lastBitIndex(nn);
+  int mm = log2(nn);
   rep(i, 0, nn - 1)
     lca[i][0] = i;
   rep(j, 1, mm) {
@@ -99,7 +99,7 @@ void buildLCA(int nn) {
 }
 
 void buildLA(int nn) {
-  int mm = lastBitIndex(nn);
+  int mm = log2(nn);
   rep(i, 0, nn - 1) {
     la[i][0] = P[i];
   }
@@ -118,7 +118,7 @@ int findLCA(int u, int v) {
   else
     l = H[v], r = H[u];
   int len = r -  l + 1;
-  int m = lastBitIndex(len);
+  int m = log2(len);
   int i1 = lca[l][m];
   int i2 = lca[r + 1 - (1 << m)][m];
   return L[i1] < L[i2] ? E[i1] : E[i2];
@@ -128,8 +128,8 @@ int findLA(int u, int k) {
 
   if (k == 0) return u;
   if (D[u] < k) return -1;
-  int m = lastBitIndex(k);
-  irep (j, m, 0) {
+  int m = log2(k);
+  invrep (j, m, 0) {
     if (k >= (1 << j)) {
       u = la[u][j];
       k -= (1 << j);

@@ -23,7 +23,7 @@ typedef long long int ll;
 /* DEFINES */
 // for loops
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define irep(i,b,a) for(int i = b; i >= a; --i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
 // declare a dynamic 2D matrix with the given name, type, cols and rows
 #define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
 
@@ -153,6 +153,8 @@ sscanf(string,"%d",&i);
 //option #1:
 #include <cstdlib>
 long int strtol (const char* str, char** endptr, int base);
+// it only works skipping whitespaces, so make sure your numbers
+// are surrounded by whitespaces only
 //example:
   char szNumbers[] = "2001 60c0c0 -1101110100110100100000 0x6fffff";
   char * pEnd;
@@ -204,6 +206,16 @@ void split(const string &s, char delim, vector<string> &elems) {
     elems.push_back(item);
   }
 }
+
+// find index of string or char within string
+string str = "random";
+std:size_t pos = str.find("ra");
+std:size_t pos = str.find('m');
+if (pos == string::npos) // not found
+
+// substrings
+string subs = str.substr(pos, length);
+string subs = str.substr(pos); // default: to the end of the string
 
 //======================
 //Nested Unordered Maps
@@ -329,4 +341,28 @@ int x = rand() % 100;
 // a-b
 int randBetween(int a, int b) {
   return (rand() % (1 + b - a)) + a;
+}
+
+
+/* ============== */
+/* Bitwise Tricks */
+/* ============== */
+
+// index of most significant bit
+int log2(int x) {
+  sizeof(x) * 8 - __builtin_clz(x) - 1;
+}
+int log2(long long x) {
+  sizeof(x) * 8 - __builtin_clzll(x) - 1;
+}
+// or
+int log2(int x) {
+  int i = 0;
+  while (x) x >>= 1, ++i;
+  return i-1;
+}
+int log2(long long x) {
+  int i = 0;
+  while (x) x >>= 1, ++i;
+  return i-1;
 }
