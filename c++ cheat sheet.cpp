@@ -343,17 +343,16 @@ int randBetween(int a, int b) {
   return (rand() % (1 + b - a)) + a;
 }
 
-
 /* ============== */
 /* Bitwise Tricks */
 /* ============== */
 
 // index of most significant bit
 int log2(int x) {
-  sizeof(x) * 8 - __builtin_clz(x) - 1;
+  return sizeof(x) * 8 - __builtin_clz(x) - 1;
 }
 int log2(long long x) {
-  sizeof(x) * 8 - __builtin_clzll(x) - 1;
+  return sizeof(x) * 8 - __builtin_clzll(x) - 1;
 }
 // or
 int log2(int x) {

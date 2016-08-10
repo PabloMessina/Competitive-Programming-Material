@@ -1,3 +1,4 @@
+// tags: DFS, BFS, bicoloration, articulation points, biconnected components
 #include <cstdio>
 #include <vector>
 #include <set>

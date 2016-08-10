@@ -1,4 +1,4 @@
-// Algorithms: DFS + segment tree sum + segment tree min
+// tags: iterative DFS, segment tree sum, segment tree min
 #include <vector>
 #include <cstdio>
 #include <stack>
@@ -79,8 +79,8 @@ void update_tree(int node, int a, int b, int i, int j, ll value) {
   sumtree[node] = sumtree[l] + sumtree[r];
 }
 
-enum QuertyType { MIN, SUM };
-ll query_tree(QuertyType qt, int node, int a, int b, int i, int j) {
+enum QueryType { MIN, SUM };
+ll query_tree(QueryType qt, int node, int a, int b, int i, int j) {
   if (a > b || a > j || b < i)
     return (qt == MIN) ? INF : 0;
 

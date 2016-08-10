@@ -13,27 +13,25 @@ typedef vector<int> vi;
 // METHOD 1: SPARSE TABLE - EULER TOUR
 // -----------------------------------
 // construction: O(2|V| log 2|V|) = O(|V| log |V|)
-// query: O(1)
+// query: O(1)  
 // cannot be updated :(
 
 
 #define MAXN 10000
-#define LCA_MAXM 14
+#define MAXLOG 14
 
 int E[2 * MAXN]; // records sequence of visited nodes
 int L[2 * MAXN]; // records level of each visited node
 int H[MAXN]; // records index of first ocurrence of node u in E
 int idx; // tracks node ocurrences
-int lca[2 * MAXN][LCA_MAXM + 1];
+int rmq[2 * MAXN][MAXLOG + 1];
 
 int N; // number of nodes
 vector<vi> g; // tree graph
 
 // get highest exponent e such that 2^e <= x
-inline int log2(int x) {
-  int i = 0;
-  while (x) x >>= 1, ++i;
-  return i-1;
+int log2(int x) {
+  return sizeof(x) * 8 - __builtin_clz(x) - 1;
 }
 
 void dfs(int u, int depth) {
@@ -48,26 +46,23 @@ void dfs(int u, int depth) {
     }
 }
 
-// execute Euler Tour over the tree
-// to initialize H, E, L
-void dfs_start() {
+void lca_init() {
   idx = 0;
   memset(H, -1, sizeof(H[0]) * N);
-  dfs(0, 0);
-}
+  dfs(0, 0); // euler tour to initialize H, E, L
+  int nn = idx; // <-- make sure you use the correct number  
+  int m = log2(nn);
 
-void buildLCA(int n) {
-  int m = log2(n);
-  rep(i, 0, n - 1)
-    lca[i][0] = i; // base case
+  rep(i, 0, nn - 1)
+    rmq[i][0] = i; // base case
   rep(j, 1, m) {
-    rep(i, 0, n - (1 << j)) {
+    rep(i, 0, nn - (1 << j)) {
       // i ... i + 2 ^ (j-1) - 1
-      int i1 = lca[i][j-1];
+      int i1 = rmq[i][j-1];
       // i + 2 ^ (j-1) ... i + 2 ^ j  - 1
-      int i2 = lca[i + (1 << (j-1))][j-1];
+      int i2 = rmq[i + (1 << (j-1))][j-1];
       // choose index with minimum level
-      lca[i][j] = (L[i1] < L[i2] ? i1 : i2);
+      rmq[i][j] = (L[i1] < L[i2] ? i1 : i2);
     }
   }
 }
@@ -82,8 +77,8 @@ int LCA(int u, int v) {
   // get node with minimum level within [l .. r] in O(1)
   int len = r -  l + 1;
   int m = log2(len);
-  int i1 = lca[l][m];
-  int i2 = lca[r - ((1 << m) - 1)][m];
+  int i1 = rmq[l][m];
+  int i2 = rmq[r - ((1 << m) - 1)][m];
   return L[i1] < L[i2] ? E[i1] : E[i2];
 }
 
