@@ -49,3 +49,22 @@ bool inPolygon_evenodd(Point p, vector<Point>& pts) {
   }
   return (cn & 1); // odd -> in, even -> out
 }
+
+// -------------------------------------------------
+// Convex Polygon method: check orientation changes
+bool inConvexPolygon(Point p, vector<Point>& pts) {
+  Point prev_p = pts.back();
+  Point curr_p;
+  float prev_orient = 0;
+  float curr_orient;
+  rep (i, 0, (int)pts.size() - 1) {
+    curr_p = pts[i];
+    curr_orient = isLeft(p, prev, curr);
+    if ((prev_orient < 0 && curr_orient > 0)
+      || (prev_orient > 0 && curr_orient < 0))
+      return false;
+    prev_p = curr_p;
+    prev_orient = curr_orient;
+  }
+  return true;
+}

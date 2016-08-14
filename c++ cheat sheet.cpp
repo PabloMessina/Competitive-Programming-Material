@@ -299,15 +299,6 @@ struct cmp
 set<int, cmp> s;
 priority_queue<int, vector<int>, cmp> pq;
 
-//============================
-//	DATA STRUCTURES
-//============================
-
-//greater, less
-#include <functional>
-std::sort (foo, foo+5, std::less<int>());
-std::sort (bar, bar+3, std::less<int>());
-
 //=================
 // functors
 //=================
@@ -334,6 +325,14 @@ myvector.front(); // peek reference to first element
 myvector.pop_back(); // remove last element
 myvector.clear(); // remove all elements
 
+// sorting a vector
+#include <algorithm>
+#include <functional> //greater, less
+vector<int> foo;
+sort (foo.begin(), foo.end());
+sort (foo.begin(), foo.end(), std::less<int>());
+sort (foo.begin(), foo.end(), std::greater<int>());
+
 /* =============== */
 /* RANDOM INTEGERS */
 /* =============== */
@@ -345,7 +344,7 @@ srand(time(NULL));
 int x = rand() % 100;
 // a-b
 int randBetween(int a, int b) {
-  return (rand() % (1 + b - a)) + a;
+  return a + (rand() % (1 + b - a));
 }
 
 /* ============== */
