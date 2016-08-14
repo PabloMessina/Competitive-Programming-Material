@@ -217,6 +217,11 @@ if (pos == string::npos) // not found
 string subs = str.substr(pos, length);
 string subs = str.substr(pos); // default: to the end of the string
 
+// std::string from cstring's substring
+const char* s = "bla1 bla2";
+int offset = 5, len = 4;
+string subs(s + offset, len); // bla2
+
 //======================
 //Nested Unordered Maps
 //=======================

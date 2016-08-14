@@ -2,11 +2,12 @@
 /* Angle Comparison */
 /* ================ */
 
+// --------------
 // method 1: atan2()
 #include <cmath>
 const double PI = atan(1) * 4;
 double angle(double x, double y) {
-  double a = atan2(x, y);
+  double a = atan2(y, x);
   return (a < 0) ? (a + 2 * PI) : a;
 }
 int cmpAngles(double x1, double y1, double x2, double y2) {
@@ -15,6 +16,7 @@ int cmpAngles(double x1, double y1, double x2, double y2) {
   return (a1 < a2) ? -1 : (a1 == a2) ? 0 : 1;
 }
 
+// ----------------------------
 // method 2: quadrants + slopes
 // this is the prefered method when coordinates
 // are given as integers
