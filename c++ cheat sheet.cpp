@@ -14,6 +14,7 @@
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+#include <bits/stdc++.h> // add everything in one shot
 using namespace std;
 
 typedef vector<int> vi;
@@ -28,10 +29,10 @@ typedef long long int ll;
 #define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
 
 int main() {
-	setvbuf(stdout, NULL, _IONBF, 0);	 //debugging
-	while(true) {	
-	}
-	return 0;
+  setvbuf(stdout, NULL, _IONBF, 0);  //debugging
+  while(true) { 
+  }
+  return 0;
 }
 
 //=====================
@@ -46,15 +47,15 @@ scanf("%lf",&d); //double
 scanf("%d %*s %d",&a,&b);  //* = skip
 
 //read until eol
-//	- eol not included in buffer
-//	- eol is not consumed
-//	- nothing is written into buffer if EOF is found
+//  - eol not included in buffer
+//  - eol is not consumed
+//  - nothing is written into buffer if EOF is found
 scanf(" %[^\n]",buffer); 
 
 //reading until EOL or EOF
-//	- eol not included in buffer
-//	- eol is consumed
-//	- works with eof
+//  - eol not included in buffer
+//  - eol is consumed
+//  - works with eof
 char* output = gets(buffer);
 if(feof(stind)) {//eof file found
 }
@@ -62,10 +63,10 @@ if(output == buffer) {} //succesful read
 if(output == NULL) {} //eof found without previous chars found
 //example
 while(gets(buffer) != NULL) {
-	puts(buffer);
-	if(feof(stdin)) {
-		break;
-	}
+  puts(buffer);
+  if(feof(stdin)) {
+    break;
+  }
 }
 
 //read single char
@@ -134,7 +135,6 @@ int main ()
 }
 
 
-
 //============================================
 // CONVERTING FROM STRING TO NUMBERS
 //============================================
@@ -171,7 +171,10 @@ sscanf(string,"%ld",&l);
 
 //----------------
 //string to long long int:
+//option #1:
 long long int strtoll (const char* str, char** endptr, int base);
+//option #2:
+sscanf(string,"%lld", &l);
 
 //--------------------------
 //string to double:
@@ -180,7 +183,7 @@ double strtod (const char* str, char** endptr); //similar to strtol
 //option #2:
 double atof (const char* str);
 //option #3:
-sscanf(string,"%lf",&d);
+sscanf(string,"%lf", &d);
 
 //==========================
 // C STRING UTILITY FUNCTIONS
@@ -233,12 +236,12 @@ typedef std::tr1::unordered_map<int, nested_hash> double_hash;
 //Struct Node
 //============
 struct node {
-	vector<node*> children;
-	node* parent;
+  vector<node*> children;
+  node* parent;
 }; //node *_node = new node;
 
 //============================
-//	CUSTOM COMPARISONS
+//  CUSTOM COMPARISONS
 //============================
 struct Edge
 {
@@ -283,7 +286,7 @@ struct Edge
 //method #2: custom comparison function
 bool cmp(const Edge& a, const Edge& b)
 { 
-	return a.weight < b.weight;
+  return a.weight < b.weight;
 }
 
 

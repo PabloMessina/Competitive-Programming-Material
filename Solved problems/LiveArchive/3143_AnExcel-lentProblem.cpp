@@ -31,7 +31,7 @@ int main() {
   while (true) {
     getline(cin, line);
     std::size_t pos = line.find('C');
-    ll row = atoi(line.substr(1, pos-1).c_str());
+    int row = atoi(line.substr(1, pos-1).c_str());
     int col = atoi(line.substr(pos+1).c_str());
     if (row == 0 && col == 0) break;
     vector<int> digits;
