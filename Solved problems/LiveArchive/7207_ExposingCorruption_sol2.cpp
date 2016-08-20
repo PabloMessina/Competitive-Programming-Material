@@ -46,7 +46,7 @@ int memo[MAXB+1];
 
 int dp(int p) {
   // first item
-  memset(memo, 0, sizeof memo);
+  memset(memo, 0, sizeof(memo[0]) * (B+1));
   if (gain[0][p] > 0) {
     rep (b, weight[0], B) {
       memo[b] = gain[0][p];
@@ -65,8 +65,8 @@ int dp(int p) {
 
 int main() {
   while(scanf("%d%d%d%d", &D, &P, &R, &B) == 4) {
-
-    g.assign(D+P, vi());
+    int n = D+P;
+    g.assign(n, vi());
 
     rep(i, 0, D-1) {
       scanf("%d", &price[i]);
@@ -82,9 +82,9 @@ int main() {
       g[D+y].push_back(x);
     }
     //
-    memset(vis, 0, sizeof vis);
+    memset(vis, 0, sizeof(vis[0]) * n);
     idx = 0;
-    for (int i = 0, n = D+P; i < n; ++i) {
+    for (int i = 0; i < n; ++i) {
       if (!vis[i]) {
         bfs(i); idx++;
       }

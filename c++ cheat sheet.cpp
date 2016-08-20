@@ -135,9 +135,9 @@ int main ()
 }
 
 
-//============================================
+//=====================================
 // CONVERTING FROM STRING TO NUMBERS
-//============================================
+//=====================================
 
 //------------------------
 //string to int
@@ -185,9 +185,9 @@ double atof (const char* str);
 //option #3:
 sscanf(string,"%lf", &d);
 
-//==========================
+//=============================
 // C STRING UTILITY FUNCTIONS
-//==========================
+//=============================
 
 #include <cstring>
 int strcmp ( const char * str1, const char * str2 ); // (-1,0,1)
@@ -240,67 +240,94 @@ struct node {
   node* parent;
 }; //node *_node = new node;
 
-//============================
-//  CUSTOM COMPARISONS
-//============================
-struct Edge
-{
-    int from, to, weight;
-};
 
+//========================
+//  OPERATOR OVERLOADING
+//========================
 
-//----------------------------------------------
-//method #1: overlaod operator< and/or operator>
-//syntax #1
-struct Edge
-{
-  int from, to, weight;
-  bool operator<(const Edge& other) const
-  {
-      return weight < other.weight;
+//--------------------------
+//method #1: inside struct
+struct Point {
+  int x, y; 
+  bool operator<(const Point& p) const {
+    if (x != p.x) return x < p.x;
+    return y < p.y;
   }
-  bool operator>(const Edge& other) const
-  {
-      return weight > other.weight;
+  bool operator>(const Point& p) const {
+    if (x != p.x) return x > p.x;
+    return y > p.y;
   }
-  bool operator== (const Edge& other) {
-   return weight == other.weight;
-  }
-};
-//syntax #2
-struct Edge
-{
-  int from, to, weight;
-  friend bool operator<(const Edge& a, const Edge& b)
-  {
-    return a.weight < b.weight;
-  }
-  friend bool operator>(const Edge& a, const Edge& b)
-  {
-    return a.weight > b.weight;
+  bool operator==(const Point& p) const {
+    return x == p.x && y == p.y;
   }
 };
 
-
-//----------------------------------------------
-//method #2: custom comparison function
-bool cmp(const Edge& a, const Edge& b)
-{ 
-  return a.weight < b.weight;
+//--------------------------
+//method #2: outside struct
+struct Point {int x, y; };
+bool operator<(const Point& p1, const Point& p2) {
+  if (p1.x != p2.x) return p1.x < p2.x;
+  return p1.y < p2.y;
+}
+bool operator>(const Point& p1, const Point& p2) {
+  if (p1.x != p2.x) return p1.x > p2.x;
+  return p1.y > p2.y;
+}
+bool operator==(const Point& p1, const Point& p2) {
+  return p1.x == p2.x && p1.y == p2.y;
 }
 
+// Note: if you overload the < operator for a custom struct,
+// then you can use that struct with any library function
+// or data structure that requires the < operator
 
-//----------------------------------------------
-//method #3: functor
-struct cmp
-{
-  bool operator()(const Edge& a, const Edge& b)
-  {
-    return occurrences[a] < occurrences[b];
+// Examples:
+
+priority_queue<Point> pq;
+pq.top();
+
+vector<Point> pts;
+sort(pts.begin(), pts.end());
+lower_bound(pts.begin(), pts.end(), {1,2});
+upper_bound(pts.begin(), pts.end(), {1,2});
+
+set<Point> pts;
+map<Point, int> ptToId;
+
+
+//=====================
+// CUSTOM COMPARISONS
+//=====================
+
+// method #1: operator overloading
+
+// method #2: custom comparison function
+bool cmp(const Point& a, const Point& b) { 
+  if (a.x != b.x) return a.x < b.x;
+  return a.y < b.y;
+}
+
+// method #2: functor
+struct cmp {
+  bool operator()(const Point& a, const Point& b) {
+    if (a.x != b.x) return a.x < b.x;
+    return a.y < b.y;
   }
 };
-set<int, cmp> s;
-priority_queue<int, vector<int>, cmp> pq;
+
+// without operator overloading, you would have to use
+// an explicit comparison method when using library
+// functions or data structures that require sorting
+priority_queue<Point, vector<Point>, cmp> pq;
+pq.top();
+
+vector<Point> pts;
+sort(pts.begin(), pts.end(), cmp);
+lower_bound(pts.begin(), pts.end(), {1,2}, cmp);
+upper_bound(pts.begin(), pts.end(), {1,2}, cmp);
+
+set<Point, cmp> pts;
+map<Point, int, cmp> ptToId;
 
 //=================
 // functors
@@ -335,6 +362,36 @@ vector<int> foo;
 sort (foo.begin(), foo.end());
 sort (foo.begin(), foo.end(), std::less<int>());
 sort (foo.begin(), foo.end(), std::greater<int>());
+
+/* ===================== */
+/* MAP UTILITY FUNCTIONS */
+/* ===================== */
+
+struct Point {int x, y; };
+bool operator<(const Point& a, const Point& b) {
+  return a.x < b.x || (a.x == b.x && a.y < b.y);
+}
+map<Point, int> toId;
+
+// -----------------
+// inserting into map
+
+// method #1: operator[]
+// it overwrites the value if the key already exists
+toId[{1, 2}] = 1;
+
+// method #2: .insert({ key, value })
+// it returns a pair { iterator(key, value) , bool }
+// if the key already exists, it doesn't overwrite the value
+int tid = 0;
+while (true) {
+  int x,y; scanf("%d%d",&x,&y);
+  auto res = toId.insert({x,y}, tid);
+  int id = res.first->second;
+  if (res->second) // insertion happened
+    tid++; 
+}
+
 
 /* =============== */
 /* RANDOM INTEGERS */
@@ -372,3 +429,12 @@ int log2(long long x) {
   while (x) x >>= 1, ++i;
   return i-1;
 }
+
+/* ============ */
+/* Other Tricks */
+/* ============ */
+
+// swap stuff
+#include <algorithm>
+int x = 1,  y = 2;
+swap(x, y);

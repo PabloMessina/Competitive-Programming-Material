@@ -66,7 +66,7 @@ function DP(i, c)
   else
     ans = DP(i-1, c)
     if c >= weight[i] && value[i] > 0 // enough space and worth it
-      ans = max(ans, value[i] + DP(i, c - weight[i])) // << same i instead of i-1
+      ans = max(ans, value[i] + DP(i, c - weight[i])) // << i instead of i-1
     return ans
 
 // -----------
