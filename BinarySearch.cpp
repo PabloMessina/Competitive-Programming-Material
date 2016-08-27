@@ -1,65 +1,57 @@
-//#####################################################
-//################## BINARY SEARCH ####################
-//#####################################################
+/* ============= */
+/* BINARY SEARCH */
+/* ============= */
 
-int binsearch(int a[], int key, int i, int j) {
-  if(key < a[i] || key > a[j]) return -1;
-  while (i <= j) {
-    int m = (i + j) / 2;
-    if (a[m] == key)
-      return m;
-    if (key > a[m])
-      i = m + 1;
+// Find the index of the first item that satisfies a predicate.
+// If no such index exists, retuns -1
+// Pseudo-code:
+function binsearch(array, i, j) {
+  while (i < j) {
+    m = (i+j)/2
+    if (predicate(array[m]))
+      j = m
     else
-      j = m - 1;
+      i = m + 1
   }
-  return -1;
+  return (predicate(array[i]) ? i : -1)
 }
 
-//first element's index with value >= key
-//if no element has value >= key, return -1
-//example:
-//key = 5
-//array: 1 2 3 4 (5) 5 5 6 7 8
-//----------------^
-int lowerbound(int a[], int key, int i, int j) {
+// -----------------------------
+// EXAMPLE 1: Integer Lowerbound
+// predicate(a, i, key) = (a[i] >= key)
+// i.e. "first element >= key"
+int lowerbound(vector<int> a, int key, int i, int j) {
   while (i < j) {
     int m = (i + j) / 2;
-    if (a[m] < key)
-      i = m + 1;
-    else
+    if (a[m] >= key)
       j = m;
+    else
+      i = m + 1;
   }
-  return (a[i] >= key) ? i : -1;
+  return a[i] >= key ? i : -1;
 }
 
-//first element's index with value > key
-//if no element has value > key, return -1
-//example:
-//key = 5
-//array: 1 2 3 4 5 5 5 (6) 7 8
-//----------------------^
-int upperbound(int a[], int key, int i, int j) {
+// -----------------------------
+// EXAMPLE 2: Integer Upperbound
+// predicate(a, i, key) = (a[i] > key)
+// i.e. "first element > key"
+int upperbound(vector<int> a, int key, int i, int j) {
   while (i < j) {
     int m = (i + j) / 2;
-    if (a[m] <= key)
-      i = m + 1;
-    else
+    if (a[m] > key)
       j = m;
+    else
+      i = m + 1;
   }
-  return (a[i] > key) ? i : -1;
+  return a[i] > key ? i : -1;
 }
 
+/* ============================= */
+/*  upper_bound(), lower_bound() */
+/* ============================= */
 
-//----------------------------
-//Using c++ libraries
-
-//================================
-// upper_bound(), lower_bound()
-//================================
-
-//search between [first, last)
-//if no value is >= key (lb) / > key (ub), return last
+// search between [first, last)
+// if no value is >= key (lb) / > key (ub), return last
 
 #include <algorithm>
 #include <iostream>     // std::cout
@@ -81,6 +73,16 @@ int main () {
 
   return 0;
 }
+
+// ------------------------------------------------
+// Query: how many items are LESS THAN (<) value x
+
+lower_bound(v.begin(), v.end(), x) - v.begin();
+
+// ------------------------------------------------
+// Query: how many items are GREATER THAN (>) value x
+
+v.end() - upper_bound(v.begin(), v.end(), x);
 
 //=================
 // binary_search()

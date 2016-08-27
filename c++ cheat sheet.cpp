@@ -85,6 +85,8 @@ printf("%f",f); //float
 printf("%lf",d); //double
 printf("%0*.*f",x,y,f); //padding = 0, width = x, decimals = y
 printf("(%.5s)\n", buffer);// print  at most the first five characters (safe to use on short strings)
+
+// make sure that n is an integer (with long long I had problems)
 printf("(%.*s)\n", n, buffer);  /* print at most first n characters (safe) */
 puts(buffer); //string + \n
 
@@ -429,6 +431,32 @@ int log2(long long x) {
   while (x) x >>= 1, ++i;
   return i-1;
 }
+
+
+// reverse the bits of an integer
+int reverse_bits(int x) {
+  int len = sizeof(x) * 8 - __builtin_clz(x);
+  int y = 0;
+  invrep(i, len-1, 0) {
+    if ((1 << i) & x) {
+      y |= (1 << (len - 1 - i));
+    }
+  }
+  return y;
+}
+// reverse the bits of a long long integer
+ll reverse_bits(ll x) {
+  int len = sizeof(x) * 8 - __builtin_clz(x);
+  ll y = 0;
+  invrep(i, len-1, 0) {
+    if ((1 << i) & x) {
+      y |= (1 << (len - 1 - i));
+    }
+  }
+  return y;
+}
+
+
 
 /* ============ */
 /* Other Tricks */

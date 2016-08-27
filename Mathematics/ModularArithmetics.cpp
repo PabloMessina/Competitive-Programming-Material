@@ -37,3 +37,23 @@ void gcdext(int a, int b, int& d, int& x, int& y) {
   x = x1;
   y = y1;
 }
+
+/* =================== */
+/* Integer Root Square */
+/* =================== */
+
+// Newton's method
+ll isqrt(ll x) {
+  ll y0 = x;
+  while (true) {
+    ll y1 = (y0 +  x / y0) / 2;
+    if (y1 == y0) break;
+    y0 = y1;
+  }
+  return y0;
+}
+
+bool isPerfectSquare(ll x, ll& root) {
+  root = isqrt(x);
+  return root * root == x;
+}
