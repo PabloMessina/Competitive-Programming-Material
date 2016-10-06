@@ -109,7 +109,7 @@ void print_interval(Interval& i) {
 
 /* Get intervals by consecutively intersecting original straight lines from their
 respective dual points. The intervals can be wide, e.g. (-100, 50) (an open range),
-or singleton, e.g. [3,3] (a single dot)*/
+or singleton, e.g. [3,3] (a single point)*/
 vector<Interval> get_intervals(vector<Point>& pts, ll* ms, ll* ns) {
   vector<Interval> intervals;
   Fraction prev_t(-INF, 1);
