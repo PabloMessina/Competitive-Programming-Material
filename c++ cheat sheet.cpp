@@ -409,6 +409,20 @@ int randBetween(int a, int b) {
   return a + (rand() % (1 + b - a));
 }
 
+/* ======= */
+/* CLIMITS */
+/* ======= */
+#include <climits>
+INT_MIN
+INT_MAX
+UINT_MAX
+LONG_MIN
+LONG_MAX
+ULONG_MAX
+LLONG_MIN
+LLONG_MAX
+ULLONG_MAX
+
 /* ============== */
 /* Bitwise Tricks */
 /* ============== */
@@ -456,8 +470,6 @@ ll reverse_bits(ll x) {
   return y;
 }
 
-
-
 /* ============ */
 /* Other Tricks */
 /* ============ */
@@ -466,3 +478,13 @@ ll reverse_bits(ll x) {
 #include <algorithm>
 int x = 1,  y = 2;
 swap(x, y);
+
+/* =========== */
+/*    TIPS     */
+/* =========== */
+
+// 1) do not use .emplace(x, y) if your struct doesn't have an explicit constructor
+//    instead you can use .push({x, y})
+
+// 2) be careful while mixing scanf() with getline(), scanf will not consume \n unless
+//    you explicitly tell it to do so (e.g scanf("%d\n", &x)) )
