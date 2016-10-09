@@ -42,6 +42,7 @@ bool operator==(const Fraction& f1, const Fraction& f2) {
   return f1.a == f2.a && f1.b == f2.b;
 }
 
+// ----------
 struct Interval {
   Fraction start;
   Fraction end;
