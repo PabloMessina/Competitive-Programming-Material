@@ -1,85 +1,69 @@
+// tags: DP top down
+
 #include <bits/stdc++.h>
 using namespace std;
+typedef pair<int,int> pii;
 
-#define rep(i,a,b) for(int i=a; i<=b; ++i)
-#define MAXN 4005
-
-struct Point { double x, y; };
-enum Where { LEFT, RIGHT };
+#define rep(i,a,b) for(int i=a;i<=b;++i)
+#define MAXN 4000
 
 int N, E, S;
-Point pts[MAXN];
-Point lbranch[MAXN];
-Point rbranch[MAXN];
-int lsize;
-int rsize;
+vector<pii> P;
+double memo[MAXN][MAXN][2];
+enum Where {LEFT, RIGHT};
 
-bool cached[MAXN + 1][MAXN + 1][2];
-double memo[MAXN + 1][MAXN + 1][2];
-double INF = 10000.0 * 2.0 * 4.0;
-
-double dist(Point& a, Point& b) {
-  double dx = a.x - b.x;
-  double dy = a.y - b.y;
+double dist(int i, int j) {
+  pii& a = P[i], b = P[j];
+  int dx = a.first - b.first;
+  int dy = a.second - b.second;
   return sqrt(dx*dx + dy*dy);
 }
 
-double solve(int lc, int rc, int where) {
-  // static int call = 0;
-  // int mycall = call++;
-  // printf("==> call=%d, solve(lc=%d, rc=%d, where=%d)\n",mycall, lc,rc,where);
-  if (cached[lc][rc][where])
-    return memo[lc][rc][where];
+double solve(int l, int r, int w) {
+  if (memo[l][r][w] >= -0.5)
+    return memo[l][r][w];
 
-  Point prev_p = (where == LEFT ? lbranch[lc-1] : rbranch[rc-1]);
+  int l_next = (l+N-1) % N;
+  int r_next = (r+1) % N;
 
-  // printf("\tprev_p = (%lf, %lf)\n",prev_p.x, prev_p.y);
-  double ans;
-
-  if (lc < lsize && rc < rsize) {
-    ans = min(
-      dist(prev_p, lbranch[lc]) + solve(lc+1, rc, LEFT),
-      dist(prev_p, rbranch[rc]) + solve(lc, rc+1, RIGHT)
-    );
-  } else if (lc < lsize) {
-    ans = dist(prev_p, lbranch[lc]) + solve(lc+1, rc, LEFT);
-  } else if (rc < rsize) {
-    ans = dist(prev_p, rbranch[rc]) + solve(lc, rc+1, RIGHT);
+  double ans = 1e10;
+  if (w == LEFT) {
+    if (l_next == S && r == S)
+      ans = min(ans, dist(l, S));
+    if (l_next != S)
+      ans = min(ans, dist(l, l_next) + solve(l_next, r, LEFT));
+    if (r != S)
+      ans = min(ans, dist(l, r) + solve(l_next, r, RIGHT));    
   } else {
-    ans = dist(prev_p, pts[S]);
+    if (r_next == S && l == S)
+      ans = min(ans, dist(r, S));
+    if (r_next != S)
+      ans = min(ans, dist(r, r_next) + solve(l, r_next, RIGHT));
+    if (l != S)
+      ans = min(ans, dist(r, l) + solve(l, r_next, LEFT));
   }
-
-  // printf("--> call=%d, ans = %lf\n", mycall, ans);
-  cached[lc][rc][where] = true;
-  return memo[lc][rc][where] = ans;
+  return memo[l][r][w] = ans;
 }
 
 int main() {
-  // read input
-  scanf("%d%d%d",&N,&E,&S); E--, S--;
-  rep(i, 0, N-1) scanf("%lf%lf", &pts[i].x, &pts[i].y);
+  scanf("%d%d%d",&N,&E,&S);
+  --E; --S;  
+  P.resize(N);
+  rep(i,0,N-1)
+    scanf("%d%d",&P[i].first,&P[i].second);
 
-  // collect left branch
-  lsize = 0;
-  for (int i = (E-1+N) % N; i != S; i = (i - 1 + N) % N) {
-    lbranch[lsize++] = pts[i];
-    // printf("lbranch[%d] = (%.0lf,%.0lf)\n",lsize-1,pts[i].x, pts[i].y);
-  }
+  int E_l = (E-1+N) % N;
+  int E_r = (E+1) % N;
 
-  // collect right branch
-  rsize = 0;
-  for (int i = E+1; i != S; i = (i + 1) % N) {
-    rbranch[rsize++] = pts[i];
-    // printf("rbranch[%d] = (%.0lf,%.0lf)\n",rsize-1,pts[i].x, pts[i].y);
-  }
+  rep(i, 0, N-1) rep(j, 0, N-1) memo[i][j][LEFT] = memo[i][j][RIGHT] = -1.0;
+  double ans = 1e10;
+  if (E_l != S)
+    ans = min(ans, dist(E,E_l) + solve(E_l, E_r, LEFT));
+  if (E_r != S)
+    ans = min(ans, dist(E,E_r) + solve(E_l, E_r, RIGHT));
+  if (E_l == S && E_r == S)
+    ans = dist(E,S);
+  printf("%.6lf\n", ans);
 
-  // solve
-  memset(cached, false, sizeof cached);
-  double ans = INF;
-  if (lsize > 0)
-    ans = min(ans, dist(pts[E], lbranch[0]) + solve(1, 0, LEFT));
-  if (rsize > 0)
-    ans = min(ans, dist(pts[E], rbranch[0]) + solve(0, 1, RIGHT));
-  printf("%.6lf", ans);
   return 0;
 }
