@@ -12,7 +12,7 @@
 #include <cmath>
 using namespace std;
 
-#define FOR(i,i0,n) for(int i=0; i<n; ++i)
+#define rep(i,a,b) for(int i=a; i<=b; ++i)
 
 char errorBuffer[200];
 
@@ -86,7 +86,7 @@ Token* getNextToken(const char* buffer, int& offset) {
   case '\0':
     return new Token(END);
   case 's':{
-    FOR(i,0,4) if (buffer[offset + i] != "sqrt"[i]) {
+    rep(i,0,3) if (buffer[offset + i] != "sqrt"[i]) {
       sprintf(errorBuffer, "unexpected char '%c' at position %d\n", buffer[offset + i], offset + i);
       throw std::runtime_error(errorBuffer);
     }
