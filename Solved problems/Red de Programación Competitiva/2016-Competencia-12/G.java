@@ -64,7 +64,7 @@ public class G {
     StringTokenizer st = new StringTokenizer(br.readLine());
 
     N = Integer.parseInt(st.nextToken());
-    g = new ArrayList [N];
+    g = new ArrayList[N];
     for (int i = 0; i < N; ++i)
       g[i] = new ArrayList<Pair>();
 
