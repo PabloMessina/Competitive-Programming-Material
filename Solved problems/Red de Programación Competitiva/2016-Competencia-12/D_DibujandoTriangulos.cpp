@@ -38,10 +38,10 @@ bool perfect_square(ll x, ll& root) {
 }
 
 iii get_triple(int a, int b, int c) {
-  int aa = min(min(a,b),c);
-  int cc = max(max(a,b),c);
-  int bb = a + b + c - aa - cc;
-  return iii(aa, bb, cc);
+  if (a > b) swap(a, b);
+  if (b > c) swap(b, c);
+  if (a > b) swap(a, b);
+  return iii(a, b, c);
 }
 
 void try_add_similar(int i, int j, ll x, ll y) {
