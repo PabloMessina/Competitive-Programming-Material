@@ -227,6 +227,26 @@ const char* s = "bla1 bla2";
 int offset = 5, len = 4;
 string subs(s + offset, len); // bla2
 
+// -------------------------
+// string comparisons
+int compare (const string& str) const;
+int compare (size_t pos, size_t len, const string& str) const;
+int compare (size_t pos, size_t len, const string& str,
+             size_t subpos, size_t sublen) const;
+int compare (const char* s) const;
+int compare (size_t pos, size_t len, const char* s) const;
+// examples
+// 1) check string begins with another string
+string prefix = "prefix";
+string word = "prefix suffix";
+word.compare(0, prefix.size(), prefix);
+
+
+buffer (4)  
+
+int compare (size_t pos, size_t len, const char* s, size_t n) const;
+
+
 //======================
 //Nested Unordered Maps
 //=======================

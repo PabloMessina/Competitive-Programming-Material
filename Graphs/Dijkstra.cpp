@@ -47,8 +47,8 @@ struct Edge {
 struct Pair {
   int node;
   int dist;
-  bool operator<(const Pair& p) {
-    return w > p.w;
+  bool operator<(const Pair& p) const {
+    return dist > p.dist;
   }
 };
 

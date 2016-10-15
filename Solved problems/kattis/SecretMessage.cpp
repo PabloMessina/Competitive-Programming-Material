@@ -1,49 +1,40 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-#define rep(i,a,b) for (int i=a; i<=b; ++i)
-#define invrep(i,a,b) for (int i=a; i>=b; --i)
-#define MAXL 10000
+#define rep(i,a,b) for(int i=a; i <= b; ++i)
+#define invrep(i,a,b) for(int i=a; i>= b; --i)
 
-int minsqrt(int x) {
-  int i = 1, j = x;
+char matrix[101][101];
+int min_side(int n) {
+  int i = 1, j = n;
   while (i < j) {
-    int m = (i+j)/2;
-    if (m*m >= x)
-      j = m;
-    else
-      i = m + 1;
+    int m = (i + j) / 2;
+    if (m*m >= n) j = m;
+    else i = m+1;
   }
   return i;
 }
 
-int N, L;
-char board[MAXL][MAXL];
-
 int main() {
+  int n;
+  scanf("%d\n", &n);
   string line;
-  scanf("%d\n", &N);
-  while(N--) {
+  while(n--) {
     getline(cin, line);
-    L = line.size();
-    int mroot = minsqrt(L);
-    // printf("mroot = %d\n", mroot); 
-    int p2 = mroot * mroot;
-    int r = 0, c = 0, i = 0;
-    while(i < p2) {
-      if (i < L)
-        board[r][c] = line[i];
-      else
-        board[r][c] = '*';
-      ++i;
-      if (++r == mroot) {
-        r = 0; ++c; 
+    int k = min_side(line.size());
+    int i = 0;
+    invrep (c, k-1, 0) {
+      rep(r, 0, k-1) {
+        if (i < line.size())
+          matrix[r][c] = line[i++];
+        else
+          matrix[r][c] = '*';
       }
     }
-    rep(r,0,mroot-1) {
-      invrep(c,mroot-1,0) {
-        if (board[r][c] != '*')
-          printf("%c",board[r][c]);
+    rep(r, 0, k-1) {
+      rep(c, 0, k-1) {
+        if (matrix[r][c] != '*')
+          printf("%c", matrix[r][c]);
       }
     }
     puts("");

@@ -29,6 +29,9 @@ int gcd (int a, int b) {
 /* GCD extended */
 /* ============ */
 // extended euclid algorithm
+// a * x + b * y = d = gcd(a, b)
+// x = x0 + n * (b/d)
+// y = y0 - n * (a/d)
 void gcdext(int a, int b, int& d, int& x, int& y) {
   if (b == 0) { x = 1; y = 0; d = a; return; }
   gcdext(b, a % b, d, x, y);
