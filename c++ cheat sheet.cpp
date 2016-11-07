@@ -14,19 +14,23 @@
 #include <cstdlib>
 #include <sstream>
 #include <iostream>
+
 #include <bits/stdc++.h> // add everything in one shot
+#include <tr1/unordered_map>
+#include <tr1/unordered_set>
 using namespace std;
 
+// defines
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define umap tr1::unordered_map
+#define uset tr1::unordered_set
+
+// typedefs
 typedef vector<int> vi;
 typedef vector<vi> vii;
 typedef long long int ll;
-
-/* DEFINES */
-// for loops
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-// declare a dynamic 2D matrix with the given name, type, cols and rows
-#define vecMatrix(name,type,cols,rows) vector<vector<type> > name(rows, vector<type>(cols));
+typedef pair<int,int> pii;
 
 int main() {
   setvbuf(stdout, NULL, _IONBF, 0);  //debugging
@@ -447,6 +451,24 @@ ULLONG_MAX
 /* Bitwise Tricks */
 /* ============== */
 
+// amount of one-bits in number
+int __builtin_popcount(int x);
+int __builtin_popcountl(long x);
+int __builtin_popcountll(long long x);
+
+// amount of leading zeros in number
+int __builtin_clz(int x);
+int __builtin_clzl(long x);
+int __builtin_clzll(long long x);
+
+// binary length of non-negative number
+int bitlen(int x) {
+  return sizeof(x) * 8 - __builtin_clz(x);
+}
+int bitlen(ll x) {
+  return sizeof(x) * 8 - __builtin_clzll(x);
+}
+
 // index of most significant bit
 int log2(int x) {
   return sizeof(x) * 8 - __builtin_clz(x) - 1;
@@ -460,35 +482,54 @@ int log2(int x) {
   while (x) x >>= 1, ++i;
   return i-1;
 }
-int log2(long long x) {
+int log2(ll x) {
   int i = 0;
   while (x) x >>= 1, ++i;
   return i-1;
 }
 
-
 // reverse the bits of an integer
 int reverse_bits(int x) {
-  int len = sizeof(x) * 8 - __builtin_clz(x);
-  int y = 0;
-  invrep(i, len-1, 0) {
-    if ((1 << i) & x) {
-      y |= (1 << (len - 1 - i));
-    }
-  }
-  return y;
+  int v = 0;
+  while (x) v <<= 1, v |= x&1, x >>= 1;
+  return v;
 }
-// reverse the bits of a long long integer
-ll reverse_bits(ll x) {
+
+// get string binary representation of an integer
+string bitstring(int x) {
   int len = sizeof(x) * 8 - __builtin_clz(x);
-  ll y = 0;
-  invrep(i, len-1, 0) {
-    if ((1 << i) & x) {
-      y |= (1 << (len - 1 - i));
-    }
-  }
-  return y;
+  if (len == 0) return "0";
+
+  char buff[len+1]; buff[len] = '\0';
+  for (int i = len-1; i >= 0; --i, x >>= 1)
+    buff[i] = (char)('0' + (x&1));
+  return string(buff);
 }
+
+/* ================== */
+/* Hexadecimal Tricks */
+/* ================== */
+
+// get string hex representation of an integer
+string to_hex(int num) {
+  static char buff[100];
+  static const char* hexdigits = "0123456789abcdef";
+  buff[99] = '\0';
+  int i = 98;
+  do {
+    buff[i--] = hexdigits[num & 0xf];
+    num >>= 4;
+  } while (num);
+  return string(buff+i+1);
+}
+
+// ['0'-'9' 'a'-'f'] ->  [0 - 15]
+int char_to_digit(char c) {
+  if ('0' <= c && c <= '9')
+    return c - '0';
+  return 10 + c - 'a';
+}
+
 
 /* ============ */
 /* Other Tricks */
