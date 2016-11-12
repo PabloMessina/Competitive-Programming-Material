@@ -1,61 +1,30 @@
-/* ========== */
-/*  DIJKSTRA  */
-/* ========== */
 // complexity: (|E| + |V|) * log |V|
-
-/* code */
-
 #include <bits/stdc++.h>
-#define FOR(i,i0,n) for(int i = i0; i < n; ++i)
-#define INF 1e9
+using namespace std;
+typedef pair<int, int> pii; // (weight, node), in that order
 
-typedef vector<int> vi;
-typedef vector<vi> vii;
+vector<vector<pii>> g; // graph
+int N; // number of nodes
+vector<int> mindist; // min distance from source to each node
+vector<int> parent; // parent of each node in shortest path from source
 
-struct Edge {
-  int u;
-  int v;
-  int w;
-};
-
-struct Pair {
-  int node;
-  int dist;
-  bool operator<(const Pair& p) const {
-    return dist > p.dist;
-  }
-};
-
-int main() {
-  int V, E, s;
-  scanf("%d %d %d", &V, &E, &s);
-  /* initialization */
-  vector<vector<Edge>> adjList(V);
-  FOR(i,0,E) {
-    Edge e;
-    scanf("%d %d %d",&e.u,&e.v,&e.w);
-    adjList[e.u].push_back(e);
-  }
-  vi dist(V,INF);
-  vi parent(V,-1);
-  dist[s] = 0;
-  priority_queue<Pair> pq;
-  pq.push({s,0});
-  /* routine */
-  while (!pq.empty()) {
-    Pair top = pq.top(); pq.pop();
-    int u = top.node;
-    int d = top.dist;
-    if (d > dist[u]) continue; // skip outdated improvements
-    FOR(i,0,adjList[u].size()) {
-      Edge& e = adjList[u][i];
-      int alt = d + e.w;
-      if (alt < dist[e.v]) {
-        dist[e.v] = alt;
-        parent[e.v] = u;
-        pq.push({e.v,alt});
+void dijkstra(int source) {
+  parent.assign(N, -1);
+  mindist.assign(N, INT_MAX);
+  mindist[source] = 0;
+  priority_queue<pii, vector<pii>, greater<pii>> q;
+  q.push(pii(0, source));
+  while (!q.empty()) {
+    pii p = q.front(); q.pop();
+    int u = p.second, dist = p.first;
+    if (mindist[u] < dist) continue; // skip outdated improvements
+    for (pii& e : g[u]) {
+      int v = e.second, w = e.first;
+      if (mindist[v] > dist + w) {
+        mindist[v] = dist + w;
+        parent[v] = u;
+        q.push(v);
       }
     }
   }
-  return 0;
 }
