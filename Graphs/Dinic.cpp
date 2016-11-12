@@ -1,6 +1,3 @@
-/* ================== */
-/*  DINIC : Max Flow  */
-/* ================== */
 // Time Complexity:
 // - general worst case: O (|E| * |V|^2)
 // - unit capacities: O( min( V^(2/3), sqrt(E) ) )

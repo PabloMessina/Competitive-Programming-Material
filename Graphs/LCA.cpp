@@ -65,13 +65,10 @@ void lca_init() {
 
 int LCA(int u, int v) {
   // get ocurrence indexes in increasing order
-  int l, r;
-  if (H[u] < H[v])
-    l = H[u], r = H[v];
-  else
-    l = H[v], r = H[u];
+  int l = H[u], r = H[v];
+  if (l > r) swap(l, r);  
   // get node with minimum level within [l .. r] in O(1)
-  int len = r -  l + 1;
+  int len = r - l + 1;
   int m = log2(len);
   int i1 = rmq[l][m];
   int i2 = rmq[r - ((1 << m) - 1)][m];
@@ -119,16 +116,12 @@ void init() {
       // i's 2^j th ancestor is
       // i's 2^(j-1) th ancestor's 2^(j-1) th ancestor
       int p = P[i][j-1];
-      if (p != -1) P[i][j] = P[a][j-1];
+      if (p != -1) P[i][j] = P[p][j-1];
     }
   }
 }
 
-int log2(int x) {
-  int i = 0;
-  while (x) x>>=1, i++;
-  return i-1;
-}
+inline int log2(int x) { return sizeof(x) * 8 - __builtin_clz(x) - 1; }
 
 int LCA(int u, int v) {
   if (level[u] < level[v]) swap(u, v);

@@ -314,7 +314,7 @@ map<Point, int> pt2id;
 
 // method #1: operator[]
 // it overwrites the value if the key already exists
-toId[{1, 2}] = 1;
+pt2id[{1, 2}] = 1;
 
 // method #2: .insert(key, value)
 // it returns a pair { iterator(key, value) , bool }
