@@ -1,8 +1,6 @@
 //=============================================
 // Sieve of Eratosthenes (all primes up to N)
 //=============================================
-#include <vector>
-#include <cmath>
 void collect_primes_up_to(int n, vector<int>& primes) {
 	vector<bool> isPrime(n + 1, true);
 	int limit = (int) floor(sqrt(n));

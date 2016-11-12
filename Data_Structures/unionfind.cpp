@@ -1,22 +1,13 @@
-/* ==================== */
-/* ==== UNION FIND ==== */
-/* ==================== */
-
-#include <cstdio>
-#include <vector>
+#include <bits/stdc++.h>
 using namespace std;
-
 typedef vector<int> vi;
 
 struct UnionFind {
   vi p, rank, setSize;
   int numSets;
-  UnionFind(int N) {
-    numSets = N;
-    setSize.assign(N, 1);
-    rank.assign(N, 0);
-    p.resize(N);
-    rep(i,0,N-1) p[i] = i; 
+  UnionFind(int n) {
+    numSets = n; setSize.assign(n, 1); rank.assign(n, 0); p.resize(n);
+    rep(i,0,n-1) p[i] = i; 
   }
   int findSet(int i) { return (p[i] == i) ? i : (p[i] = findSet(p[i])); }
   bool isSameSet(int i, int j) { return findSet(i) == findSet(j); }

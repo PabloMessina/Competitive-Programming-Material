@@ -1,10 +1,8 @@
 /* =========================== */
 /* LA (Level Ancestor Problem) */
 /* =========================== */
-
 #include <vector>
 using namespace std;
-
 typedef vector<int> vi;
 
 #define rep (i,a,b) for(int i=a; i<=b; ++i)
@@ -27,11 +25,7 @@ void dfs(int u, int p, int l) {
       dfs(v, u, l + 1);
 }
 
-inline int log2(int x) {
-  int i = 0;
-  while (x) x>>=1, i++;
-  return i-1;
-}
+inline int log2(int x) { return sizeof(x) * 8 - __builtin_clz(x) - 1; }
 
 void init_la(int n) {
   memset(P, -1, sizeof P);

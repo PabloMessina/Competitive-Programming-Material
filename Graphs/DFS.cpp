@@ -103,8 +103,8 @@ for (int i = topoSort.size()-1; i >= 0; i--)       // we need to print in revers
 //option 2: Kahn's algorithm
 
 //pseudo-code
-// L ← Empty list that will contain the sorted elements
-// S ← Set of all nodes with no incoming edges
+// L <- Empty list that will contain the sorted elements
+// S <- Set of all nodes with no incoming edges
 // while S is non-empty do
 //     remove a node n from S
 //     add n to tail of L

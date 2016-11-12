@@ -1,3 +1,22 @@
+/* =========================== */
+/* Example of Point Definition */
+/* =========================== */
+
+struct Point {
+  double x, y;
+  bool operator==(const Point& p) const { return x==p.x && y == p.y; }
+  Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }
+  Point operator-(const Point& p) const { return {x-p.x, y-p.y}; }
+  Point operator*(double d) const { return {x*d, y*d}; }
+  double norm2() const { return x*x + y*y; }
+  double norm() const { return sqrt(norm2()); }
+  double dot(const Point& p) const { return x*p.x + y*p.y; }
+  Point unit() const {
+    double d = norm();
+    return {x/d,y/d};
+  }
+};
+
 /* ================ */
 /* Angle Comparison */
 /* ================ */
@@ -74,4 +93,25 @@ Line getLine(Point p1, Point p2) {
   b /= f;
   c /= f;
   return {a, b, c};
+}
+
+/* ======================== */
+/* Point - Segment distance */
+/* ======================== */
+
+// get distance between p and truncated projection of p on segment s -> e
+double point_segment_dist(const Point& p, const Point& s, const Point& e) {
+  if (s==e) return (p-s).norm(); // segment is a single point
+  double t = min(1.0, max(0.0, (p-s).dot(e-s) / (e-s).norm2()));
+  return (s+(e-s)*t-p).norm();
+}
+
+/* ===================== */
+/* Point - Line distance */
+/* ===================== */
+
+// get distance between p and projection of p on line <- a - b ->
+double point_line_dist(const Point& p, const Point& a, const Point& b) {
+  double t = (p-a).dot(b-a) / (b-a).norm2();
+  return (a+(b-a)*t-p).norm();
 }

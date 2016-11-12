@@ -2,14 +2,8 @@
 /*  Edmonds Karp  */
 /* ============== */
 // complexity: |V| * |E|^2
-
-#include <algorithm>
-#include <bitset>
-#include <cstdio>
-#include <vector>
-#include <queue>
+#include <bits/stdc++.h>
 using namespace std;
-
 typedef vector<int> vi;
 
 #define INF 1000000000
@@ -31,7 +25,7 @@ int main() {
 	scanf("%d %d %d", &V, &s, &t);
 
 	//initialize AdjList and res
-	AdjList.assign(V,vi());
+	AdjList.assign(V, vi());
   for (int i = 0; i < V; i++) {
     scanf("%d", &k);
     for (int j = 0; j < k; j++) {

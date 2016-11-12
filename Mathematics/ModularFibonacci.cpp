@@ -5,7 +5,7 @@
 #include <cstdio>
 #include <vector>
 using namespace std;
-typedef unsigned long long int ull;
+typedef unsigned long long ull;
 const ull MOD = 1000000000;
 
 vector<ull> mult(const vector<ull>& A, const vector<ull>& B) {

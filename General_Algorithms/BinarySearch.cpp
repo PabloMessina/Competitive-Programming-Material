@@ -1,7 +1,3 @@
-/* ============= */
-/* BINARY SEARCH */
-/* ============= */
-
 // Find the index of the first item that satisfies a predicate.
 // If no such index exists, retuns -1
 // Pseudo-code:
@@ -91,3 +87,32 @@ bool myfunction (int i,int j) { return (i<j); }
 int myints[] = {1,2,3,4,5,4,3,2,1};
 std::vector<int> v(myints,myints+9);  
 bool found = std::binary_search (v.begin(), v.end(), 6, myfunction)
+
+
+/* ======================= */
+/* Discrete Ternary Search */
+/* ======================= */
+
+int min_search(int i, int j) {
+  while (i < j) {
+    int m = (i+j)/2;
+    int slope = eval(m+1) - eval(m);
+    if (slope >= 0)
+      j = m;
+    else
+      i = m+1;
+  }
+  return eval(i);
+}
+
+int max_search(int i, int j) {
+  while (i < j) {
+    int m = (i+j)/2;
+    int slope = eval(m+1) - eval(m);
+    if (slope <= 0)
+      j = m;
+    else
+      i = m+1;
+  }
+  return eval(i);
+}

@@ -1,9 +1,7 @@
 /* ============================ */
 /* LCA (Lowest Common Ancestor) */
 /* ============================ */
-
-#include <vector>
-#include <cstring>
+#include <bits/stdc++.h>
 using namespace std;
 typedef vector<int> vi;
 #define rep(i,a,b) for (int i=a; i<=b; ++i)
@@ -30,9 +28,7 @@ int N; // number of nodes
 vector<vi> g; // tree graph
 
 // get highest exponent e such that 2^e <= x
-int log2(int x) {
-  return sizeof(x) * 8 - __builtin_clz(x) - 1;
-}
+inline int log2(int x) { return sizeof(x) * 8 - __builtin_clz(x) - 1; }
 
 void dfs(int u, int depth) {
   H[u] = idx; // index of first u's ocurrence
@@ -126,10 +122,6 @@ void init() {
       if (p != -1) P[i][j] = P[a][j-1];
     }
   }
-}
-
-inline void swap(int& u, int &v) {
-  int tmp = u; u = v; v = tmp;
 }
 
 int log2(int x) {

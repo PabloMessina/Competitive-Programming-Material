@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-
-#define rep(i,a,b) for(int i=a; i<=b; ++i)
-#define invrep(i,a,b) for(int i=a; i>=b; --i)
-
 struct Point {
   double x, y;
   bool operator<(const Point& p) {

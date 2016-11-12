@@ -3,35 +3,9 @@
 /* ========== */
 // complexity: (|E| + |V|) * log |V|
 
-/* pseudo code */
-
-function Dijkstra(Graph, source):
-    // Initialization
-    dist[source] ← 0 
-    create vertex set Q
-    for each vertex v in Graph:           
-        if v ≠ source
-            dist[v] ← INFINITY // Unknown distance from source to v
-            prev[v] ← UNDEFINED // Predecessor of v
-        Q.add_with_priority(v, dist[v])
-    // The main loop
-    while Q is not empty: 
-        u ← Q.extract_min() // Remove and return best vertex
-        for each neighbor v of u:    // only v that is still in Q
-            alt = dist[u] + length(u, v) 
-            if alt < dist[v]
-                dist[v] ← alt
-                prev[v] ← u
-                Q.decrease_priority(v, alt)
-    return dist[], prev[]
-
 /* code */
 
-#include <cstdio>
-#include <vector>
-#include <queue>
-using namespace std;
-
+#include <bits/stdc++.h>
 #define FOR(i,i0,n) for(int i = i0; i < n; ++i)
 #define INF 1e9
 
