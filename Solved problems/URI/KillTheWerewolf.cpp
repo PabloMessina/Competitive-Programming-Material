@@ -1,14 +1,12 @@
-// tags: Max Flow, Bipartite Graph, Dinic, Binary Search
+// tags: max flow, Dinic
 #include <bits/stdc++.h>
 using namespace std;
-
-#define rep(i,a,b) for(int i=a; i<=b; ++i)
+#define rep(i,a,b) for(int i=a;i<=b;++i)
+#define MAXN 50
 typedef long long int ll;
-typedef pair<int,int> pii;
 
-int N, M, V;
-int s, t;
-vector<pii> edge_list;
+int indegree[MAXN];
+int g[MAXN][2];
 
 struct Dinic {
   struct edge {
@@ -83,41 +81,47 @@ struct Dinic {
   }
 };
 
-ll max_flow(int maxdeg) {
-  Dinic din(V);
-  rep (e, 0, M-1) {
-    int a = M + edge_list[e].first;
-    int b = M + edge_list[e].second;
-    din.add_edge(s, e, 1);
-    din.add_edge(e, a, 1);
-    din.add_edge(e, b, 1);
-  }
-  rep(i,0,N-1) {
-    din.add_edge(M+i, t, maxdeg);
-  }
-  return din.max_flow(s, t);
-}
 
 int main() {
-  scanf("%d%d", &N,&M);
-  edge_list.resize(M);
-  rep(i,0,M-1) {   
-    int a,b; scanf("%d%d", &a, &b); --a; --b;
-    edge_list[i] = pii(a,b);
+  int n; scanf("%d", &n);
+  memset(indegree, 0, sizeof indegree);
+  rep(i,0,n-1) {
+    int a,b; scanf("%d%d",&a,&b); --a,--b;
+    g[i][0] = a, g[i][1] = b;
+    indegree[a]++;
+    indegree[b]++;
   }
-  V = N+M+2;
-  s = V-2;
-  t = V-1;
 
-  int dmin = 0, dmax = N;
-  while (dmin < dmax) {
-    int m = (dmin+dmax)/2;
-    if (max_flow(m) == M)
-      dmax = m;
-    else
-      dmin = m+1;
+  int count = 0;
+  rep(w,0,n-1) {
+    if (indegree[w] < 2) {
+      count++; continue;
+    }
+    
+    int wa = g[w][0], wb = g[w][1];
+    int s = 2*n, t = 2*n+1;
+    Dinic din(2*n+2);
+
+    rep(i, 0, n-1) {
+      int a = g[i][0], b = g[i][1];
+      if (i == w or a == w or b == w) continue;
+      din.add_edge(s, i, 1);
+      din.add_edge(i, n+a, 1);
+      din.add_edge(i, n+b, 1);      
+    }
+    rep(i, 0, n-1) {
+      if (i == w) continue;
+      if (i == wa or i == wb)
+        din.add_edge(n+i, t, indegree[w]-2);
+      else
+        din.add_edge(n+i, t, indegree[w]-1);
+    }
+
+    int votes = n - indegree[w] - 1;
+    int mf = (int)din.max_flow(s, t);
+    if (votes > mf)
+      count++;
   }
-  int ans = dmin;
-  printf("%d\n", ans);
+  printf("%d\n", count);
   return 0;
 }

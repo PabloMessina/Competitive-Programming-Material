@@ -2,15 +2,13 @@
 // Template  //
 /* ========= */
 #include <bits/stdc++.h> // add almost everything in one shot
-#include <tr1/unordered_map>
-#include <tr1/unordered_set>
 using namespace std;
 
 // defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap tr1::unordered_map
-#define uset tr1::unordered_set
+#define umap unordered_map
+#define uset unordered_set
 
 // typedefs
 typedef vector<int> vi;
@@ -66,6 +64,7 @@ while(true) {c = getchar(); if (c == EOF || c== '\n') break;}
 /* Printing to stdout */
 /* ================== */
 printf("%d",a); // int
+printf("%u",a); // unsigned int
 printf("%lld",a); // long long int
 printf("%llu",a); // unsigned long long int
 printf("%c",c); // char
@@ -289,7 +288,7 @@ map<Point, int, cmp> pt_map;
 /* ======================== */
 /* VECTOR UTILITY FUNCTIONS */
 /* ======================== */
-std::vector<int> myvector;
+vector<int> myvector;
 myvector.push_back(100);
 myvector.pop_back(); // remove last element
 myvector.back(); // peek reference to last element
@@ -300,6 +299,21 @@ vector<int> foo;
 sort (foo.begin(), foo.end());
 sort (foo.begin(), foo.end(), std::less<int>()); // increasing
 sort (foo.begin(), foo.end(), std::greater<int>()); // decreasing
+
+/* ===================== */
+/* SET UTILITY FUNCTIONS */
+/* ===================== */
+set<int> myset;
+myset.begin(); // iterator to first elemnt
+myset.end(); // iterator to after last element
+myset.rbegin(); // iterator to last element
+myset.rend(); // iterator to before first element
+for (auto it = myset.begin(); it != myset.end(); ++it) {} // left -> right
+for (auto it = myset.rbegin(); it != myset.rend(); ++it) {} // right -> left
+for (auto& it : myset) {} // left->right shortcut
+myset.insert(5);
+mysert.erase(5);
+if (!myset.empty()) {}
 
 /* ===================== */
 /* MAP UTILITY FUNCTIONS */

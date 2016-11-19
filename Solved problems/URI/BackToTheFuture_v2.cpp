@@ -1,5 +1,4 @@
-// tags: constraint propagation
-
+// tags: constraint propagation, BFS
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i=a;i<=b;++i)
@@ -35,26 +34,27 @@ int main() {
 
     rep(i,0,N-1) {
       int x = remain[curr][i];
-      if (!inside[x]) continue;
-      comp = g[x].size(), incomp = N - 1 - (int)g[x].size();
-      if (comp < A or incomp < B) {
-        inside[x] = false;
-        N--;
-        q.push(x);
-        stop = false;
-        while(!q.empty()) {
-          int u = q.front(); q.pop();
-          for (int v : g[u]) {
-            if (!inside[v]) continue;
-            g[v].erase(u);
-            comp = g[v].size(), incomp = N - 1 - (int)g[v].size();
-            if (comp < A /*or incomp < B*/) {
-              inside[v] = false;
-              N--;
-              q.push(v);
+      if (inside[x]) {
+        comp = g[x].size(), incomp = N - 1 - (int)g[x].size();
+        if (comp < A or incomp < B) {
+          stop = false;
+          inside[x] = false;
+          q.push(x);
+          while(!q.empty()) {
+            int u = q.front(); q.pop();
+            N--;
+            for (int v : g[u]) {
+              if (inside[v]) {
+                g[v].erase(u);
+                comp = g[v].size(), incomp = N - 1 - (int)g[v].size();
+                if (comp < A or incomp < B) {
+                  inside[v] = false;
+                  q.push(v);
+                }                
+              }
             }
           }
-        }
+        }        
       }
     }
 
