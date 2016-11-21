@@ -102,7 +102,7 @@ int main() {
     int s = 2*n, t = 2*n+1;
     Dinic din(2*n+2);
 
-    rep(i, 0, n-1) {
+    rep(i,0,n-1) {
       int a = g[i][0], b = g[i][1];
       if (i == w or a == w or b == w) continue;
       din.add_edge(s, i, 1);

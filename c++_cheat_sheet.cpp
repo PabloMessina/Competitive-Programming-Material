@@ -322,25 +322,23 @@ struct Point {int x, y; };
 bool operator<(const Point& a, const Point& b) {
   return a.x < b.x || (a.x == b.x && a.y < b.y);
 }
-map<Point, int> pt2id;
+map<Point, int> ptcounts;
+
 // --------------------
 // inserting into map
 
 // method #1: operator[]
 // it overwrites the value if the key already exists
-pt2id[{1, 2}] = 1;
+ptcounts[{1, 2}] = 1;
 
-// method #2: .insert(key, value)
+// method #2: .insert(pair<key, value>)
 // it returns a pair { iterator(key, value) , bool }
 // if the key already exists, it doesn't overwrite the value
-int tid = 0;
-while (true) {
-  int x,y; scanf("%d%d",&x,&y);
-  auto res = pt2id.insert({x,y}, tid);
-  int id = res.first->second;
-  if (res->second) // insertion happened
-    tid++; 
+void update_count(Point& p) {
+  auto res = ptcounts.insert(make_pair(p, 1));
+  if (!res.second) res.first->second++;
 }
+
 // -------------------------
 // generating ids with map
 int get_id(string& name) {
