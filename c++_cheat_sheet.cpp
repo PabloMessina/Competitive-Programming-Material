@@ -3,16 +3,14 @@
 /* ========= */
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
-
 // defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
-
 // typedefs
 typedef vector<int> vi;
-typedef vector<vi> vii;
+typedef vector<vi> vvi;
 typedef long long int ll;
 typedef pair<int,int> pii;
 
