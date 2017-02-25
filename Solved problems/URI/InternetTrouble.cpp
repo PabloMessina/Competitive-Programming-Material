@@ -36,20 +36,20 @@ ll cost(int i, int j) {
 
 // Solve DP[k][i] where i1 <= i <= i2 using divide and conquer optimization
 // DP[k][i] = min { DP[k-1][j-1] + cost(j, i+1) for p1 <= j <= p2}
-void fill(int k, int i1, int i2, int p1, int p2) {
+void fill(int k, int i1, int i2, int j1, int j2) {
     if (i1 > i2) return;
     int im = (i1+i2)/2;
-    int j1 = max(p1, k-1);
-    int j2 = min(p2, im);
+    int jmin = max(j1, k-1);
+    int jmax = min(j2, im);
     ll min_val = LLONG_MAX;
-    int p = -1;
-    rep(j,j1,j2) {
+    int best_j = -1;
+    rep(j,jmin,jmax) {
         ll val = cost(j,im+1) + (j > 0 ? dp[k-1][j-1] : 0);
-        if (val < min_val) min_val = val, p = j;
+        if (val < min_val) min_val = val, best_j = j;
     }
     dp[k][im] = min_val;
-    fill(k,i1,im-1,p1,p);
-    fill(k,im+1,i2,p,p2);
+    fill(k,i1,im-1,j1,best_j);
+    fill(k,im+1,i2,best_j,j2);
 }
 
 int main() {
