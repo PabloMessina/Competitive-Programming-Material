@@ -1,6 +1,6 @@
+// DISCLAIMER: SOLUTION IS NOT WORKING :(
 // tags: LCA, centroid decomposition, segment trees
 // problem: http://main.edu.pl/en/archive/pa/2013/pod
-// Note: solution it's not working :(
 
 #include <cstdio>
 #include <vector>
