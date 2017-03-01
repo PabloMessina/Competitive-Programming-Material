@@ -1,4 +1,4 @@
-// tags: space reduction, range sum query, sweep line
+// tags: range compression, range sum query, sweep line
 #include <bits/stdc++.h>
 #include <tr1/unordered_map>
 using namespace std;
