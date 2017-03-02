@@ -14,16 +14,6 @@ int DP[MAXN];
 int st[MAXN * 4 + 5];
 int left(int x) { return x << 1; }
 int right(int x) { return (x << 1) + 1; }
-void build_st(int node, int l, int r) {
-    if (l == r) {
-        st[node] = 0;
-        return;
-    }
-    int ln = left(node), rn = right(node);
-    build_st(ln, l, (l+r)/2);
-    build_st(rn, (l+r)/2+1, r);
-    st[node] = min(st[ln], st[rn]);
-}
 void update_point(int node, int l, int r, int i, int val) {
     if (i < l or i > r) return;
     if (l == r) {
@@ -72,6 +62,7 @@ int main() {
             shops[l].push_back({l, s, c});
         }
         DP[N] = 0;
+        update_point(1,0,N,N,0);
         invrep(i,N-1,0) {
             DP[i] = INT_MAX;
             for (Shop& shop : shops[i]) {
