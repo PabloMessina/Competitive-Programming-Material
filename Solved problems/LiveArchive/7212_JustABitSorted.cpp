@@ -8,8 +8,8 @@ const ll MOD = 1000000007;
 int N,Q;
 ll dp[MAXN+1][MAXN+1];
 ll acc[MAXN+1];
-ll inline sum(ll a, ll b) { return (a + b) % MOD; }
-ll inline mult(ll a, ll b) { return (a * b) % MOD; }
+inline ll sum(ll a, ll b) { return (a + b) % MOD; }
+inline ll mult(ll a, ll b) { return (a * b) % MOD; }
 int main() {
     while (scanf("%d%d", &N, &Q) == 2) {
         rep(n,1,N) {
