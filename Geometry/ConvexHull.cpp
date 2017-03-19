@@ -1,3 +1,4 @@
+// Andrew's Montone Chain Algorithm
 struct Point {
   double x, y;
   bool operator<(const Point& p) {

@@ -23,7 +23,6 @@ struct Point {
 
 // --------------
 // method 1: atan2()
-#include <cmath>
 const double PI = atan(1) * 4;
 double angle(double x, double y) {
   double a = atan2(y, x);
@@ -39,7 +38,6 @@ int cmpAngles(double x1, double y1, double x2, double y2) {
 // method 2: quadrants + slopes
 // this is the prefered method when coordinates
 // are given as integers
-#include <cmath>
 enum Quadrant { UpRight, Up, UpLeft, DownLeft, Down, DownRight };
 int getQuadrant(int x, int y) {
   if (x > 0) return (y >= 0) ? UpRight : DownRight;
