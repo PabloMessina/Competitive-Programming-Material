@@ -12,7 +12,8 @@ using namespace std;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
 typedef long long int ll;
-typedef pair<int,int> pii;
+typedef pair<int,int> ii;
+typedef tuple<int,int,int> iii;
 
 int main() {
   setvbuf(stdout, NULL, _IONBF, 0);  //debugging
@@ -108,7 +109,21 @@ bool peekAndCheck(char c) {
 /* ================ */
 // reading a line of unknown length
 string line;
-getline (cine, name);
+getline(cin, line);
+while(getline(cin, line)) {}
+
+/* ====================== */
+/* USING PAIRS AND TUPLES */
+/* ====================== */
+// ii = pair<int,int>
+ii p(5,5);
+ii p = make_pair(5,5)
+ii p = {5, 5};
+int x = p.first, y = p.second;
+// iii = tuple<int,int,int>
+iii t(5,5,5);
+tie(x,y,z) = t;
+tie(x,y,z) = make_tuple(5,5,5);
 
 /* ================================= */
 /* CONVERTING FROM STRING TO NUMBERS */

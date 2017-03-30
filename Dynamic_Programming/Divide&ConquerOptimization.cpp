@@ -15,21 +15,20 @@ ll group_cost(int i, int j) { ... }
  Calculates the values of DP[g][l] for l1 <= l <= l2 (a range of cells in row 'g')
  using divide & conquer optimization
 
- DP[g][l] means: given a list of 'l' items, partition them into 'g' groups,
+ DP[g][l] means: given a list of the first 'l' items, partition them into 'g' groups,
  each group consisting of consecutive items (left to right), so that the total
- cost of forming those group is minimized.
+ cost of forming those groups is the minimum possible.
 
  If we form one group at a time, from right to left, this leads to the following
  recursion:
 
- DP[g][l] = min { DP[g-1][k-1] + group_cost(k,l) for k = g-1 .. l }
- DP[1][l] = group_cost(0, l)
+ DP[g][l] = min { DP[g-1][k] + group_cost(k,l-1) for k = g-1 .. l-1 }
+ DP[1][l] = group_cost(0, l-1)
 
  in other words:
 
- DP[g][l] = DP[g-1][best_k - 1] + group_cost(best_k,l)
-    where best_k is the left most index where we can start the last group
-    and minimize the total cost
+ DP[g][l] = DP[g-1][best_k] + group_cost(best_k,l-1)
+    where best_k is the left most value of k where the minimum is reached
 
 Now, for a given 'g':
 
@@ -47,12 +46,12 @@ void fill_row(int g, int l1, int l2, int k1, int k2) {
   if (l1 > l2) return; // ensure valid range
   int lm = (l1+l2)/2; // solve middle case
   int kmin = max(g-1, k1);
-  int kmax = min(lm, k2);
+  int kmax = min(lm-1, k2);
   int best_k = -1;  
   ll mincost = LLONG_MAX;
   rep(k,kmin,kmax) {
-    ll tmp = DP[g-1][k-1] + group_cost(k, lm);
-    if (mincost > tmp) mincost = tmp, best_k = k;
+    ll tmp = DP[g-1][k] + group_cost(k, lm-1);    
+    if (mincost > tmp) mincost = tmp, best_k = k;    
   }
   DP[g][lm] = mincost;
   fill_row(g, l1, lm-1, k1, best_k); // solve left cases
@@ -61,7 +60,7 @@ void fill_row(int g, int l1, int l2, int k1, int k2) {
 
 void fill_dp() {
     // base: g = 1
-    rep(l,0,L-1) DP[1][l] = group_cost(0,l);
+    rep(l,1,L) DP[1][l] = group_cost(0,l-1);
     // other: g >= 2
-    rep(g,2,G) fill_row(g,g-1,L-1,0,L-1);
+    rep(g,2,G) fill_row(g,g,L,0,L);
 }

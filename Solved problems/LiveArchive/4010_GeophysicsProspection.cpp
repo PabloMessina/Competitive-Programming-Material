@@ -1,62 +1,65 @@
-#include <cstdio>
-#include <vector>
-#include <algorithm>
+#include <bits/stdc++.h>
 using namespace std;
+#define rep(i,a,b) for(int i=a; i<=b; i++)
+#define invrep(i,a,b) for(int i=a; i>=b; i--)
+typedef tuple<int,int,int> iii;
 
-#define FOR(i,i0,n) for(int i = i0; i < n; ++i)
-typedef vector<int> vi;
-typedef vector<vi> vii;
-
-int m, p, k;
-char volume[50][50][51];
-int groupCount;
-int shifts[6][3] = {
-	{-1, 0, 0},
+const int MAXP = 50;
+const int MAXK = 50;
+const int MAXM = 50;
+int p, k, m;
+char board[MAXM][MAXP][MAXK+1];
+int dirs[6][3] = {
 	{1, 0, 0},
-	{0, -1, 0},
+	{-1, 0, 0},
 	{0, 1, 0},
-	{0, 0, -1},
-	{0, 0, 1}
+	{0, -1, 0},
+	{0, 0, 1},
+	{0, 0, -1}
 };
 
-void dfs(int i, int x, int y, char c) {
-	if (0 <= i && i < m && 0 <= x && x < p && 0 <= y && y < k && volume[i][x][y] == c) {
-		groupCount++;
-		volume[i][x][y] = '*';
-		FOR(d,0,6) dfs(i + shifts[d][0], x + shifts[d][1], y + shifts[d][2], c);
+int bfs(int x, int y, int z) {
+	char c = board[x][y][z];
+	queue<iii> q;
+	q.push(iii(x,y,z));
+	board[x][y][z] = '*';
+	int count = 1;
+	while (!q.empty()) {
+		tie(x,y,z) = q.front(); q.pop();
+		rep(i,0,5) {
+			int xx = x + dirs[i][0], yy = y + dirs[i][1], zz = z + dirs[i][2];
+			if (0 <= xx && xx < m && 0 <= yy && yy < p && 0 <= zz && zz < k
+				&& board[xx][yy][zz] == c) {
+				count++;
+				board[xx][yy][zz] = '*';
+				q.push(iii(xx,yy,zz));
+			} 
+		}
 	}
+	return count;
 }
 
 int main() {
-	int _case = 1;
-	while(scanf("%d %d %d", &p, &k, &m) == 3) {
-		// read layers
-		FOR(i,0,m) FOR(x,0,p) scanf("%s",volume[i][x]);
-		// collect groups
-		vii groups(4);
-		FOR(i,0,m) FOR(x,0,p) FOR(y,0,k) {
-			char c = volume[i][x][y];
-			if (c == '*') continue;
-			groupCount = 0;
-			dfs(i,x,y,c);
-			groups[c-'a'].push_back(groupCount);
+	int case_ = 1;
+	while (scanf("%d%d%d",&p,&k,&m)==3) {
+		rep(i,0,m-1) rep(j,0,p-1) scanf("%s", board[i][j]);
+		vector<int> counts[4];
+		rep(x,0,m-1) rep(y,0,p-1) rep(z,0,k-1) {
+			char c = board[x][y][z];
+			if (c != '*') counts[c - 'a'].push_back(bfs(x,y,z));
 		}
-		// sort groups
-		FOR(i,0,4) sort(groups[i].begin(),groups[i].end());
-		// print answer
-		if (_case > 1) puts("");
-		printf("Case %d:\n",_case);
-		for(char c = 'a'; c <= 'd'; ++c) {
-			printf("%c",c);
-			vi& cgroups = groups[c-'a'];
-			if (cgroups.size()) {
-				for(int i = cgroups.size() - 1; i >= 0; --i) printf(" %d", cgroups[i]);
-			} else {
-				printf(" 0");
+		if (case_ > 1) puts("");
+		printf("Case %d:\n", case_);
+		rep(i,0,3) {
+			printf("%c",(char)(i + 'a'));
+			if (counts[i].size() == 0) puts(" 0");
+			else {
+				sort(counts[i].begin(), counts[i].end());
+				invrep(j, counts[i].size()-1, 0) printf(" %d", counts[i][j]);
+				puts("");
 			}
-			puts("");
 		}
-		_case++;
+		case_++;
 	}
 	return 0;
 }
