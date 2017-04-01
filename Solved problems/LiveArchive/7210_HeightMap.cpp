@@ -17,7 +17,6 @@ int shifts[4][2] = {
     {0, 1}
 };
 
-
 void bfs(int r, int c) {
     int h = board[r][c];
     queue<ii> q;

@@ -27,7 +27,9 @@ int bfs(int x, int y, int z) {
 	while (!q.empty()) {
 		tie(x,y,z) = q.front(); q.pop();
 		rep(i,0,5) {
-			int xx = x + dirs[i][0], yy = y + dirs[i][1], zz = z + dirs[i][2];
+			int xx = x + dirs[i][0];
+			int yy = y + dirs[i][1];
+			int zz = z + dirs[i][2];
 			if (0 <= xx && xx < m && 0 <= yy && yy < p && 0 <= zz && zz < k
 				&& board[xx][yy][zz] == c) {
 				count++;
