@@ -12,6 +12,7 @@ int A[MAXN][MAXN];
 int B[MAXN][MAXN];
 vector<vector<int>> g;
 
+// -- Dijkstra --
 double mincost[MAXN];
 double find_mincost(double t) {
   rep(i,0,N-1) mincost[i] = -1.0;
@@ -26,7 +27,6 @@ double find_mincost(double t) {
       continue;
     if (u == N-1)
       break;
-
     for (int v : g[u]) {
       double c = cost + A[u][v] * t + B[u][v];
       if (mincost[v] < -0.5 or mincost[v] > c) {
@@ -40,6 +40,8 @@ double find_mincost(double t) {
 
 int main() {
   while (scanf("%d%d",&N,&M) == 2) {
+
+    // -- read input and build graph --
     g.assign(N, vector<int>());
     rep(i,1,M) {
       int u,v,a,b; scanf("%d%d%d%d",&u,&v,&a,&b); --u, --v;
@@ -51,6 +53,7 @@ int main() {
       B[v][u] = b;
     }
 
+    // --- ternary search ---
     double left = 0;
     double right = 24 * 60;
     double ans;
@@ -71,6 +74,8 @@ int main() {
         right = t2;
       }
     }
+
+    // -- print answer --
     ans = (c1+c2) * 0.5;
     printf("%.5lf\n", ans);
 

@@ -1,4 +1,4 @@
-// tags: binary search, union find, disjoint set
+// tags: binary search, union find, disjoint sets
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i=a; i<=b; i++)
@@ -76,7 +76,7 @@ int main() {
 				if (dist2UpperLeft[i] >= R) continue; // make sure it's reachable
 				if (dist2LowerRight[i] < R) { // optimization: check if it reaches the other margin
 					marginsConnected = true;
-					goto updateBounds;
+					goto update_range;
 				}
 				uf.unionSet(source, i);
 			}
@@ -91,12 +91,12 @@ int main() {
 					uf.unionSet(i, j);
 					if (uf.isSameSet(source, target)) {
 						marginsConnected = true;
-						goto updateBounds;
+						goto update_range;
 					}
-				}				
+				}
 			}
 			// update range
-			updateBounds:
+			update_range:
 			if (marginsConnected) maxR = R;
 			else minR = R;
 		}

@@ -40,14 +40,15 @@ int main() {
     while(scanf("%d%d",&R,&C)==2) {
         rep(r,0,R-1) rep(c,0,C-1) scanf("%d", &board[r][c]);
         memset(visited, 0, sizeof visited);
-        int faces = 5;
+
+        int faces = 5; // always there are at least 5 faces
 
         // top
         rep(r,0,R-1) rep(c,0,C-1) if (!visited[r][c]) faces++, bfs(r,c);
 
         bool inface;
         int prev_up, prev_down, up, down;
-        // top down
+        // north -> south
         rep(r,1,R-1) {
             inface = false;
             prev_up = prev_down = 0;
@@ -62,7 +63,7 @@ int main() {
                 prev_down = down;
             }
         }
-        // bottom up
+        // south -> north
         invrep(r,R-2,0) {
             inface = false;
             prev_up = prev_down = 0;
@@ -77,7 +78,7 @@ int main() {
                 prev_down = down;
             }
         }
-        // left to right
+        // west -> east
         rep(c,1,C-1) {
             inface = false;
             prev_up = prev_down = 0;
@@ -92,7 +93,7 @@ int main() {
                 prev_down = down;
             }
         }
-        // right to left
+        // east -> west
         invrep(c,C-2,0) {
             inface = false;
             prev_up = prev_down = 0;
