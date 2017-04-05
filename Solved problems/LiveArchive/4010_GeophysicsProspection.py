@@ -4,7 +4,7 @@
 
 from sys import stdin, stdout
 
-N = 5
+N = 50
 board = [[[0 for i in range(N)] for j in range(N)] for k in range(N)]
 
 dirs = (
