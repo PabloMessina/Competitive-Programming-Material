@@ -16,7 +16,7 @@ typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
 
 int main() {
-  setvbuf(stdout, NULL, _IONBF, 0);  //debugging
+  // setvbuf(stdout, NULL, _IONBF, 0);  //debugging
   return 0;
 }
 

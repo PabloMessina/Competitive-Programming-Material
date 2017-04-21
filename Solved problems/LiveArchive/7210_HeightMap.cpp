@@ -46,11 +46,9 @@ int main() {
         // top
         rep(r,0,R-1) rep(c,0,C-1) if (!visited[r][c]) faces++, bfs(r,c);
 
-        bool inface;
         int prev_up, prev_down, up, down;
         // north -> south
         rep(r,1,R-1) {
-            inface = false;
             prev_up = prev_down = 0;
             rep(c,0,C-1) {
                 up = board[r][c];
@@ -65,7 +63,6 @@ int main() {
         }
         // south -> north
         invrep(r,R-2,0) {
-            inface = false;
             prev_up = prev_down = 0;
             rep(c,0,C-1) {
                 up = board[r][c];
@@ -80,7 +77,6 @@ int main() {
         }
         // west -> east
         rep(c,1,C-1) {
-            inface = false;
             prev_up = prev_down = 0;
             rep(r,0,R-1) {
                 up = board[r][c];
@@ -95,7 +91,6 @@ int main() {
         }
         // east -> west
         invrep(c,C-2,0) {
-            inface = false;
             prev_up = prev_down = 0;
             rep(r,0,R-1) {
                 up = board[r][c];
