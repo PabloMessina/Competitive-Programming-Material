@@ -1,5 +1,5 @@
-// tags: implicit graph, DAG, bitwise operations, shortest path in DAG,
-// longest path in DAG, modular arithmetics, combinatorics
+// tags: implicit graph, DAG, bitwise operations, shortest/longest path in DAG,
+//        modular arithmetics, combinatorics
 #include <bits/stdc++.h>
 using namespace std;
 // defines
@@ -17,11 +17,11 @@ typedef pair<double, int> pdi;
 typedef pair<ll, int> lli;
 // -------------------------------
 
-const int MAX_STATES = 1 << 16;
+const int N_STATES = 1 << 16;
 const ll MOD = 0x3b9aca07;
 int N;
 vector<string> seq;
-ll sums[MAX_STATES];
+ll sums[N_STATES];
 
 int char2idx(char c) {
     if ('0' <= c and c <= '9') return c - '0';
@@ -39,7 +39,7 @@ ll string2hex(string& s, int mask) {
     return hex;
 }
 
-ll minsums[MAX_STATES];
+ll minsums[N_STATES];
 ll min_path_sum(int mask) {
     if (mask == 0) return 0;
     if (minsums[mask] < LLONG_MAX) return minsums[mask];
@@ -52,7 +52,7 @@ ll min_path_sum(int mask) {
     return minsums[mask];
 }
 
-ll maxsums[MAX_STATES];
+ll maxsums[N_STATES];
 ll max_path_sum(int mask) {
     if (mask == 0) return 0;
     if (maxsums[mask] > -1) return maxsums[mask];
