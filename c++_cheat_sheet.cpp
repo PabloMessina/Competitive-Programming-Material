@@ -14,6 +14,8 @@ typedef vector<vi> vvi;
 typedef long long int ll;
 typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
+typedef pair<double, int> pdi;
+typedef pair<ll, int> lli;
 
 int main() {
   // setvbuf(stdout, NULL, _IONBF, 0);  //debugging
