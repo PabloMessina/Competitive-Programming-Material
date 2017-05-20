@@ -28,8 +28,8 @@ ll solve(int i, int start) {
     ll count = 0;
     rep(j,i+1,N-1) {
         // make sure that:
-        //   1) the next activity does not leave a gap with the i-th activity
-        //   2) the next activity does not cover 100% de interval [start, activity_i.end]
+        //   1) there is no gaps between the i-th activity and the next activity
+        //   2) the next activity does not cover 100% the interval [start, activity_i.end]
         if (start < act[j].first and act[j].first <= act[i].second and act[j].second > act[i].second) {
             count = (count + solve(j, act[i].second)) % MOD;
         }
