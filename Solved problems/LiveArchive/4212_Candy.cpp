@@ -41,7 +41,6 @@ int main() {
             row_max[r] = find_max(N, candies);
         }
         // find global maximun using row_max as candies
-        // of a new row
         row_max[M] = 0;
         printf("%lld\n", find_max(M, row_max));
     }
