@@ -19,8 +19,6 @@ ll a[MAXN];
 vector<pair<int,ll>> g[MAXN];
 int parent[MAXN];
 bool todelete[MAXN];
-bool deleted[MAXN];
-
 ll memo[MAXN];
 
 void dfs1(int u, int p, ll edge_cost) {
@@ -41,8 +39,7 @@ void dfs1(int u, int p, ll edge_cost) {
 }
 
 int dfs2(int u, int p) {
-    if (deleted[u]) return 0;
-    deleted[u] = true;
+    if (todelete[u]) return 0;
     int c = 1;    
     for (auto& v : g[u]) {
         if (v.first == p) continue;
@@ -60,19 +57,9 @@ int main() {
         --p;
         g[i].emplace_back(p, c);
         g[p].emplace_back(i, c);
-    }
-    
+    }    
     memset(todelete, 0, sizeof(todelete));
-    memset(deleted, 0, sizeof(deleted));
     dfs1(0, -1, 0);
-
-    int count = 0;
-    rep(i, 0, n-1) {
-        if (todelete[i]) {
-            count += dfs2(i, parent[i]);
-        }
-    }
-    printf("%d\n", count);
-
+    printf("%d\n",n - dfs2(0, -1));
     return 0;
 }
