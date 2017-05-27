@@ -21,29 +21,24 @@ int parent[MAXN];
 bool todelete[MAXN];
 ll memo[MAXN];
 
-void dfs1(int u, int p, ll edge_cost) {
-    parent[u] = p;
-    if (p == -1) {
+void dfs1(int u, ll edge_cost) {
+    if (u == 0) {
         memo[u] = 0;
         todelete[u] = false;
     } else {
-        memo[u] = edge_cost;
-        memo[u] = max(memo[u], memo[u] + memo[p]);        
-
+        memo[u] = max(edge_cost, edge_cost + memo[parent[u]]);
         todelete[u] = (memo[u] > a[u]);
     }
     for (auto& v : g[u]) {
-        if (v.first == p) continue;
-        dfs1(v.first, u, v.second);
+        dfs1(v.first, v.second);
     }
 }
 
-int dfs2(int u, int p) {
+int dfs2(int u) {
     if (todelete[u]) return 0;
     int c = 1;    
     for (auto& v : g[u]) {
-        if (v.first == p) continue;
-        c += dfs2(v.first, u);
+        c += dfs2(v.first);
     }
     return c;
 }
@@ -53,13 +48,12 @@ int main() {
     rep(i, 0, n-1) scanf("%I64d", &a[i]);
     rep(i, 1, n-1) {
         int p; ll c;
-        scanf("%d %I64d", &p, &c);
-        --p;
-        g[i].emplace_back(p, c);
+        scanf("%d %I64d", &p, &c); --p;
+        parent[i] = p;
         g[p].emplace_back(i, c);
     }    
     memset(todelete, 0, sizeof(todelete));
-    dfs1(0, -1, 0);
-    printf("%d\n",n - dfs2(0, -1));
+    dfs1(0, 0);
+    printf("%d\n",n - dfs2(0));
     return 0;
 }
