@@ -30,20 +30,22 @@ struct SegmentTree {
       return;
     }
     // recursive case
-    update_point(left(p), l, (l+r)/2, i, val);
-    update_point(right(p), (l+r)/2+1, r, i, val);
-    return st[p] = (A[p1] <= A[p2]) ? p1 : p2;
+    int lp = left(p), rp = right(p);
+    update_point(lp, l, (l+r)/2, i, val);
+    update_point(rp, (l+r)/2+1, r, i, val);
+    int i = st[lp], j = st[rp];
+    st[p] = (A[i] <= A[j]) ? i : j;
   }
 
   int rmq(int p, int l, int r, int i, int j) {
       if (i > r or j < l) return -1; // check valid range
       if (i <= l && r <= j) return st[p]; // base case
       // recursive case
-      int p1 = rmq(left(p), l, (l+r)/2, i, j);
-      int p2 = rmq(right(p), (l+r)/2+1, r, i, j);
-      if (p1 == -1) return p2;
-      if (p2 == -1) return p1;
-      return (A[p1] <= A[p2]) ? p1 : p2; 
+      int ii = rmq(left(p), l, (l+r)/2, i, j);
+      int jj = rmq(right(p), (l+r)/2+1, r, i, j);
+      if (ii == -1) return jj;
+      if (jj == -1) return ii;
+      return (A[ii] <= A[jj]) ? ii : jj; 
   }
 
   SegmentTree(const vi &_A) {
