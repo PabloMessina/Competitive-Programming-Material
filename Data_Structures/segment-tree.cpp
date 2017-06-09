@@ -2,69 +2,85 @@
 using namespace std;
 typedef vector<int> vi;
 
-// Example of SegmentTree for rmq (minimum range query)
-struct SegmentTree {
-  vi st, A;            
-  int n;
-  int left (int p) { return p << 1; }
-  int right(int p) { return (p << 1) + 1; }
+// Example of SegmentTree for rmq (range minimum query)
+// Note: instead of storing the minimum value, each node will store 
+//  the index of the leftmost position of the range in which the minimum
+//  value of that range is found
 
-  void build(int p, int l, int r) 
-      if (l == r) { // base case
-          st[p] = l; 
-          return;
-      }
-      // recursive case
-      int lp = left(p), rp = right(p);
-      build(lp, l, (l+r)/2);
-      build(rp, (l+r)/2+1, r);
-      int i = st[lp], j = st[rp];
-      st[p] = (A[i] <= A[j]) ? i : j;
-  }
+struct SegmentTreeRMQ {
+    vi arr; // store original array values
+    vi st; // store nodes of segment tree
+    vi leaf; // store index of leaf nodes in segment tree
+    int n; // number of leaf nodes (length of arr)
+    inline int left (int u) { return u << 1; } // index of left child
+    inline int right(int u) { return (u << 1) + 1; } // index of right child
 
-  void update_point(int p, int l, int r, int i, int val) {
-    if (i > r or i < l) return; // check valid range
-    if (l == r) { // base case
-      A[i] = val;
-      st[p] = l;
-      return;
+    void build(int u, int i, int j) {
+        if (i == j) { // base case: a leaf node
+            st[u] = i;
+            leaf[i] = u;
+            return;
+        }
+        // recursive case
+        int lu = left(u), ru = right(u), m = (i+j)/2;
+        build(lu, i, m);
+        build(ru, m+1, j);
+        // store the index of the minimum value,
+        // in case of draw choose the leftmost
+        int ii = st[lu], jj = st[ru];
+        st[u] = (arr[ii] <= arr[jj]) ? ii : jj;
     }
-    // recursive case
-    int lp = left(p), rp = right(p);
-    update_point(lp, l, (l+r)/2, i, val);
-    update_point(rp, (l+r)/2+1, r, i, val);
-    int i = st[lp], j = st[rp];
-    st[p] = (A[i] <= A[j]) ? i : j;
-  }
 
-  int rmq(int p, int l, int r, int i, int j) {
-      if (i > r or j < l) return -1; // check valid range
-      if (i <= l && r <= j) return st[p]; // base case
-      // recursive case
-      int ii = rmq(left(p), l, (l+r)/2, i, j);
-      int jj = rmq(right(p), (l+r)/2+1, r, i, j);
-      if (ii == -1) return jj;
-      if (jj == -1) return ii;
-      return (A[ii] <= A[jj]) ? ii : jj; 
-  }
+    // update arr[i] with new_val, and propagate updates in the tree
+    // from leaf[i] upwards
+    void update(int i, int new_val) {
+        arr[i] = new_val;
+        int u = leaf[i] >> 1;
+        while (u) {
+            int lu = left(u), ru = right(u);
+            int min_i = (arr[st[lu]] <= arr[st[ru]]) ? st[lu] : st[ru];
+            if (min_i == st[u]) break; // optimization: no changes, interrupt updates
+            // update and move to next parent
+            st[u] = min_i;
+            u >>= 1;
+        }        
+    }
 
-  SegmentTree(const vi &_A) {
-    A = _A; n = (int)A.size(); // copy content for local usage
-    st.assign(4 * n, 0); // create large enough vector of zeroes
-    build(1, 0, n - 1); // recursive build
-  }
+    // query for range [a,b], considering that we are at node u
+    // which is in charge of range [i, j]
+    int query(int a, int b, int u, int i, int j) {
+        // case 1: no overlap -> return some neutral / invalid vlaue
+        if (j < a or b < i) return -1;
+        // case 2: full overlap -> return cached answer
+        if (a <= i and j <= b) return st[p]; 
 
-  int rmq(int i, int j) { return rmq(1, 0, n - 1, i, j); } // overloading
+        // case 3: partial overlap -> need recursion and merge of answers
+        int lu = left(u), lr = right(u), m = (i+j)/2;
+        int ii = query(a, b, lu, i, m);
+        int jj = query(a, b, ru, m+1, j);
+        if (ii == -1) return jj;
+        if (jj == -1) return ii;
+        return (arr[ii] <= arr[jj]) ? ii : jj; 
+    }
 
-  int update_point(int i, int val) { // overloading
-    return update_point(1, 0, n - 1, i, val); }
+    // overloading for easier use
+    int query(int a, int b) { return query(a, b, 1, 0, n - 1); }
+
+    SegmentTreeRMQ(const vi& _arr) {
+        arr = _arr; // copy content for local usage
+        n = arr.size();
+        leaf.resize(n);
+        st.resize(4 * n + 5); // reserve enough space for the worst case
+        build(1, 0, n - 1); // recursive build from root
+    }
+    
 };
   
 // usage
 int main() {
-  vi A = { 18, 17, 13, 19, 15, 11, 20 };
-  SegmentTree st(A);
-  st.rmq(1,3);
-  st.update_point(5, 100);
-  return 0;
+    vi arr = { 18, 17, 13, 19, 15, 11, 20 };
+    SegmentTreeRMQ st(arr);
+    st.query(1, 3);
+    st.update(5, 100);
+    return 0;
 }
