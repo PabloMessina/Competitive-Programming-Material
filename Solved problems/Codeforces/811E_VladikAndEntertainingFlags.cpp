@@ -79,9 +79,10 @@ void build(int p, int l, int r) {
 
 segment* query(int p, int l, int r, int i, int j, bool& should_delete) {
     should_delete = false;
-    if (i > r or j < l) return NULL;
-    if (i <= l and r <= j) return &st[p];
+    if (i > r or j < l) return NULL; // no overlap
+    if (i <= l and r <= j) return &st[p]; // full overlap
 
+    // partial overlap
     int lp = left(p), rp = right(p);
     bool dell, delr;
     segment* lseg = query(lp, l, (l+r)/2, i, j, dell);
