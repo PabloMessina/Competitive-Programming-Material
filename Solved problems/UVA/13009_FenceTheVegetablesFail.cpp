@@ -93,7 +93,7 @@ int main() {
 		// sort X objects using custom comparator
 		sort(xs.begin(), xs.end(), cmp);
 
-		// range compression: map all y values to a narrower range
+		// domain compression: map all y values to a narrower domain
 		int idx = 1;
 		umap<int,int> y2idx;
 		for (int y : ys) y2idx[y] = idx++;
