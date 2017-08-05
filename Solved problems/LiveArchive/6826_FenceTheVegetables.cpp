@@ -1,4 +1,4 @@
-// tags: greedy, implementation
+// tags: greedy, implementation, polygon area (green's theorem)
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)

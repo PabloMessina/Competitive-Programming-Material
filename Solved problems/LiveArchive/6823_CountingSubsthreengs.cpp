@@ -19,10 +19,13 @@ int main() {
                 int j = i;
                 while (j+1 < n && is_digit(line[j+1])) j++;
                 
+                // (*) insight: (accsum[j] - accsum[i]) % 3 = 0
+                //          iff  accsum[j] % 3 = accsum[i]) % 3
+
                 int sum = 0; // keep track of accumulated sums mod 3
-                ll c[3] = {0,0,0}; // count how many times each sum mode 3 (0,1,2) appears
+                ll c[3] = {0,0,0}; // count how many times each sum mod 3 (0,1,2) appears
                 rep(k,i,j) {
-                    sum = (sum + (line[k] - '0')) % 3; // update sum mode 3
+                    sum = (sum + (line[k] - '0')) % 3; // update sum mod 3
                     c[sum]++; // add to count
                 }
                 // all pairs between 1's, all pairs between 2's
