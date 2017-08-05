@@ -111,7 +111,7 @@ int main() {
 					// add 1 to range -> we are now inside the fence
 					ft.range_add(a, b-1, 1);
 				} else {
-					// substract 1 to range -> we are not outside the fence
+					// substract 1 to range -> we are now outside the fence
 					ft.range_add(a, b-1, -1);
 				}
 			} else { // plant encountered
