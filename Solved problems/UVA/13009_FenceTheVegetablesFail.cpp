@@ -1,4 +1,4 @@
-// tags: domain compression, sweep line, fenwick tree (range updates)
+// tags: domain compression, sweep line, fenwick tree (range update & point query)
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
