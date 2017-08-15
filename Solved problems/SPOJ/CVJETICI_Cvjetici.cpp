@@ -32,8 +32,6 @@ struct BIT {
         add(i, d); add(j+1, -d);
     }
     int psq(int x) {
-        if (x < 1 or x > n)
-            return 0;
         int sum = 0;
         while (x > 0) {
             sum += f[x];
