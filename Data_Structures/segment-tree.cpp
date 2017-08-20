@@ -9,7 +9,7 @@ typedef vector<int> vi;
 
 struct SegmentTreeRMQ {
     vi arr; // store original array values
-    vi st; // store nodes of segment tree
+    vi tree; // store nodes of segment tree
     vi leaf; // store index of leaf nodes in segment tree
     int n; // number of leaf nodes (length of arr)
     inline int left (int u) { return u << 1; } // index of left child
@@ -17,7 +17,7 @@ struct SegmentTreeRMQ {
 
     void build(int u, int i, int j) {
         if (i == j) { // base case: a leaf node
-            st[u] = i;
+            tree[u] = i;
             leaf[i] = u;
             return;
         }
@@ -27,8 +27,8 @@ struct SegmentTreeRMQ {
         build(ru, m+1, j);
         // store the index of the minimum value,
         // in case of draw choose the leftmost
-        int ii = st[lu], jj = st[ru];
-        st[u] = (arr[ii] <= arr[jj]) ? ii : jj;
+        int ii = tree[lu], jj = tree[ru];
+        tree[u] = (arr[ii] <= arr[jj]) ? ii : jj;
     }
 
     // update arr[i] with new_val, and propagate updates in the tree
@@ -38,24 +38,24 @@ struct SegmentTreeRMQ {
         int u = leaf[i] >> 1;
         while (u) {
             int lu = left(u), ru = right(u);
-            int min_i = (arr[st[lu]] <= arr[st[ru]]) ? st[lu] : st[ru];
-            if (min_i == st[u]) break; // optimization: no changes, interrupt updates
+            int min_i = (arr[tree[lu]] <= arr[tree[ru]]) ? tree[lu] : tree[ru];
+            if (min_i == tree[u]) break; // optimization: no changes, interrupt updates
             // update and move to next parent
-            st[u] = min_i;
+            tree[u] = min_i;
             u >>= 1;
-        }        
+        }
     }
 
     // query for range [a,b], considering that we are at node u
     // which is in charge of range [i, j]
     int query(int a, int b, int u, int i, int j) {
-        // case 1: no overlap -> return some neutral / invalid vlaue
+        // case 1: no overlap -> return some neutral / invalid value
         if (j < a or b < i) return -1;
         // case 2: full overlap -> return cached answer
-        if (a <= i and j <= b) return st[p]; 
+        if (a <= i and j <= b) return tree[u];
 
         // case 3: partial overlap -> need recursion and merge of answers
-        int lu = left(u), lr = right(u), m = (i+j)/2;
+        int lu = left(u), ru = right(u), m = (i+j)/2;
         int ii = query(a, b, lu, i, m);
         int jj = query(a, b, ru, m+1, j);
         if (ii == -1) return jj;
@@ -70,7 +70,7 @@ struct SegmentTreeRMQ {
         arr = _arr; // copy content for local usage
         n = arr.size();
         leaf.resize(n);
-        st.resize(4 * n + 5); // reserve enough space for the worst case
+        tree.resize(4 * n + 5); // reserve enough space for the worst case
         build(1, 0, n - 1); // recursive build from root
     }
     
