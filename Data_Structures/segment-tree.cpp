@@ -19,16 +19,15 @@ struct SegmentTreeRMQ {
         if (i == j) { // base case: a leaf node
             tree[u] = i;
             leaf[i] = u;
-            return;
-        }
-        // recursive case
-        int lu = left(u), ru = right(u), m = (i+j)/2;
-        build(lu, i, m);
-        build(ru, m+1, j);
-        // store the index of the minimum value,
-        // in case of draw choose the leftmost
-        int ii = tree[lu], jj = tree[ru];
-        tree[u] = (arr[ii] <= arr[jj]) ? ii : jj;
+        } else { // recursive case
+            int lu = left(u), ru = right(u), m = (i+j)/2;
+            build(lu, i, m);
+            build(ru, m+1, j);
+            // store the index of the minimum value,
+            // in case of draw choose the leftmost
+            int ii = tree[lu], jj = tree[ru];
+            tree[u] = (arr[ii] <= arr[jj]) ? ii : jj;
+        }        
     }
 
     // update arr[i] with new_val, and propagate updates in the tree
