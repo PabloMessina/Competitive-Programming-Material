@@ -1,4 +1,4 @@
-// WARNING: gives TLE :s
+// tags: Sieve of Eratosthenes, greatest common divisor (GCD), segment tree
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
@@ -62,12 +62,8 @@ void print_nonprime_divisors(int x) {
     if (divisors->size() > 0) {
         bool first = true;
         for (int x : *divisors) {
-            if (first) {
-                printf("%d", x);
-                first = false;
-            } else {
-                printf(" %d", x);
-            }
+            if (first) printf("%d", x), first = false;
+            else printf(" %d", x);
         }
         puts("");
     } else {        
@@ -122,13 +118,9 @@ struct ST {
 };
 
 int main() {
-    setvbuf(stdout, NULL, _IONBF, 0);  //debugging
-    // puts("---- debug1");
     init_primes();
-    // puts("---- debug2");
     ST* st = new ST();
     st->build(1,1,MAXN);
-    // puts("---- debug3");
     int T; scanf("%d", &T);
     while (T--) {
         st->reset();
@@ -142,7 +134,7 @@ int main() {
                 if (strcmp(buff, "ADD") == 0) { // add
                     st->update(x, ADD);
                 } else { // remove
-                    st->update(x, REMOVE);                    
+                    st->update(x, REMOVE);
                 }
             } else { // print
                 print_nonprime_divisors(st->tree[1]);
