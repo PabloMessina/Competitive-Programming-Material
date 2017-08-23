@@ -51,7 +51,6 @@ struct ST {
         arr[i] = v;
         int u = leaf[i];        
         tree[u].val = v;
-
         u >>= 1;
         
         while (u) {
