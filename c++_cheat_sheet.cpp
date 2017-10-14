@@ -9,9 +9,10 @@ using namespace std;
 #define umap unordered_map
 #define uset unordered_set
 // typedefs
+typedef unsigned int uint;
+typedef long long int ll;
 typedef vector<int> vi;
 typedef vector<vi> vvi;
-typedef long long int ll;
 typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
 typedef pair<double, int> pdi;
@@ -126,6 +127,8 @@ int x = p.first, y = p.second;
 iii t(5,5,5);
 tie(x,y,z) = t;
 tie(x,y,z) = make_tuple(5,5,5);
+get<0>(t)++;
+get<1>(t)--;
 
 /* ================================= */
 /* CONVERTING FROM STRING TO NUMBERS */
