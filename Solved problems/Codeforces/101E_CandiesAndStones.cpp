@@ -113,7 +113,7 @@ void find_optimal_path(int r_offset, int c_offset, int height, int width,
         if (bits.test(r * width + c)) { // right
             path.push_back('S'); // eat a stone
             c++; // increase column
-        } else { // up
+        } else { // down
             path.push_back('C'); // eat a candy
             r++; // increase row
         }
