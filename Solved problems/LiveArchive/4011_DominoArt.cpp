@@ -1,4 +1,4 @@
-// tags: bicoloration, maximum bipartite matching
+// tags: maximum bipartite matching, max flow, Dinic
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
@@ -93,90 +93,45 @@ struct Dinic {
 
 const int MAXR = 60;
 int R, C;
-int board[MAXR][MAXR];
+char board[MAXR][MAXR+1];
 int dirs[4][2] = {{1,0}, {-1,0}, {0,1}, {0,-1}};
-enum { BLACK, WHITE, SHARP, DOT };
-char buff[MAXR + 1];
 
 int main() {
     int _case = 1;
     mainloop:
     while (true) {
-
-        // read board
         scanf("%d%d", &R, &C);
-        if (R == 0 && C == 0) break;
-        rep(r,0,R-1) {
-            scanf("%s", buff);
-            rep(c,0,C-1) {
-                board[r][c] = (buff[c] == '#') ? SHARP : DOT;
-            }
-        }
-
-        int counts[2] = {0, 0}; // black and white counters
-
-        // --- bicoloration of connected components with BFS        
-        rep(r,0,R-1) rep(c,0,C-1) {            
-            if (board[r][c] == SHARP) {
-                queue<ii> q;                
-                board[r][c] = WHITE;
-                counts[WHITE]++;
-                q.emplace(r,c);
-
-                while (!q.empty()) {
-                    ii curr = q.front(); q.pop();
-
-                    int ucolor = board[curr.first][curr.second];
-                    int vcolor = 1 - ucolor;
-                    int uid = curr.first * C + curr.second;
-                    
-                    rep(i,0,3) {
-                        int rr = curr.first + dirs[i][0];
-                        int cc = curr.second + dirs[i][1];
-                        if (0 <= rr and rr < R and 0 <= cc and cc < C
-                            and board[rr][cc] == SHARP)
-                        {
-                            int vid = rr * C + cc;
-                            q.emplace(rr, cc);
-                            board[rr][cc] = vcolor;
-                            counts[vcolor]++;
-                        }
-                    }
-                }
-
-                // check same number of white and black cells
-                if (counts[WHITE] != counts[BLACK]) {
-                    printf("Case %d: Impossible\n", _case++);
-                    goto mainloop;
-                }
-            }
-        }
-
-        // ----- DINIC (maximum bipartite matching) -----
-
-        int n = counts[WHITE] + counts[BLACK];
-        Dinic din(n+2);
-        int sid = n;
-        int tid = n+1;
-
-        // map indexes to ids
+        if (R == 0 && C == 0) break;        
+        
+        int counts[2] = {0, 0};
         umap<int,int> idx2id;
         int id = 0;
-        rep(r,0,R-1) rep(c,0,C-1) {
-            if (board[r][c] != DOT)  idx2id[r * C + c] = id++;
+        rep(r,0,R-1) {
+            scanf("%s", board[r]);
+            rep(c,0,C-1) if (board[r][c] == '#') {
+                counts[(r + c)&1]++; // count colors
+                idx2id[r * C + c] = id++; // map positions to ids
+            }
         }
 
-        // build graph
-        rep(r,0,R-1) rep(c,0,C-1) {            
-            int color = board[r][c];
-            if (color == DOT) continue;
+        // check same name number of white and black cells
+        if (counts[0] != counts[1]) {
+            printf("Case %d: Impossible\n", _case++);
+            goto mainloop;
+        }
+        
+        // --- maximum bipartite matching ---
+        Dinic din(id+2);
+        int sid = id;
+        int tid = id+1;
+        rep(r,0,R-1) rep(c,0,C-1) if (board[r][c] == '#') {
             int uid = idx2id[r * C + c];
-            if (color == WHITE) {
+            if ((r+c)&1) {
                 din.add_edge(sid, uid, 1);
                 rep(i,0,3) {
                     int rr = r + dirs[i][0];
                     int cc = c + dirs[i][1];
-                    if (0 <= rr and rr < R and 0 <= cc and cc < C and board[rr][cc] == BLACK) {
+                    if (0 <= rr and rr < R and 0 <= cc and cc < C and board[rr][cc] == '#') {
                         int vid = idx2id[rr * C + cc];
                         din.add_edge(uid, vid, 1);
                     }
@@ -187,7 +142,7 @@ int main() {
         }
 
         // find max flow and print answer
-        if (din.max_flow(sid, tid) == counts[WHITE]) {
+        if (din.max_flow(sid, tid) == counts[0]) {
             printf("Case %d: Possible\n", _case);
         } else {
             printf("Case %d: Impossible\n", _case);
