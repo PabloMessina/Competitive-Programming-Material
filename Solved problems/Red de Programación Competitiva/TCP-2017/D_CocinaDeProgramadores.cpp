@@ -40,7 +40,7 @@ int total_time(int u) {
     for (int v : g[u]) {
         t = max(t, total_time(v));
     }
-    return t + times[u];
+    return memo[u] = t + times[u];
 }
 
 int main() {
