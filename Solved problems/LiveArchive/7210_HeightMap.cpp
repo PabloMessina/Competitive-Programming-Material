@@ -65,7 +65,7 @@ int main() {
         invrep(r,R-2,0) {
             prev_up = prev_down = 0;
             rep(c,0,C-1) {
-                up = board[r][c];
+                up = board[r][c]; 
                 down = board[r+1][c];
                 if (up > down) {
                     if (min(prev_up, up) - max(prev_down, down) <= 0)
