@@ -54,7 +54,7 @@ int main() {
                 up = board[r][c];
                 down = board[r-1][c];
                 if (up > down) {
-                    if (min(prev_up, up) - max(prev_down, down) <= 0)
+                    if (min(prev_up, up) <= max(prev_down, down))
                         faces++;
                 }
                 prev_up = up;
@@ -68,7 +68,7 @@ int main() {
                 up = board[r][c]; 
                 down = board[r+1][c];
                 if (up > down) {
-                    if (min(prev_up, up) - max(prev_down, down) <= 0)
+                    if (min(prev_up, up) <= max(prev_down, down))
                         faces++;
                 }
                 prev_up = up;
@@ -82,7 +82,7 @@ int main() {
                 up = board[r][c];
                 down = board[r][c-1];
                 if (up > down) {
-                    if (min(prev_up, up) - max(prev_down, down) <= 0)
+                    if (min(prev_up, up) <= max(prev_down, down))
                         faces++;
                 }
                 prev_up = up;
@@ -96,7 +96,7 @@ int main() {
                 up = board[r][c];
                 down = board[r][c+1];
                 if (up > down) {
-                    if (min(prev_up, up) - max(prev_down, down) <= 0)
+                    if (min(prev_up, up) <= max(prev_down, down))
                         faces++;
                 }
                 prev_up = up;

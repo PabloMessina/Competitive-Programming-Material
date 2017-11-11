@@ -1,4 +1,4 @@
-// tags: polygon area, binary search
+// tags: polygon area, ternary search
 
 #include <bits/stdc++.h>
 using namespace std;
