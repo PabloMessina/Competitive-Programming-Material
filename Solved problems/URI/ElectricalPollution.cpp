@@ -1,4 +1,5 @@
-// tags: graph traversal, LCA, BFS, DFS, domain compression
+// tags: graph traversal, LCA, BFS, DFS, odd length cycle, 
+// bipartite, bicoloration, domain compression
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
 #define umap unordered_map
