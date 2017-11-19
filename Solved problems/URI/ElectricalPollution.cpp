@@ -1,3 +1,4 @@
+// tags: graph traversal, LCA, BFS, DFS, domain compression
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
 #define umap unordered_map
