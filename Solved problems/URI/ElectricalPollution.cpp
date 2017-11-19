@@ -187,7 +187,7 @@ int main() {
                 g[v].emplace_back(u,a);
             }
         }
-        N = ID; // set the number distinct nodes in the graph
+        N = ID; // set number of distinct nodes in the graph
 
         // ---------------
         // STEP 1: propagate known values at the diagonal
@@ -215,8 +215,8 @@ int main() {
         }
         tree.resize(ID2); // remove unnecessary space
 
-        // // --- STEP 3: build LCA structure over 'tree' which includes all
-        // // bipartite connected components (no odd-length loops) of 'g'
+        // --- STEP 3: build LCA structure over 'tree' which includes all
+        // bipartite connected components (no odd-length loops) of 'g'
         LCA::init(tree);
         
         // ----------------
