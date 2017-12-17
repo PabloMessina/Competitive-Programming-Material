@@ -75,6 +75,7 @@ bool dfs1(int u, int p, int d) {
 }
 
 vector<vi> tree; // tree used for LCA queries
+tree.reserve(MAXN+1);
 // -- map old ids to new ids in an even more compact range
 int ID2;
 unordered_map<int,int> u2id;
@@ -214,7 +215,7 @@ int main() {
                 }
             }
         }
-        tree.resize(ID2); // remove unnecessary space
+        tree.resize(ID2); // set size to the space actually used
 
         // --- STEP 3: build LCA structure over 'tree' which includes all
         // bipartite connected components (no odd-length loops) of 'g'
@@ -227,7 +228,6 @@ int main() {
             int u = getId(x);
             int v = getId(y);
 
-            // printf("query: x=%d, y=%d, u=%d, v=%d\n",x,y,u,v);
             if (u >= N or v >= N) { // outside range
                 puts("*");
                 continue; 
