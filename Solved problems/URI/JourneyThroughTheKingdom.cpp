@@ -57,7 +57,7 @@ namespace Solver {
         memset(ft, 0, sizeof ft);
         while (!q.empty()) q.pop();
     }
-    void expand(int r1, int c1, int r2, int c2, int depth) {        
+    void expand(int r1, int c1, int r2, int c2) {        
         int vis = count(r1,c1,r2,c2);
         int dr = r2 - r1;
         int dc = c2 - c1;
@@ -68,12 +68,12 @@ namespace Solver {
             add1(r1,c1);
         } else if (dr > dc) {
             int rm = (r1 + r2) >> 1;
-            expand(r1, c1, rm, c2, depth+1);
-            expand(rm+1, c1, r2, c2, depth+1);
+            expand(r1, c1, rm, c2);
+            expand(rm+1, c1, r2, c2);
         } else {
             int cm = (c1 + c2) >> 1;
-            expand(r1, c1, r2, cm, depth+1);
-            expand(r1, cm+1, r2, c2, depth+1);
+            expand(r1, c1, r2, cm);
+            expand(r1, cm+1, r2, c2);
         }
     }
     int dijkstra(int sr, int sc, int er, int ec) {
@@ -92,7 +92,7 @@ namespace Solver {
             int rmax = min(u.r + rspan, R);
             int cmax = min(u.c + cspan, C);
             curr_cost = u.cost;
-            expand(rmin, cmin, rmax, cmax, 0);
+            expand(rmin, cmin, rmax, cmax);
         }
         return -1;
     }
