@@ -12,11 +12,8 @@ using namespace std;
 typedef unsigned int uint;
 typedef long long int ll;
 typedef vector<int> vi;
-typedef vector<vi> vvi;
 typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
-typedef pair<double, int> pdi;
-typedef pair<ll, int> lli;
 
 int main() {
   // setvbuf(stdout, NULL, _IONBF, 0);  //debugging
