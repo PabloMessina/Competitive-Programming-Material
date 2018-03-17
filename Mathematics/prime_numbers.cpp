@@ -17,12 +17,10 @@ vector<int> get_primes(int n) {
 	return primes;
 }
 
-
 //====================================
 // Prime Factorization of Factorials
 //====================================
 // source: http://mathforum.org/library/drmath/view/67291.html
-
 void factorial_prime_factorization(int x, umap<int,int>& counts) {
 	static vector<int> primes = get_primes(MAXN);
 

@@ -15,10 +15,13 @@ typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
 // -------------------------------
 
-struct BeautyGroup {
-    int b;
-    vector<int> fs;
-    vector<ll> ds;
+struct Triplet {
+    int b; int f; ll d;
+    bool operator<(const Triplet& o) const {
+        if (b < o.b) return true;
+        if (b == o.b and f > o.f) return true;
+        return false;
+    }
 };
 
 struct FenwickTree {
@@ -64,61 +67,29 @@ int main() {
         compact_f_map[f] = ++maxf;
     }
 
-    // re-collect points into 'beauty' groups, i.e.,
-    // groups such that all points within a group
-    // have the same beauty
-    vector<BeautyGroup*> bgroups;
-    BeautyGroup *bg;
-    int prevb = -1;
+    // collect all b,f,d in triplets and sort them
+    // lexicographically: increasing in b, decreasing in f
+    vector<Triplet> triplet_list(bf2d.size());
+    int i = 0;
     for (auto& it : bf2d) {
-        int b = it.first.first;
-        int f = it.first.second;
-        f = compact_f_map[f];
-        ll d = it.second;
-        if (prevb != b) { // new b value -> spawn new group
-            bg = new BeautyGroup();
-            bg->b = b;
-            bgroups.push_back(bg);
-            prevb = b;
-        }        
-        bg->fs.push_back(f);
-        bg->ds.push_back(d);
+        Triplet& t = triplet_list[i++];
+        t.b = it.first.first;
+        t.f = compact_f_map[it.first.second];
+        t.d = it.second;
     }
+    sort(triplet_list.begin(), triplet_list.end());
 
     // FT to keep track of maximum subsequence weight
     // seen so far such that it ends in value f,
     // for 1 <= f <= maxf
     FenwickTree ft(maxf);
 
-    // stack to keep track of pairs (f, max_weight)
-    // we use this stack to remember optimum values for the
-    // current BeautyGroup and perform updates to the Fenwick Tree
-    // afterwards
-    vector<pair<int,ll>> stack;
-    stack.reserve(maxf);
-    
-    // Iterate over beauty groups and calculate maximum subsequence
-    // weights using DP (dynamic programming): we reuse maximum
-    // subsequence weights from previous iterations, which are
-    // stored in the fenwick tree.
-    for (BeautyGroup* bg : bgroups) {
-        // iterate over points of the current beauty group
-        int n = bg->fs.size();        
-        rep(i,0,n-1) {
-            int f = bg->fs[i];
-            ll d = bg->ds[i];
-            // max subsequence weight ending in f at this position
-            // = (max subsequence weight ending in some value < f
-            // at some position to the left) + d
-            stack.emplace_back(f, ft.rmq(f-1)+d);
-        }
-        // update fenwick tree with the optimum values found
-        // for the current group (stored in the stack)
-        while (!stack.empty()) {
-            auto p = stack.back();
-            ft.update(p.first,p.second);
-            stack.pop_back();
-        }
+    // Find HIS for each point, from left to right,
+    // reusing stored HIS of previous points by quering
+    // the fenwick tree. Then update the fenwick tree
+    // with this new value.
+    for (Triplet& t : triplet_list) {
+        ft.update(t.f, ft.rmq(t.f-1) + t.d);
     }
 
     // print global maximum
