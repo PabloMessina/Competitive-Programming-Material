@@ -18,9 +18,7 @@ typedef tuple<int,int,int> iii;
 struct Triplet {
     int b; int f; ll d;
     bool operator<(const Triplet& o) const {
-        if (b < o.b) return true;
-        if (b == o.b and f > o.f) return true;
-        return false;
+        return (b < o.b) or (b == o.b and f > o.f);
     }
 };
 
