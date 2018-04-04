@@ -1,3 +1,7 @@
+// Note: This Cheat Sheet is by no means complete
+// If you want a thorough documentation of the Standard C++ Library
+// please refer to this link: http://www.cplusplus.com/reference/
+
 /* ========= */
 // Template  //
 /* ========= */
