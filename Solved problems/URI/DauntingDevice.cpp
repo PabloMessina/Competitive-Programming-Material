@@ -48,7 +48,7 @@ int main() {
         // iterators pointing to the first and last intervals
         // that intersect with the range [m1, m2]
         set<Interval>::iterator it_first, it_last;
-        // Interval instances to copy the Intervals pointed by the
+        // Interval instances to copy the Intervals pointed to by the
         // previous iterators
         Interval in_first, in_last;
 
@@ -67,12 +67,12 @@ int main() {
         in_first = *it_first; // copy Interval pointed to by "it_first"
 
         // -------------------------------------
-        // STEP 2) iterate from "it_first" until we find the last interval that intersects [m1, m2],
+        // STEP 2) iterate from "it_first" until we find the last interval that intersects with [m1, m2],
         // and remove the whole range from the intervals set
         for(auto it = it_first; it != intervals.end(); ++it) {
-            if ((*it).start <= m2) {                
+            aux = *it;
+            if (aux.start <= m2) {
                 it_last = it;
-                aux = *it;
                 // substract from corresponding color count
                 color_counts[aux.color] -= aux.end - aux.start + 1;
             } else {
