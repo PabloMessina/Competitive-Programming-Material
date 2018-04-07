@@ -23,7 +23,7 @@ ll DP[MAXN][MAXN];
 
 // Fraction: numerator / denominator
 struct Fraction {
-	ll num, den;
+    ll num, den;
 };
 bool operator<(const Fraction& f1, const Fraction& f2) {
     return f1.num * f2.den < f2.num * f1.den;
@@ -37,8 +37,8 @@ bool operator==(const Fraction& f1, const Fraction& f2) {
 
 // Line: slope (m), intercept(b) and domain [x_left, x_right]
 struct Line {
-	ll m, b;
-	Fraction x_left, x_right; // we use fractions to avoid float point precision errors
+    ll m, b;
+    Fraction x_left, x_right; // we use fractions to avoid float point precision errors
 };
 // stack of lines, used to keep track of the lower envelope of multiple
 // line equations
@@ -71,7 +71,7 @@ void addline(ll m, ll b) {
             else break;
         }
         Line& prevl = lines_stack[stack_size-1];
-		Fraction x = {prevl.b - b, m - prevl.m};
+        Fraction x = {prevl.b - b, m - prevl.m};
         Line& newl = lines_stack[stack_size];
         newl.m = m;
         newl.b = b;
@@ -79,62 +79,62 @@ void addline(ll m, ll b) {
         newl.x_right = x;
         prevl.x_left = x;
     }
-	stack_size++;
+    stack_size++;
 }
 
 // Find with binary search the correct line in the lines_stack
 // whose domain contains x, and return the line equation evaluated
 // at x.
 ll lower_envelope_eval(ll x) {
-	Fraction f = {x, 1};
-	int i = 0, j = stack_size-1;
-	while (i < j) {
-		int m = (i+j)>>1;
-		if (lines_stack[m].x_left <= f) {
-			j = m;
-		} else {
-			i = m+1;
-		}
-	}
-	Line& l = lines_stack[i];
-	return l.m * x + l.b;
+    Fraction f = {x, 1};
+    int i = 0, j = stack_size-1;
+    while (i < j) {
+        int m = (i+j)>>1;
+        if (lines_stack[m].x_left <= f) {
+            j = m;
+        } else {
+            i = m+1;
+        }
+    }
+    Line& l = lines_stack[i];
+    return l.m * x + l.b;
 }
 
 // cost of moving all heaps in range [i, j] to j
 ll cost(int i, int j) {
-	if (i > 0) return X[j] * (Wacc[j] - Wacc[i-1]) - (XWacc[j] - XWacc[i-1]);
-	return X[j] * Wacc[j] - XWacc[j];
+    if (i > 0) return X[j] * (Wacc[j] - Wacc[i-1]) - (XWacc[j] - XWacc[i-1]);
+    return X[j] * Wacc[j] - XWacc[j];
 }
 
 int main() {
-	while(scanf("%d%d", &N, &K) == 2) {
-		ll accw = 0, accxw = 0;
-		rep(i,0,N-1) {
-			ll x, w; scanf("%lld%lld", &x, &w);
-			X[i] = x;
-			accw = Wacc[i] = accw + w;
-			accxw = XWacc[i] = accxw + x * w;
-		}
+    while(scanf("%d%d", &N, &K) == 2) {
+        ll accw = 0, accxw = 0;
+        rep(i,0,N-1) {
+            ll x, w; scanf("%lld%lld", &x, &w);
+            X[i] = x;
+            accw = Wacc[i] = accw + w;
+            accxw = XWacc[i] = accxw + x * w;
+        }
         // base case of DP: k = 1
-		invrep(i,N-1,0) {
-			DP[1][i] = cost(i, N-1);
-		}
+        invrep(i,N-1,0) {
+            DP[1][i] = cost(i, N-1);
+        }
         // general cases
-		rep(k,2,K) {
-			stack_size = 0; // reset stack
-			invrep(i,N-k,0) {
+        rep(k,2,K) {
+            stack_size = 0; // reset stack
+            invrep(i,N-k,0) {
                 // slope and intercept
-				ll m = -X[i];
-				ll b = X[i] * Wacc[i] - XWacc[i] + DP[k-1][i+1];
-				addline(m, b);
+                ll m = -X[i];
+                ll b = X[i] * Wacc[i] - XWacc[i] + DP[k-1][i+1];
+                addline(m, b);
                 // find minimum value with binsearch over lower envelope
                 // of lines
-				DP[k][i] = i > 0 ?
+                DP[k][i] = i > 0 ?
                     lower_envelope_eval(Wacc[i-1]) + XWacc[i-1] :
                     lower_envelope_eval(0);
-			}
-		}
-		printf("%lld\n", DP[K][0]);
-	}
+            }
+        }
+        printf("%lld\n", DP[K][0]);
+    }
     return 0;
 }
