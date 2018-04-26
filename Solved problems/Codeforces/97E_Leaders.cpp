@@ -160,10 +160,11 @@ int main() {
             puts("Yes");
         // case 3) same connected component BEFORE and AFTER edge deletion.
         // This means both "a" and "b" lie in the same connected cluster of biconnected components
-        // WITHOUT odd cycles. This means all biconnected components are bipartites (only have
-        // even length cycles), so no matter how many cycles we use, the parity of any path will
-        // never change. Therefore, we can use the DFS bi-coloration to anwer:
-        // if different colores -> YES, otherwise -> NO
+        // WITHOUT odd cycles. This means all biconnected components in this cluster are bipartites
+        // (in other words, they only have even length cycles), so no matter how many cycles we use,
+        // the parity of any path will never change.
+        // Therefore, we can use the DFS bi-coloration to answer:
+        // different colors -> YES, otherwise -> NO
         else if (color[a] != color[b])
             puts("Yes");
         else
