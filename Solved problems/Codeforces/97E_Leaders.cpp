@@ -2,6 +2,7 @@
 // recommended reads:
 //https://www.hackerearth.com/practice/algorithms/graphs/articulation-points-and-bridges/tutorial/
 //https://www.hackerearth.com/practice/algorithms/graphs/biconnected-components/tutorial/
+//http://web.iitd.ac.in/~bspanda/biconnectedMTL776.pdf
 //http://codeforces.com/blog/entry/55824
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
