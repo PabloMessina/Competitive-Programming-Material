@@ -62,7 +62,6 @@ bool dfs_before(int u, int p, int d) {
         if (depth[v] == -1) { // exploring a new, unvisited child node
             edge_stack.emplace(u, v); // add edge to stack
             bool v_odd = dfs_before(v, u, d+1);
-            if (p == -1) { assert(low[v] >= d); }
             if (low[v] >= d) { // u is an AP for subtree rooted at v
                 // => remove the top of the stack until the edge (u,v) is encountered
                 // because the union of all these edges [(u,v) inclusive] is another
@@ -83,7 +82,6 @@ bool dfs_before(int u, int p, int d) {
                 low[u] = min(low[u], low[v]);
             }
         } else if (depth[v] < d) { // back edge to a proper ancestor
-            assert(d - depth[v] >= 2);
             // => we are in the presence of a loop
             edge_stack.emplace(u, v); // add edge to stack
             low[u] = min(low[u], depth[v]); // update u's low
