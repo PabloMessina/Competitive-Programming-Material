@@ -33,3 +33,5 @@
 *.synctex.gz
 *.synctex.gz(busy)
 *.pdfsync
+
+.vscode/
