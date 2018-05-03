@@ -151,9 +151,12 @@ int main() {
             puts("No");
         // case 2) same connected component BUT different components AFTER edge deletion:
         // => this means ALL paths from "a" to "b" MUST NECESSARILY go through at least
-        // 1 biconnected component with an odd cycle. It's not hard to see that if a
+        // 1 biconnected component with an odd cycle. It can be shown that if a
         // biconnected component has an odd cycle, then ALL edges within that component
-        // are part of an odd cycle (http://codeforces.com/blog/entry/49386?#comment-334100)
+        // are part of an odd cycle (IDEA of proof: using Menger's Theorem
+        // https://www.youtube.com/watch?v=dUAeleBMRCQ first prove that each NODE is part
+        // of an odd cycle, and once you prove that it's easy to prove that each EDGE is part
+        // of an odd cycle)
         // Hence, we can always modify the PARITY of any path
         // that goes through any such component as we wish. So the answer is YES.
         else if (comp_after[a] != comp_after[b])
