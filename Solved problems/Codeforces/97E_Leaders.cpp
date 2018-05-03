@@ -1,5 +1,6 @@
 // tags: DFS, articulation points, biconnected components, bicoloration
-// recommended reads:
+// recommended links:
+//https://www.youtube.com/watch?v=jFZsDDB0-vo
 //https://www.hackerearth.com/practice/algorithms/graphs/articulation-points-and-bridges/tutorial/
 //https://www.hackerearth.com/practice/algorithms/graphs/biconnected-components/tutorial/
 //http://web.iitd.ac.in/~bspanda/biconnectedMTL776.pdf
@@ -95,7 +96,7 @@ bool dfs_before(int u, int p, int d) {
         } else { // forward-edge to an already visited descendant
             // => do nothing, because this edge was already considered as a
             // back-edge from v -> u
-        }        
+        }
     }
     return u_odd;
 }
