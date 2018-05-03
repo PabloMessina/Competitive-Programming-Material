@@ -24,7 +24,7 @@ void print_and_remove_bicomp(int u, int v) {
 void dfs(int u, int p, int d) { // (node, parent, depth)
     static num_root_children = 0;    
     depth[u] = d;
-    low[u] = d; // u at least can reach itself (ignoring u-v edge)
+    low[u] = d; // u at least can reach itself (ignoring u-p edge)
     for(int v : g[u]) {
         if (v == p) continue; // direct edge to parent -> ignore
         if (depth[v] == -1) { // exploring a new, unvisited child node            
