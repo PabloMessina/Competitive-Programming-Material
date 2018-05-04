@@ -60,7 +60,7 @@ namespace LCA1 {
                 int i1 = rmq[i][j-1];
                 // i + 2 ^ (j-1) ... i + 2 ^ j  - 1
                 int i2 = rmq[i + (1 << (j-1))][j-1];
-                // choose index with minimum level
+                // choose index with minimum depth
                 rmq[i][j] = D[i1] < D[i2] ? i1 : i2;
             }
         }
