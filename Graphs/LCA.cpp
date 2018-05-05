@@ -7,22 +7,120 @@ typedef vector<int> vi;
 #define rep(i,a,b) for (int i=a; i<=b; ++i)
 #define invrep(i,b,a) for (int i=b; i>=a; --i)
 
-// -----------------------------------
-// METHOD 1: SPARSE TABLE - EULER TOUR
-// -----------------------------------
-// construction: O(2|V| log 2|V|) = O(|V| log |V|)
-// query: O(1)  
-// cannot be updated :(
+// General comments:
+// * Both of these methods assume that we are working with a connected
+//   graph 'g' of 'n' nodes, and that nodes are indexed from 0 to n-1.
+//   In case you have a forest of trees, a simple trick is to create a fake
+//   root and connect all the trees to it (make sure to re-index all your nodes)
+// * 'g' need not be a 'tree', DFS fill implictly find a tree for you
+//   in case you don't care of the specific tree (e.g. if cycles are not important)
+
+// ------------------------------------------------------------
+// METHOD 1: SPARSE TABLE - BINARY LIFTING (aka JUMP POINTERS)
+// ------------------------------------------------------------
+// construction: O(|V| log |V|)
+// query: O(log|V|)
+// ** advantages:
+//   - it's possible to append new leaf nodes to the tree
+//   - the lca query can be modified to compute querys over the path between 2 nodes
 
 namespace LCA1 {
+    const int MAXN = 1000000;
+    const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN)-1;
+
+    int P[MAXN][MAXLOG+1]; // level ancestor table
+    int D[MAXN]; // depths
+    int n; // num of nodes
+    vector<vi> *g; // pointer to graph
+    int root; // root of the tree
+
+    // get highest exponent e such that 2^e <= x
+    inline int log2(int x) { return sizeof(x) * 8 - __builtin_clz(x) - 1; }
+
+    // dfs to record direct parents and depths
+    void dfs(int u, int p, int depth) {
+        P[u][0] = p;
+        D[u] = depth;        
+        for (int v : (*g)[u]) {
+            if (D[v] == -1) {
+                dfs(v, u, depth + 1);
+            }
+        }
+    }
+
+    void init(vector<vi> &_g, int _root) {
+        g = &_g;
+        root = _root;
+        n = _g.size();
+        memset(P, -1, sizeof(int) * n);
+        memset(D, -1, sizeof(int) * n);        
+        dfs(root, -1, 0);
+        rep(j, 1, MAXLOG) {
+            rep (i, 0, n-1) {
+                // i's 2^j th ancestor is
+                // i's 2^(j-1) th ancestor's 2^(j-1) th ancestor
+                int p = P[i][j-1];
+                P[i][j] = (p == -1 ? -1 : P[p][j-1]);
+            }
+        }
+    }
+
+    int find_lca(int u, int v) {
+        if (D[u] < D[v]) swap(u, v);
+        // raise lowest to same level
+        int diff = D[u] - D[v];
+        while (diff) {
+            int j = log2(diff);
+            u = P[u][j];
+            diff -= (1 << j);
+        }
+        if (u == v) return u; // same node, we are done
+        // raise u and v to their highest ancestors below the LCA
+        invrep (j, MAXLOG, 0) {
+            // greedily takes the biggest 2^j jump possible as long as 
+            // u and v still remain BELOW the LCA
+            if (P[u][j] != P[v][j]) {
+                u = P[u][j], v = P[v][j];
+            }
+        }
+        // the direct parent of u (or v) is lca(u,v)
+        return P[u][0];
+    }
+
+    int dist(int u, int v) {
+        return D[u] + D[v] - 2 * D[find_lca(u,v)];
+    }
+
+    int add_child(int u, int v) {
+        // add to graph
+        (*g)[u].push_back(v);
+        // update depth
+        D[v] = D[u] + 1;
+        // update ancestors
+        P[v][0] = u;
+        rep (j, 1, MAXLOG){
+            P[v][j] = P[P[v][j-1]][j-1];
+            if (P[v][j] == -1) break;
+        }
+    }
+}
+
+// ------------------------------------------
+// METHOD 2: SPARSE TABLE - EULER TOUR + RMQ
+// ------------------------------------------
+// construction: O(2|V| log 2|V|) = O(|V| log |V|)
+// query: O(1) (** assuming that __builtin_clz is mapped to an
+//               efficient processor instruction)
+
+namespace LCA2 {
     const int MAXN = 10000;
-    const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN);
+    const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN)-1;
 
     int E[2 * MAXN]; // records sequence of visited nodes
     int D[2 * MAXN]; // records depth of each visited node
     int H[MAXN]; // records index of first ocurrence of node u in E
     int idx; // tracks node ocurrences
-    int rmq[2 * MAXN][MAXLOG]; // memo table for range minimun query
+    int rmq[2 * MAXN][MAXLOG+1]; // memo table for range minimun query
     vector<vi> *g; // pointer to graph
     int n; // number of nodes
     int root; // root of the tree
@@ -82,93 +180,29 @@ namespace LCA1 {
         // make sure you use H to retrieve the indexes of u and v
         // within the Euler Tour sequence before using D
         return D[H[u]] + D[H[v]] - 2 * D[H[find_lca(u,v)]];
-    }    
+    }
 }
 
-// ---------------------------------------
-// METHOD 2: SPARSE TABLE - JUMP POINTERS
-// ----------------------------------------
-// construction: O(|V| log |V|)
-// query: O(log|V|)
-// can be updated: tree can receive new nodes :)
-
-namespace LCA2 {
-    const int MAXN = 1000000;
-    const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN);
-
-    int P[MAXN][MAXLOG+1]; // level ancestor table
-    int D[MAXN]; // depths
-    int n; // num of nodes
-    vector<vi> *g; // pointer to graph
-    int root; // root of the tree
-
-    // get highest exponent e such that 2^e <= x
-    inline int log2(int x) { return sizeof(x) * 8 - __builtin_clz(x) - 1; }
-
-    // dfs to record direct parents and depths
-    void dfs(int u, int p, int depth) {
-        P[u][0] = p;
-        D[u] = depth;        
-        for (int v : (*g)[u]) {
-            if (D[v] == -1) {
-                dfs(v, u, depth + 1);
-            }
-        }
+// -----------------
+// EXAMPLE OF USAGE
+// -----------------
+int main() {
+    // build graph
+    int n, m;
+    scanf("%d", &n, &m);
+    vector<vi> g(n);
+    while (m--) {
+        int u, v; scanf("%d%d", &u, &v);
+        g[u].push_back(v);
+        g[v].push_back(u);
     }
-
-    void init(vector<vi> &_g, int _root) {
-        g = &_g;
-        root = _root;
-        n = _g.size();
-        memset(P, -1, sizeof(int) * n);
-        memset(D, -1, sizeof(int) * n);        
-        dfs(root, -1, 0);
-        rep(j, 1, MAXLOG) {
-            rep (i, 0, n-1) {
-                // i's 2^j th ancestor is
-                // i's 2^(j-1) th ancestor's 2^(j-1) th ancestor
-                int p = P[i][j-1];
-                if (p != -1) P[i][j] = P[p][j-1];
-            }
-        }
-    }
-
-    int find_lca(int u, int v) {
-        if (D[u] < D[v]) swap(u, v);
-        // raise lowest to same level
-        int diff = D[u] - D[v];
-        while (diff) {
-            int j = log2(diff);
-            u = P[u][j];
-            diff -= (1 << j);
-        }
-        if (u == v) return u; // same node, we are done
-        // raise u and v to their highest ancestors below the LCA
-        invrep (j, MAXLOG, 0) {
-            // if there are 2^j th ancestors for u and v and they are not the same,
-            // then they can be raised and still be below the LCA
-            if (P[u][j] != -1 && P[u][j] != P[v][j]) {
-                u = P[u][j], v = P[v][j];
-            }
-        }
-        // the direct parent of u (or v) is lca(u,v)
-        return P[u][0];
-    }
-
-    int dist(int u, int v) {
-        return D[u] + D[v] - 2 * D[find_lca(u,v)];
-    }
-
-    int add_child(int u, int v) {
-        // add to graph
-        (*g)[u].push_back(v);
-        // update depth
-        D[v] = D[u] + 1;
-        // update ancestors
-        P[v][0] = u;
-        rep (j, 1, MAXLOG){
-            P[v][j] = P[P[v][j-1]][j-1];
-            if (P[v][j] == -1) break;
-        }
+    // init LCA
+    LCA1::init(g, 0);
+    // answer queries
+    int q; scanf("%d", &q);
+    while (q--) {
+        int u, v; scanf("%d%d", &u, &v);
+        printf("LCA(%d,%d) = %d\n", u, v, LCA1::find_lca(u,v));
+        printf("dist(%d,%d) = %d\n", u, v, LCA1::dist(u,v));
     }
 }
