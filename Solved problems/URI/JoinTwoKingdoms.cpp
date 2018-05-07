@@ -66,7 +66,7 @@ void update_maxdist(vector<vi>& g, int* maxdist, int s) {
 }
 
 // set the maxdist array for tree 'g' and return its diameter
-int set_maxdist(vector<vi>& g, int* maxdist) {
+int set_maxdist_and_get_diamater(vector<vi>& g, int* maxdist) {
 	// 1) find the end nodes of a diameter of 'g'
 	int e1 = farthest_from(g, 0);
 	int e2 = farthest_from(g, e1);
@@ -99,8 +99,8 @@ int main() {
 			g2[v].push_back(u);
 		}
 		// set maxdist and find diameter for each graph
-		int diam1 = set_maxdist(g1, maxdist1);
-		int diam2 = set_maxdist(g2, maxdist2);
+		int diam1 = set_maxdist_and_get_diamater(g1, maxdist1);
+		int diam2 = set_maxdist_and_get_diamater(g2, maxdist2);
 		// remember the maximum between both diameters
 		int max_diameter = max(diam1, diam2);
 		// sort maxdist2 and fill accsum2
