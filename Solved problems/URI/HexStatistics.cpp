@@ -73,7 +73,6 @@ ll inline mod_sum(ll a, ll b) {
     return ((a % MOD) + (b % MOD)) % MOD;
 }
 
-
 int main() {
     scanf("%x\n", &N);
     rep(i,1,N) {

@@ -1,15 +1,16 @@
-// Find the index of the first item that satisfies a predicate.
-// If no such index exists, retuns -1
-// Pseudo-code:
+// Find the index of the first item that satisfies a predicate
+// over a range [i,j), i.e., from i to j-1
+// If no such index exists, j is returned
 function binsearch(array, i, j) {
-  while (i < j) {
-    m = (i+j)/2
-    if (predicate(array[m]))
-      j = m
-    else
-      i = m + 1
-  }
-  return (predicate(array[i]) ? i : -1)
+    assert(i < j) // since the range is [i,j), then j must be > i
+    while (i < j) {
+        m = (i+j) >> 1;
+        if (predicate(array[m]))
+            j = m
+        else
+            i = m + 1
+    }
+    return i; // notice that i == j if the predicate is false for the whole range
 }
 
 // -----------------------------
@@ -17,14 +18,14 @@ function binsearch(array, i, j) {
 // predicate(a, i, key) = (a[i] >= key)
 // i.e. "first element >= key"
 int lowerbound(vector<int> a, int key, int i, int j) {
-  while (i < j) {
-    int m = (i + j) / 2;
-    if (a[m] >= key)
-      j = m;
-    else
-      i = m + 1;
-  }
-  return a[i] >= key ? i : -1;
+    while (i < j) {
+        int m = (i + j) / 2;
+        if (a[m] >= key)
+            j = m;
+        else
+            i = m + 1;
+    }
+    return i;
 }
 
 // -----------------------------
@@ -32,14 +33,14 @@ int lowerbound(vector<int> a, int key, int i, int j) {
 // predicate(a, i, key) = (a[i] > key)
 // i.e. "first element > key"
 int upperbound(vector<int> a, int key, int i, int j) {
-  while (i < j) {
-    int m = (i + j) / 2;
-    if (a[m] > key)
-      j = m;
-    else
-      i = m + 1;
-  }
-  return a[i] > key ? i : -1;
+    while (i < j) {
+        int m = (i + j) / 2;
+        if (a[m] > key)
+            j = m;
+        else
+            i = m + 1;
+    }
+    return i
 }
 
 /* ============================= */
@@ -55,19 +56,19 @@ int upperbound(vector<int> a, int key, int i, int j) {
 #include <vector>       // std::vector
 
 int main () {
-  int myints[] = {10,20,30,30,20,10,10,20};
-  std::vector<int> v(myints,myints+8);           // 10 20 30 30 20 10 10 20
+    int myints[] = {10,20,30,30,20,10,10,20};
+    std::vector<int> v(myints,myints+8);           // 10 20 30 30 20 10 10 20
 
-  std::sort (v.begin(), v.end());                // 10 10 10 20 20 20 30 30
+    std::sort (v.begin(), v.end());                // 10 10 10 20 20 20 30 30
 
-  std::vector<int>::iterator low,up;
-  low=std::lower_bound (v.begin(), v.end(), 20); //          ^
-  up= std::upper_bound (v.begin(), v.end(), 20); //                   ^
+    std::vector<int>::iterator low,up;
+    low=std::lower_bound (v.begin(), v.end(), 20); //          ^
+    up= std::upper_bound (v.begin(), v.end(), 20); //                   ^
 
-  std::cout << "lower_bound at position " << (low- v.begin()) << '\n';
-  std::cout << "upper_bound at position " << (up - v.begin()) << '\n';
+    std::cout << "lower_bound at position " << (low- v.begin()) << '\n';
+    std::cout << "upper_bound at position " << (up - v.begin()) << '\n';
 
-  return 0;
+    return 0;
 }
 
 // ------------------------------------------------
@@ -94,25 +95,25 @@ bool found = std::binary_search (v.begin(), v.end(), 6, myfunction)
 /* ======================= */
 
 int min_search(int i, int j) {
-  while (i < j) {
-    int m = (i+j)/2;
-    int slope = eval(m+1) - eval(m);
-    if (slope >= 0)
-      j = m;
-    else
-      i = m+1;
-  }
-  return eval(i);
+    while (i < j) {
+        int m = (i+j)/2;
+        int slope = eval(m+1) - eval(m);
+        if (slope >= 0)
+            j = m;
+        else
+            i = m+1;
+    }
+    return i;
 }
 
 int max_search(int i, int j) {
-  while (i < j) {
-    int m = (i+j)/2;
-    int slope = eval(m+1) - eval(m);
-    if (slope <= 0)
-      j = m;
-    else
-      i = m+1;
-  }
-  return eval(i);
+    while (i < j) {
+        int m = (i+j)/2;
+        int slope = eval(m+1) - eval(m);
+        if (slope <= 0)
+            j = m;
+        else
+            i = m+1;
+    }
+    return i;
 }
