@@ -52,7 +52,6 @@ namespace LCA1 {
         g = &_g;
         root = _root;
         n = _g.size();
-        memset(P, -1, sizeof(int) * n);
         memset(D, -1, sizeof(int) * n);        
         dfs(root, -1, 0);
         rep(j, 1, MAXLOG) {

@@ -43,19 +43,19 @@ Doing this for G groups, the total computation cost is O(G*L*log(L))
 
 */
 void fill_row(int g, int l1, int l2, int k1, int k2) {
-  if (l1 > l2) return; // ensure valid range
-  int lm = (l1+l2)/2; // solve middle case
-  int kmin = max(g-1, k1);
-  int kmax = min(lm-1, k2);
-  int best_k = -1;  
-  ll mincost = LLONG_MAX;
-  rep(k,kmin,kmax) {
-    ll tmp = DP[g-1][k] + group_cost(k, lm-1);    
-    if (mincost > tmp) mincost = tmp, best_k = k;    
-  }
-  DP[g][lm] = mincost;
-  fill_row(g, l1, lm-1, k1, best_k); // solve left cases
-  fill_row(g, lm+1, l2, best_k, k2); // solve right cases
+    if (l1 > l2) return; // ensure valid range
+    int lm = (l1+l2)/2; // solve middle case
+    int kmin = max(g-1, k1);
+    int kmax = min(lm-1, k2);
+    int best_k = -1;
+    ll mincost = LLONG_MAX;
+    rep(k,kmin,kmax) {
+        ll tmp = DP[g-1][k] + group_cost(k, lm-1);    
+        if (mincost > tmp) mincost = tmp, best_k = k;    
+    }
+    DP[g][lm] = mincost;
+    fill_row(g, l1, lm-1, k1, best_k); // solve left cases
+    fill_row(g, lm+1, l2, best_k, k2); // solve right cases
 }
 
 void fill_dp() {

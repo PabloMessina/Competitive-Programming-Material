@@ -1,13 +1,13 @@
 // ==========================
 // Find Tree's Diameter Ends
 // ==========================
-int dist[MAXN];
-vector<vi> g;
+const int MAXN = 10000;
 
-int farthest_from(int s) {
+int farthest_from(vector<vi>& g, int s) {
+    static int dist[MAXN];
     int farthest = s;
     int maxd = 0;
-    memset(dist, -1, sizeof(dist[0]) * n);
+    memset(dist, -1, sizeof(dist[0]) * g.size());
     queue<int> q; q.push(s);
     dist[s] = 0;
     while (!q.empty()) {
@@ -26,7 +26,7 @@ int farthest_from(int s) {
     return farthest;
 }
 
-void find_diameter(int& e1, int& e2) {
-    e1 = farthest_from(0);
-    e2 = farthest_from(e1);
+void find_diameter(vector<vi>& g, int& e1, int& e2) {
+    e1 = farthest_from(g, 0);
+    e2 = farthest_from(g, e1);
 }
