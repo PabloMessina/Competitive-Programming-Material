@@ -27,11 +27,12 @@ namespace Prim { // minimun spanning tree
         }
     };
     bool visited[MAXN] = {0};
-    int build_mst() {
+    int find_mst() {
         int total_cost = 0;
         priority_queue<Edge> q;
         visited[0] = true;
         for (ii& p : g[0]) q.push({0, p.first, p.second});
+        int count = 1;
         while (!q.empty()) {
             Edge edge = q.top(); q.pop();
             if (visited[edge.v]) continue;
@@ -42,17 +43,18 @@ namespace Prim { // minimun spanning tree
             total_cost += cost;
             mst[u].emplace_back(v, cost);
             mst[v].emplace_back(u, cost);
+            if (++count == N) break;
             for (ii p : g[v]) {
                 if (visited[p.first]) continue;
                 q.push({v, p.first, p.second});                
-            }
+            }            
         }
         return total_cost;
     }
 }
 
-namespace LCA { // lowest common ancestor, power of 2 jumps method.
-// the code is modified to remember the maximum cost edge from each node
+namespace LCA { // lowest common ancestor, binary lifting (power of 2 jumps) method.
+// The code is modified to remember the maximum cost edge from each node
 // to each of its power of 2 ancestors
     const int MAXLOG = 31 - __builtin_clz(MAXN);
     int P[MAXN][MAXLOG+1];
@@ -140,7 +142,7 @@ int main() {
         save_cost(a, b, c);
     }
     // build minimum spanning tree and get its total cost
-    int mincost = Prim::build_mst();
+    int mstcost = Prim::find_mst();
     // init LCA sparse tables
     LCA::init();
     // answer queries
@@ -149,7 +151,7 @@ int main() {
         int u, v; scanf("%d%d", &u, &v); --u, --v;
         int pathmax = LCA::find_path_maxcost(u, v);
         int edgecost = get_cost(u,v);
-        printf("%d\n", mincost + edgecost - pathmax);
+        printf("%d\n", mstcost + edgecost - pathmax);
     }
     return 0;
 }
