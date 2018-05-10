@@ -66,7 +66,8 @@ namespace Kruskal {
 struct Edge {
     int u, v, cost;
     bool operator<(const Edge& o) const {
-        return cost > o.cost;
+        return cost > o.cost; // we use '>' instead of '<' so that
+        // priority_queue<Edge> works as a minheap
     }
 };
 namespace Prim {
