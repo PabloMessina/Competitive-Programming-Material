@@ -121,20 +121,11 @@ namespace LCA { // lowest common ancestor, binary lifting (power of 2 jumps) met
     }
 }
 
-// edge to cost map
-map<ii,int> edge2cost;
-void save_cost(int a, int b, int c) {
-    edge2cost[ii(a,b)] = c;
-}
-int get_cost(int a, int b) {
-    return edge2cost[ii(a,b)];
-}
-
 int main() {
     // read and build graph
     int m;
     scanf("%d%d", &N, &m);
-    vector<ii> edges;
+    vector<iii> edges;
     edges.reserve(m);
     while (m--) {
         int a, b, c;
@@ -142,18 +133,17 @@ int main() {
         --a, --b;
         g[a].emplace_back(b, c);
         g[b].emplace_back(a, c);
-        edges.emplace_back(a, b);
-        save_cost(a, b, c);
+        edges.emplace_back(a, b, c);
     }
     // build minimum spanning tree and get its total cost
     ll mstcost = Prim::find_mst();
     // init LCA sparse tables
     LCA::init();
     // print answer for each edge
-    for (ii& e : edges) {
-        int u = e.first, v = e.second;
+    for (auto& e : edges) {
+        int u, v, edgecost;
+        tie(u, v, edgecost) = e;
         int pathmax = LCA::find_path_maxcost(u, v);
-        int edgecost = get_cost(u,v);
         printf("%lld\n", mstcost + edgecost - pathmax);
     }
     return 0;

@@ -1,4 +1,4 @@
-// tags: LCA, LA, level ancestors, jump pointers, 
+// tags: LCA, LA, level ancestors, jump pointers,
 //       tree diameter, BFS, DFS, sparse tables
 
 #include <cstdio>
