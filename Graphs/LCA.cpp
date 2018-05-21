@@ -71,11 +71,9 @@ namespace LCA1 {
         return u;
     }
 
-    int find_lca(int u, int v) {
-        if (D[u] < D[v]) swap(u, v);
-        // raise lowest to same level
-        int diff = D[u] - D[v];
-        u = raise(u, diff);
+    int find_lca(int u, int v) {        
+        if (D[u] < D[v]) swap(u, v);        
+        u = raise(u, D[u] - D[v]); // raise lowest to same level
         if (u == v) return u; // same node, we are done
         // raise u and v to their highest ancestors below the LCA
         invrep (j, MAXLOG, 0) {

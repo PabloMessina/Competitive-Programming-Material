@@ -44,14 +44,12 @@ namespace LCA {
         return u;
     }
     int get_lca(int u, int v) {        
-        if (D[u] < D[v]) swap(u, v);        
-        int diff = D[u] - D[v];
-        u = raise(u, diff);
+        if (D[u] < D[v]) swap(u, v);
+        u = raise(u, D[u] - D[v]);
         if (u == v) return u;
         invrep(i, MAXLOG, 0) {
             if (P[u][i] != P[v][i]) {
-                u = P[u][i];
-                v = P[v][i];
+                u = P[u][i], v = P[v][i];
             }
         }
         return P[u][0];
