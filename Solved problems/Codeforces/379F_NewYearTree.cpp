@@ -1,4 +1,4 @@
-// tags: LCA, LA (level acenstor), jump pointers, binary lifting, tree diameter, sparse tables
+// tags: LCA, jump pointers, binary lifting, tree diameter, sparse tables
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
