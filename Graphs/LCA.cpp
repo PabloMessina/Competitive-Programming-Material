@@ -64,15 +64,17 @@ namespace LCA1 {
         }
     }
 
+    int raise(int u, int dist) {
+        // move node u "dist" steps up towards the root
+        for (int i = 0; dist; i++, dist>>=1) if (dist&1) u = P[u][i];
+        return u;
+    }
+
     int find_lca(int u, int v) {
         if (D[u] < D[v]) swap(u, v);
         // raise lowest to same level
         int diff = D[u] - D[v];
-        while (diff) {
-            int j = log2(diff);
-            u = P[u][j];
-            diff -= (1 << j);
-        }
+        u = raise(u, diff);
         if (u == v) return u; // same node, we are done
         // raise u and v to their highest ancestors below the LCA
         invrep (j, MAXLOG, 0) {
@@ -90,16 +92,17 @@ namespace LCA1 {
         return D[u] + D[v] - 2 * D[find_lca(u,v)];
     }
 
-    int add_child(int u, int v) {
+    int add_child(int p, int u) {
         // add to graph
-        (*g)[u].push_back(v);
+        (*g)[p].push_back(u);
         // update depth
-        D[v] = D[u] + 1;
+        D[u] = D[p] + 1;
         // update ancestors
-        P[v][0] = u;
+        P[u][0] = p;
         rep (j, 1, MAXLOG){
-            P[v][j] = P[P[v][j-1]][j-1];
-            if (P[v][j] == -1) break;
+            p = P[p][j-1];
+            if (p == -1) break;
+            P[u][j] = p;
         }
     }
 }
