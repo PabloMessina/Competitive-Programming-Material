@@ -1,3 +1,4 @@
+// tags: LCA, LA, level ancestor, jump pointers, binary lifting, tree diameter
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
