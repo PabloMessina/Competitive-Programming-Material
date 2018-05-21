@@ -26,7 +26,8 @@ typedef vector<int> vi;
 
 namespace LCA1 {
     const int MAXN = 1000000;
-    const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN)-1;
+    const int MAXLOG = 31 - __builtin_clz(MAXN);
+    // const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN)-1;
 
     int P[MAXN][MAXLOG+1]; // level ancestor table
     int D[MAXN]; // depths
@@ -116,7 +117,8 @@ namespace LCA1 {
 
 namespace LCA2 {
     const int MAXN = 10000;
-    const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN)-1;
+    const int MAXLOG = 31 - __builtin_clz(MAXN);
+    // const int MAXLOG = sizeof(int) * 8 - __builtin_clz(MAXN)-1;
 
     int E[2 * MAXN]; // records sequence of visited nodes
     int D[2 * MAXN]; // records depth of each visited node
