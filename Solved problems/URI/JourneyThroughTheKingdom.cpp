@@ -30,7 +30,7 @@ namespace Solver {
         }
     };
 
-    int ft[MAXR+1][MAXR+1];
+    int ft[MAXR+1][MAXR+1]; // fenwick tree 2D
     priority_queue<Cell> q;
     int curr_cost;
 
@@ -59,22 +59,26 @@ namespace Solver {
     }
     void expand(int r1, int c1, int r2, int c2) {        
         int vis = count(r1,c1,r2,c2);
-        int dr = r2 - r1;
-        int dc = c2 - c1;
-        int tot = (dr+1) * (dc+1);
-        if (vis == tot) return;
-        if (dr == 0 and dc == 0) {
-            q.emplace(r1,c1,curr_cost+costs[r1][c1]);
-            add1(r1,c1);
-        } else if (dr > dc) {
-            int rm = (r1 + r2) >> 1;
-            expand(r1, c1, rm, c2);
-            expand(rm+1, c1, r2, c2);
+        if (vis == 0) {
+            rep(r,r1,r2) rep(c,c1,c2) {
+                q.emplace(r,c,curr_cost+costs[r][c]);
+                add1(r,c);
+            }
         } else {
-            int cm = (c1 + c2) >> 1;
-            expand(r1, c1, r2, cm);
-            expand(r1, cm+1, r2, c2);
-        }
+            int dr = r2 - r1 + 1;
+            int dc = c2 - c1 + 1;
+            int tot = dr * dc;
+            if (vis == tot) return;
+            if (dr > dc) {
+                int rm = (r1 + r2) >> 1;
+                expand(r1, c1, rm, c2);
+                expand(rm+1, c1, r2, c2);
+            } else {
+                int cm = (c1 + c2) >> 1;
+                expand(r1, c1, r2, cm);
+                expand(r1, cm+1, r2, c2);
+            }
+        }        
     }
     int dijkstra(int sr, int sc, int er, int ec) {
         if (sr == er and sc == ec) return 0;
