@@ -1,4 +1,4 @@
-// tags: Dijkstra modified, Fenwick Tree 2D, Divide & Conquer
+// tags: Dijkstra modified, Fenwick Tree 2D, Divide & Conquer / Quad Tree
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines

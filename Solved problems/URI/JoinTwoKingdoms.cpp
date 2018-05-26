@@ -26,7 +26,7 @@ ll accsum2[MAXN]; // to accumulate maxdist2 (explained later on)
 int farthest_from(vector<vi>& g, int s) {
 	static int dist[MAXN];
 	memset(dist, -1, sizeof(int) * g.size());
-	int f = s, d = 0;
+	int f = s;
 	queue<int> q;
 	q.push(s);
 	dist[s] = 0;
@@ -35,11 +35,8 @@ int farthest_from(vector<vi>& g, int s) {
 		for (int v : g[u]) {
 			if (dist[v] == -1) {
 				q.push(v);
-				int tmp = dist[v] = dist[u] + 1;
-				if (tmp > d) {
-					d = tmp;
-					f = v;
-				}
+				dist[v] = dist[u] + 1;
+				if (dist[v] > dist[f]) f = v;
 			}
 		}
 	}
