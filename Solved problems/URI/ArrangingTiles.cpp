@@ -18,7 +18,7 @@ typedef tuple<int,int,int> iii;
 int N;
 const int MAXK = 10000;
 const int MAXN = 14;
-struct Point {double x, y; };
+struct Point { double x, y; };
 Point pts[MAXK];
 
 struct Tile {

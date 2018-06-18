@@ -7,7 +7,7 @@
 using namespace std;
 typedef long long int ll;
 
-class Dinic {
+struct Dinic {
     struct edge {
         int to, rev;
         ll f, cap;
@@ -53,8 +53,7 @@ class Dinic {
         }
         return 0;
     }
- 
-public:
+
     Dinic(int n) {
         this->n = n;
         g.resize(n);
