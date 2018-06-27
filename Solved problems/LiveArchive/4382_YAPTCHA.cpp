@@ -1,3 +1,4 @@
+// tags: math, primes, sieve of eratosthenes
 #include <cstdio>
 #include <cmath>
 #include <vector>
