@@ -1,3 +1,5 @@
+// tags: math, sieve of eratosthenes, binary modular exponentiation,
+// prime factorization of factorials
 #include <cstdio>
 #include <cstring>
 #include <vector>

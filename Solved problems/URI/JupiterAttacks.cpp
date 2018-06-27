@@ -87,19 +87,13 @@ struct ST {
 };
 
 int main() {
-
     while(true) {
-
         scanf("%lld %lld %d %d\n", &B, &P, &L, &N);
-
         if (B == 0 and P == 0 and L == 0 and N == 0)
-            break;
-    
+            break;    
         B_power[0] = 1;
-        rep(i, 1, L-1) B_power[i] = (B * B_power[i-1]) % P;
-    
-        ST st(L);
-    
+        rep(i, 1, L-1) B_power[i] = (B * B_power[i-1]) % P;    
+        ST st(L);    
         while(N--) {
             if (getchar() == 'E') {
                 int i, v; scanf("%d%d\n", &i, &v); --i;
@@ -111,6 +105,5 @@ int main() {
         }
         puts("-");
     }
-
     return 0;
 }
