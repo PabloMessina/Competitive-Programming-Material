@@ -20,8 +20,8 @@ typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
 
 int main() {
-  // setvbuf(stdout, NULL, _IONBF, 0);  //debugging
-  return 0;
+    // setvbuf(stdout, NULL, _IONBF, 0);  //debugging
+    return 0;
 }
 
 /* ================== */
@@ -53,10 +53,10 @@ if(output == buffer) {} // succesful read
 if(output == NULL) {} // EOF found without previous chars found
 //example
 while(gets(buffer) != NULL) {
-  puts(buffer);
-  if(feof(stdin)) {
-    break;
-  }
+    puts(buffer);
+    if(feof(stdin)) {
+        break;
+    }
 }
 
 // read single char
@@ -103,9 +103,9 @@ printf ("[%s] is a string %d chars long\n",buffer,n);
 /* Peek last char of stdin */
 /* ======================= */
 bool peekAndCheck(char c) {
-  char c2 = getchar();
-  ungetc(c2, stdin); // return char to stdin
-  return c == c2;
+    char c2 = getchar();
+    ungetc(c2, stdin); // return char to stdin
+    return c == c2;
 }
 
 /* ================ */
@@ -147,14 +147,14 @@ long int strtol (const char* str, char** endptr, int base);
 // it only works skipping whitespaces, so make sure your numbers
 // are surrounded by whitespaces only
 // Example:
-  char szNumbers[] = "2001 60c0c0 -1101110100110100100000 0x6fffff";
-  char * pEnd;
-  long int li1, li2, li3, li4;
-  li1 = strtol (szNumbers,&pEnd,10);
-  li2 = strtol (pEnd,&pEnd,16);
-  li3 = strtol (pEnd,&pEnd,2);
-  li4 = strtol (pEnd,NULL,0);
-  printf ("The decimal equivalents are: %ld, %ld, %ld and %ld.\n", li1, li2, li3, li4);
+    char szNumbers[] = "2001 60c0c0 -1101110100110100100000 0x6fffff";
+    char * pEnd;
+    long int li1, li2, li3, li4;
+    li1 = strtol (szNumbers,&pEnd,10);
+    li2 = strtol (pEnd,&pEnd,16);
+    li3 = strtol (pEnd,&pEnd,2);
+    li4 = strtol (pEnd,NULL,0);
+    printf ("The decimal equivalents are: %ld, %ld, %ld and %ld.\n", li1, li2, li3, li4);
 // option #2:
 long int atol ( const char * str );
 // option #3:
@@ -192,10 +192,10 @@ while (getline(ss, tok, ' ')) printf("tok = %s\n", tok.c_str());
 
 // split a string by a single char delimiter
 void split(const string &s, char delim, vector<string> &elems) {
-  stringstream ss(s);
-  string item;
-  while (getline(ss, item, delim))
-    elems.push_back(item);
+    stringstream ss(s);
+    string item;
+    while (getline(ss, item, delim))
+        elems.push_back(item);
 }
 
 // find index of string or char within string
@@ -218,7 +218,7 @@ string subs(s + offset, len); // bla2
 int compare (const string& str) const;
 int compare (size_t pos, size_t len, const string& str) const;
 int compare (size_t pos, size_t len, const string& str,
-             size_t subpos, size_t sublen) const;
+                         size_t subpos, size_t sublen) const;
 int compare (const char* s) const;
 int compare (size_t pos, size_t len, const char* s) const;
 
@@ -235,33 +235,33 @@ word.compare(0, prefix.size(), prefix);
 //--------------------------
 // method #1: inside struct
 struct Point {
-  int x, y; 
-  bool operator<(const Point& p) const {
-    if (x != p.x) return x < p.x;
-    return y < p.y;
-  }
-  bool operator>(const Point& p) const {
-    if (x != p.x) return x > p.x;
-    return y > p.y;
-  }
-  bool operator==(const Point& p) const {
-    return x == p.x && y == p.y;
-  }
+    int x, y; 
+    bool operator<(const Point& p) const {
+        if (x != p.x) return x < p.x;
+        return y < p.y;
+    }
+    bool operator>(const Point& p) const {
+        if (x != p.x) return x > p.x;
+        return y > p.y;
+    }
+    bool operator==(const Point& p) const {
+        return x == p.x && y == p.y;
+    }
 };
 
 //--------------------------
 // method #2: outside struct
 struct Point {int x, y; };
 bool operator<(const Point& a, const Point& b) {
-  if (a.x != b.x) return a.x < b.x;
-  return a.y < b.y;
+    if (a.x != b.x) return a.x < b.x;
+    return a.y < b.y;
 }
 bool operator>(const Point& a, const Point& b) {
-  if (a.x != b.x) return a.x > b.x;
-  return a.y > b.y;
+    if (a.x != b.x) return a.x > b.x;
+    return a.y > b.y;
 }
 bool operator==(const Point& a, const Point& b) {
-  return a.x == b.x && a.y == b.y;
+    return a.x == b.x && a.y == b.y;
 }
 
 // Note: if you overload the < operator for a custom struct,
@@ -283,15 +283,15 @@ map<Point, int> pt_map;
 // method #1: operator overloading
 // method #2: custom comparison function
 bool cmp(const Point& a, const Point& b) { 
-  if (a.x != b.x) return a.x < b.x;
-  return a.y < b.y;
+    if (a.x != b.x) return a.x < b.x;
+    return a.y < b.y;
 }
 // method #3: functor
 struct cmp {
-  bool operator()(const Point& a, const Point& b) {
-    if (a.x != b.x) return a.x < b.x;
-    return a.y < b.y;
-  }
+    bool operator()(const Point& a, const Point& b) {
+        if (a.x != b.x) return a.x < b.x;
+        return a.y < b.y;
+    }
 };
 // without operator overloading, you would have to use
 // an explicit comparison method when using library
@@ -339,7 +339,7 @@ if (!myset.empty()) {}
 /* ===================== */
 struct Point {int x, y; };
 bool operator<(const Point& a, const Point& b) {
-  return a.x < b.x || (a.x == b.x && a.y < b.y);
+    return a.x < b.x || (a.x == b.x && a.y < b.y);
 }
 map<Point, int> ptcounts;
 
@@ -354,19 +354,19 @@ ptcounts[{1, 2}] = 1;
 // it returns a pair { iterator(key, value) , bool }
 // if the key already exists, it doesn't overwrite the value
 void update_count(Point& p) {
-  auto res = ptcounts.insert(make_pair(p, 1));
-  if (!res.second) res.first->second++;
+    auto res = ptcounts.insert(make_pair(p, 1));
+    if (!res.second) res.first->second++;
 }
 
 // -------------------------
 // generating ids with map
 int get_id(string& name) {
-  static int id = 0;
-  static map<string,int> name2id;
-  auto it = name2id.find(name);
-  if (it == name2id.end())
-    return name2id[name] = id++;
-  return it->second;
+    static int id = 0;
+    static map<string,int> name2id;
+    auto it = name2id.find(name);
+    if (it == name2id.end())
+        return name2id[name] = id++;
+    return it->second;
 }
 
 /* ======================== */
@@ -388,7 +388,7 @@ foo.test(1); // true
 srand(time(NULL));
 int x = rand() % 100; // 0-99
 int randBetween(int a, int b) { // a-b
-  return a + (rand() % (1 + b - a));
+    return a + (rand() % (1 + b - a));
 }
 
 /* ======= */
@@ -429,20 +429,20 @@ int log2(ll x) { return sizeof(x) * 8 - __builtin_clzll(x) - 1; }
 
 // reverse the bits of an integer
 int reverse_bits(int x) {
-  int v = 0;
-  while (x) v <<= 1, v |= x&1, x >>= 1;
-  return v;
+    int v = 0;
+    while (x) v <<= 1, v |= x&1, x >>= 1;
+    return v;
 }
 
 // get string binary representation of an integer
 string bitstring(int x) {
-  int len = sizeof(x) * 8 - __builtin_clz(x);
-  if (len == 0) return "0";
+    int len = sizeof(x) * 8 - __builtin_clz(x);
+    if (len == 0) return "0";
 
-  char buff[len+1]; buff[len] = '\0';
-  for (int i = len-1; i >= 0; --i, x >>= 1)
-    buff[i] = (char)('0' + (x&1));
-  return string(buff);
+    char buff[len+1]; buff[len] = '\0';
+    for (int i = len-1; i >= 0; --i, x >>= 1)
+        buff[i] = (char)('0' + (x&1));
+    return string(buff);
 }
 
 /* ================== */
@@ -451,22 +451,22 @@ string bitstring(int x) {
 
 // get string hex representation of an integer
 string to_hex(int num) {
-  static char buff[100];
-  static const char* hexdigits = "0123456789abcdef";
-  buff[99] = '\0';
-  int i = 98;
-  do {
-    buff[i--] = hexdigits[num & 0xf];
-    num >>= 4;
-  } while (num);
-  return string(buff+i+1);
+    static char buff[100];
+    static const char* hexdigits = "0123456789abcdef";
+    buff[99] = '\0';
+    int i = 98;
+    do {
+        buff[i--] = hexdigits[num & 0xf];
+        num >>= 4;
+    } while (num);
+    return string(buff+i+1);
 }
 
 // ['0'-'9' 'a'-'f'] ->  [0 - 15]
 int char_to_digit(char c) {
-  if ('0' <= c && c <= '9')
-    return c - '0';
-  return 10 + c - 'a';
+    if ('0' <= c && c <= '9')
+        return c - '0';
+    return 10 + c - 'a';
 }
 
 /* ============ */

@@ -7,8 +7,8 @@ struct Point { float x, y; };
 
 /* signed area of p0 with respect to (p1 -> p2) */
 float isLeft(Point p0, Point p1, Point p2) {
-  return (p1.x - p0.x) * (p2.y - p0.y)
-    - (p2.x - p0.x) * (p1.y - p0.y);
+    return (p1.x - p0.x) * (p2.y - p0.y)
+        - (p2.x - p0.x) * (p1.y - p0.y);
 }
 
 // ----------------------------------------------
@@ -16,55 +16,55 @@ float isLeft(Point p0, Point p1, Point p2) {
 
 /* Nonzero Rule (winding number) */
 bool inPolygon_nonzero(Point p, vector<Point>& pts) {
-  int wn = 0; // winding number
-  Point prev = pts.back();
-  rep (i, 0, (int)pts.size() - 1) {
-    Point curr = pts[i];
-    if (prev.y <= p.y) {
-      if (p.y < curr.y && isLeft(p, prev, curr) > 0)
-        ++ wn; // upward & left
-    } else {
-      if (p.y >= curr.y && isLeft(p, prev, curr) < 0)
-        -- wn; // downward & right
+    int wn = 0; // winding number
+    Point prev = pts.back();
+    rep (i, 0, (int)pts.size() - 1) {
+        Point curr = pts[i];
+        if (prev.y <= p.y) {
+            if (p.y < curr.y && isLeft(p, prev, curr) > 0)
+                ++ wn; // upward & left
+        } else {
+            if (p.y >= curr.y && isLeft(p, prev, curr) < 0)
+                -- wn; // downward & right
+        }
+        prev = curr;
     }
-    prev = curr;
-  }
-  return wn != 0; // non-zero :)
+    return wn != 0; // non-zero :)
 }
 
 /* EvenOdd Rule (ray casting - crossing number) */
 bool inPolygon_evenodd(Point p, vector<Point>& pts) {
-  int cn = 0; // crossing number
-  Point prev = pts.back();
-  rep (i, 0, (int)pts.size() - 1) {
-    Point curr = pts[i];
-    if (((prev.y <= p.y) && (p.y < curr.y)) // upward crossing
-      || ((prev.y > p.y) && (p.y >= curr.y))) { // downward crossing
-      // check intersect's x-coordinate to the right of p
-      float t = (p.y - prev.y) / (curr.y - prev.y);
-      if (p.x < prev.x + t * (curr.x - prev.x))
-        ++cn;
+    int cn = 0; // crossing number
+    Point prev = pts.back();
+    rep (i, 0, (int)pts.size() - 1) {
+        Point curr = pts[i];
+        if (((prev.y <= p.y) && (p.y < curr.y)) // upward crossing
+            || ((prev.y > p.y) && (p.y >= curr.y))) { // downward crossing
+            // check intersect's x-coordinate to the right of p
+            float t = (p.y - prev.y) / (curr.y - prev.y);
+            if (p.x < prev.x + t * (curr.x - prev.x))
+                ++cn;
+        }
+        prev = curr;
     }
-    prev = curr;
-  }
-  return (cn & 1); // odd -> in, even -> out
+    return (cn & 1); // odd -> in, even -> out
 }
 
 // -------------------------------------------------
 // Convex Polygon method: check orientation changes
 bool inConvexPolygon(Point p, vector<Point>& pts) {
-  Point prev_p = pts.back();
-  Point curr_p;
-  float prev_orient = 0;
-  float curr_orient;
-  rep (i, 0, (int)pts.size() - 1) {
-    curr_p = pts[i];
-    curr_orient = isLeft(p, prev, curr);
-    if ((prev_orient < 0 && curr_orient > 0)
-      || (prev_orient > 0 && curr_orient < 0))
-      return false;
-    prev_p = curr_p;
-    prev_orient = curr_orient;
-  }
-  return true;
+    Point prev_p = pts.back();
+    Point curr_p;
+    float prev_orient = 0;
+    float curr_orient;
+    rep (i, 0, (int)pts.size() - 1) {
+        curr_p = pts[i];
+        curr_orient = isLeft(p, prev, curr);
+        if ((prev_orient < 0 && curr_orient > 0)
+            || (prev_orient > 0 && curr_orient < 0))
+            return false;
+        prev_p = curr_p;
+        prev_orient = curr_orient;
+    }
+    return true;
 }

@@ -1,115 +1,113 @@
 /* =========================== */
 /* Example of Point Definition */
 /* =========================== */
-
 struct Point {
-  double x, y;
-  bool operator==(const Point& p) const { return x==p.x && y == p.y; }
-  Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }
-  Point operator-(const Point& p) const { return {x-p.x, y-p.y}; }
-  Point operator*(double d) const { return {x*d, y*d}; }
-  double norm2() const { return x*x + y*y; }
-  double norm() const { return sqrt(norm2()); }
-  double dot(const Point& p) const { return x*p.x + y*p.y; }
-  Point unit() const {
-    double d = norm();
-    return {x/d,y/d};
-  }
+    double x, y;
+    bool operator==(const Point& p) const { return x==p.x && y == p.y; }
+    Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }
+    Point operator-(const Point& p) const { return {x-p.x, y-p.y}; }
+    Point operator*(double d) const { return {x*d, y*d}; }
+    double norm2() const { return x*x + y*y; }
+    double norm() const { return sqrt(norm2()); }
+    double dot(const Point& p) const { return x*p.x + y*p.y; }
+    Point unit() const {
+        double d = norm();
+        return {x/d,y/d};
+    }
 };
 
-/* ================ */
-/* Angle Comparison */
-/* ================ */
-
-// --------------
-// method 1: atan2()
+/* ================= */
+/* Angle of a vector */
+/* ================= */
+// returns angle in range [0, 2*PI] of vector (x,y) measured
+// counter-clockwise from positive x-axis
 const double PI = atan(1) * 4;
 double angle(double x, double y) {
-  double a = atan2(y, x);
-  return (a < 0) ? (a + 2 * PI) : a;
-}
-int cmpAngles(double x1, double y1, double x2, double y2) {
-  double a1 = angle(x1,y1);
-  double a2 = angle(x2,y2);
-  return (a1 < a2) ? -1 : (a1 == a2) ? 0 : 1;
+    double a = atan2(y, x);
+    return (a < 0) ? (a + 2 * PI) : a;
 }
 
-// ----------------------------
-// method 2: quadrants + slopes
-// this is the prefered method when coordinates
-// are given as integers
-enum Quadrant { UpRight, Up, UpLeft, DownLeft, Down, DownRight };
-int getQuadrant(int x, int y) {
-  if (x > 0) return (y >= 0) ? UpRight : DownRight;
-  if (x < 0) return (y >= 0) ? UpLeft : DownLeft;
-  return (y >= 0) ? Up : Down;
-}
-int cmpAngles(int x1, int y1, int x2, int y2) {
-  int q1 = getQuadrant(x1,y1);
-  int q2 = getQuadrant(x2,y2);
-  if (q1 > q2) return 1;
-  if (q1 < q2) return -1;
-  int m1 = abs(y1 * x2);
-  int m2 = abs(y2 * x1);
-  switch (q1) {
-    case UpRight:
-    case DownLeft:
-      return (m1 > m2) ? 1 : (m1 < m2) ? -1 : 0;
-    case UpLeft:
-    case DownRight:
-      return (m1 > m2) ? -1 : (m1 < m2) ? 1 : 0;
-    default: return 0;
-  }
+/* ======================================== */
+/* Orientation of Point with respect to Ray */
+/* ======================================== */
+// returns whether point c is to the LEFT (1), COLLINEAR (0) or to the RIGHT (-1) with respect
+// to the ray (a -> b) based on the sign of the cross product (b - a) x (c - a)
+// inspired by: https://www.geeksforgeeks.org/orientation-3-ordered-points/
+int orientation(Point& a, Point& b, Point& c) {
+    ll tmp = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x); // cross product (b - a) x (c - a)
+    return (tmp < 0) ? -1 : (tmp == 0) ? 0 : 1; // sign
 }
 
-/* ====================================== */
-/* Straight Line Hashing (integer coords) */
-/* ===================================== */
-
-struct Point {int x, y; };
-struct Line { int a, b, c; };
-
-int gcd(int a, int b) {
-  a = abs(a);
-  b = abs(b);
-  while(b) {
-    int c = a;
-    a = b;
-    b = c % b;
-  }
-  return a;
+/* ======================= */
+/* Rectangle Intersection */
+/* ======================= */
+bool do_rectangles_intersect(Point& dl1, Point& ur1, Point& dl2, Point& ur2) {
+    return max(dl1.x, dl2.x) <= min(ur1.x, ur2.x) && max(dl1.y, dl2.y) <= min(ur1.y, ur2.y);
 }
 
-// Line = {a,b,c} such that a*x + b*y + c = 0
-Line getLine(Point p1, Point p2) {
-  int a = p1.y - p2.y;
-  int b = p2.x - p1.x;
-  int c = p1.x * (p2.y - p1.y) - p1.y * (p2.x - p1.x);
-  int sgn = (a < 0 || (a == 0 && b < 0)) ? -1 : 1;
-  int f = gcd(a, gcd(b, c)) * sgn;
-  a /= f;
-  b /= f;
-  c /= f;
-  return {a, b, c};
+/* ========================= */
+/* Line Segment Intersection */
+/* ========================= */
+// returns whether segments p1q1 and p2q2 intersect, inspired by:
+// https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
+bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
+    int o11 = orientation(p1, q1, p2);
+    int o12 = orientation(p1, e1, q2);
+    int o21 = orientation(p2, q2, p1);
+    int o22 = orientation(p2, q2, q1);
+    if (o11 != o12 and o21 != o22) // general case
+        return true;
+    if (o11 == o12 and o11 == 0) { // p1q1 and p2q2 are collinear
+        Point dl1 = {min(p1.x, q1.x), min(p1.y, q1.y)};
+        Point ur1 = {max(p1.x, q1.x), max(p1.y, q1.y)};
+        Point dl2 = {min(p2.x, q2.x), min(p2.y, q2.y)};
+        Point ur2 = {max(p2.x, q2.x), max(p2.y, q2.y)};
+        return do_rectangles_intersect(dl1, ur1, dl2, ur2);
+    }
+    return false;
 }
 
 /* ======================== */
 /* Point - Segment distance */
 /* ======================== */
-
 // get distance between p and truncated projection of p on segment s -> e
 double point_segment_dist(const Point& p, const Point& s, const Point& e) {
-  if (s==e) return (p-s).norm(); // segment is a single point
-  double t = min(1.0, max(0.0, (p-s).dot(e-s) / (e-s).norm2()));
-  return (s+(e-s)*t-p).norm();
+    if (s==e) return (p-s).norm(); // segment is a single point
+    double t = min(1.0, max(0.0, (p-s).dot(e-s) / (e-s).norm2()));
+    return (s+(e-s)*t-p).norm();
 }
 
 /* ===================== */
 /* Point - Line distance */
 /* ===================== */
-
 // get distance between p and projection of p on line <- a - b ->
 double point_line_dist(const Point& p, const Point& a, const Point& b) {
-  double t = (p-a).dot(b-a) / (b-a).norm2();
-  return (a+(b-a)*t-p).norm();
+    double t = (p-a).dot(b-a) / (b-a).norm2();
+    return (a+(b-a)*t-p).norm();
+}
+
+/* ====================================== */
+/* Straight Line Hashing (integer coords) */
+/* ====================================== */
+// task: given 2 points p1, p2 with integer coordinates, output a unique
+// representation {a,b,c} such that a*x + b*y + c = 0 is the equation
+// of the straight line defined by p1, p2. This representation must be
+// unique for each straight line, no matter which p1 and p2 are sampled.
+struct Point {int x, y; };
+struct Line { int a, b, c; };
+int gcd(int a, int b) { // greatest common divisor
+    a = abs(a); b = abs(b);
+    while(b) { int c = a; a = b; b = c % b; }
+    return a;
+}
+Line getLine(Point p1, Point p2) {
+    int a = p1.y - p2.y;
+    int b = p2.x - p1.x;
+    int c = p1.x * (p2.y - p1.y) - p1.y * (p2.x - p1.x);
+    int sgn = (a < 0 || (a == 0 && b < 0)) ? -1 : 1;
+    int f = gcd(a, gcd(b, c)) * sgn;
+    a /= f;
+    b /= f;
+    c /= f;
+    return {a, b, c};
 }
