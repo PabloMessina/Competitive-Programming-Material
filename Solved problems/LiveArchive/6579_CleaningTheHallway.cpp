@@ -1,5 +1,7 @@
-// tags: area of union of circles, green's theorem, line integral,
-// polar coordinates, trigonometry, cosine theorem, union of intervals
+// tags: green's theorem, line integral, polar coordinates,
+// trigonometry, cosine theorem, union of intervals,
+// circle intersection detection, geometry
+// Explanation: http://users.dsic.upv.es/swerc/ProblemSet2013/solutions.pdf
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
@@ -137,33 +139,33 @@ bool check_if_fully_hidden_and_append_intervals(
 // Performs a line integral of the vector field (0,x) over the circular arc with center (x,y), radius r
 // and angular range [a, b] (in radians).
 // This comes from applying Green's Theorem to calculate areas of closed 2D regions (with no holes):
-//  Area(region) = line_integral(x(t) * dy(t) * dt) over the boundary.
-//  In this case, we are doing the integral over a segment of the circumsference (x,y,r), i.e. an arc,
-//  so we are using polar coordinates to parameterize x and y, i.e:
+//  Area(region) = line_integral(x * dy) over the boundary.
+//  In this case, we are doing the integral over an arc of the circumsference (x,y,r) between angles [a,b],
+//  so we use polar coordinates to parameterize x(t) and y(t) as functions of t, i.e:
 //      x(t) = x + r * cost(t)
 //      y(t) = y + r * sin(t)
 // =>   x(t) * dy(t) * dt =  (x + r * cos(t)) * derivate(y + r * sin(t)) * dt = r^2 * sin^2(t) * dt
-// ** Notice that y goes away, that's why we ignore y.
+// ** Notice that y goes away in the derivative, that's why we ignore it.
 // The integral can be seen here:
 // https://www.wolframalpha.com/input/?i=integral((x+%2B+r*cos(t))+*+derivative(y+%2B+r*sin(t))+*+dt,+t%3Da..b)
 //
 // To gain more intuition about Green's Theorem to calculate areas:
+//    https://mathinsight.org/greens_theorem_find_area
 //    Green's Theorem: https://www.youtube.com/watch?v=a_zdFvYXX_c
 //    78 - Finding area with Green's theorem: https://www.youtube.com/watch?v=42vEvHpXYP8
-//    Green's Theorem: area under an arch | MIT 18.02SC Multivariable Calculus, Fall 2010: 
-//      https://www.youtube.com/watch?v=KXof0q88xbg
+//    Green's Theorem: area under an arch | MIT 18.02SC Multivariable Calculus, Fall 2010: https://www.youtube.com/watch?v=KXof0q88xbg
 double integral(int x, int r, double a, double b) {
     return x * r * (sin(b) - sin(a)) + r * r * 0.5 * (0.5 * (sin(2*b) - sin(2*a)) + b - a);
 }
 
 // given a circle (x,y,r) and a list of angular intervals [(a0, b0), ... , (a(n-1), b(n-1))]
-// calculate the area of circle by computing the typical line integral over the circumsference
-// (based on Green's Theorem) BUT ignoring the arcs defined by the angular intervals.
+// calculates the area of this circle by computing the typical line integral over its circumsference
+// traveled ccw (based on Green's Theorem) BUT SKIPPING the arcs defined by the angular intervals.
 // In other words, we only integrate over the gaps left in between the interval unions.
-// ** y is ignored because it goes away in the integral
+// ** y is ignored because it goes away in the integral.
 double get_full_integral(int x, int r, vector<Interval>& intervals) {
     sort(intervals.begin(), intervals.end());
-    double end = 0.;
+    double end = 0;
     double ans = 0;
     for (auto& i : intervals) {
         if (end < i.a) { // gap detected
@@ -235,7 +237,7 @@ int main() {
             }
             if (!fully_hidden) { // calculate contribution only if not fully hidden
                 // notice we substract instead because inner circles should be traveled clockwise,
-                // but the integral is computed counter-clockwise, so we fix that by substracting
+                // but the integral is computed counter-clockwise, so we compensate that by substracting
                 area -= get_full_integral(curr.x, curr.r_in, intervals_in);
             }
         }

@@ -16,17 +16,6 @@ struct Point {
     }
 };
 
-/* ================= */
-/* Angle of a vector */
-/* ================= */
-// returns angle in range [0, 2*PI] of vector (x,y) measured
-// counter-clockwise from positive x-axis
-const double PI = atan(1) * 4;
-double angle(double x, double y) {
-    double a = atan2(y, x);
-    return (a < 0) ? (a + 2 * PI) : a;
-}
-
 /* ======================================== */
 /* Orientation of Point with respect to Ray */
 /* ======================================== */
@@ -110,4 +99,27 @@ Line getLine(Point p1, Point p2) {
     b /= f;
     c /= f;
     return {a, b, c};
+}
+
+/* ============================ */
+/* Circle - Circle Intersection */
+/* ============================ */
+struct Circle { double x, y, r; }
+bool is_fully_outside(double r1, double r2, double d_sqr) {
+    double tmp = r1 + r2;
+    return d_sqr > tmp * tmp;
+}
+bool is_fully_inside(double r1, double r2, double d_sqr) {
+    if (r1 > r2) return false;
+    double tmp = r2 - r1;
+    return d_sqr < tmp * tmp;
+}
+bool do_circles_intersect(Circle& c1, Circle& c2) {
+    double dx = c1.x - c2.x;
+    double dy = c1.y - c2.y;
+    double d_sqr = dx * dx + dy * dy;
+    if (is_fully_inside(c1.r, c2.r, d_sqr)) return false;
+    if (is_fully_inside(c2.r, c1.r, d_sqr)) return false;
+    if (is_fully_outside(c1.r, c2.r, d_sqr)) return false;
+    return true;
 }
