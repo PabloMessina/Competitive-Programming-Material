@@ -16,7 +16,7 @@ double angle(double x, double y) {
 /* ============== */
 /* Cosine Theorem */
 /* ============== */
-// Given triangle with sides a,b,c, returns the angle between sides b and c and in front of a
+// Given triangle with sides a, b and c, returns the angle opposed to side a.
 // a^2 = b^2 + c^2 - 2*b*c*cos(alpha)
 // => alpha = acos((b^2 + c^2 - a^2) /(2*b*c))
 double get_angle(double a, double b, double c) {

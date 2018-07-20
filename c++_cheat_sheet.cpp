@@ -327,12 +327,18 @@ myset.begin(); // iterator to first elemnt
 myset.end(); // iterator to after last element
 myset.rbegin(); // iterator to last element
 myset.rend(); // iterator to before first element
-for (auto it = myset.begin(); it != myset.end(); ++it) {} // left -> right
-for (auto it = myset.rbegin(); it != myset.rend(); ++it) {} // right -> left
-for (auto& it : myset) {} // left->right shortcut
-myset.insert(5);
-mysert.erase(5);
+for (auto it = myset.begin(); it != myset.end(); ++it) { do_something(*it); } // left -> right
+for (auto it = myset.rbegin(); it != myset.rend(); ++it) { do_something(*it); } // right -> left
+for (auto& i : myset) { do_something(i); } // left->right shortcut
+auto ret = myset.insert(5); // ret.first = iterator, ret.second = boolean (inserted / not inserted)
+int count = mysert.erase(5); // count = how many items were erased
 if (!myset.empty()) {}
+// custom comparator 1: functor
+struct cmp { bool operator()(int i, int j) { return i > j; } };
+set<int, cmp> myset;
+// custom comparator 2: function
+bool cmp(int i, int j) { return i > j; }
+set<int, bool(*)(int,int)> myset(cmp);
 
 /* ===================== */
 /* MAP UTILITY FUNCTIONS */
@@ -354,8 +360,8 @@ ptcounts[{1, 2}] = 1;
 // it returns a pair { iterator(key, value) , bool }
 // if the key already exists, it doesn't overwrite the value
 void update_count(Point& p) {
-    auto res = ptcounts.insert(make_pair(p, 1));
-    if (!res.second) res.first->second++;
+    auto ret = ptcounts.insert(make_pair(p, 1));
+    if (!ret.second) ret.first->second++;
 }
 
 // -------------------------

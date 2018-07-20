@@ -16,16 +16,41 @@ struct Point {
     }
 };
 
-/* ======================================== */
-/* Orientation of Point with respect to Ray */
-/* ======================================== */
-// returns whether point c is to the LEFT (1), COLLINEAR (0) or to the RIGHT (-1) with respect
-// to the ray (a -> b) based on the sign of the cross product (b - a) x (c - a)
+/* ========================================================= */
+/* Cross Product -> orientation of point with respect to ray */
+/* ========================================================= */
+ // cross product (b - a) x (c - a)
+ll cross(Point& a, Point& b, Point& c) {
+    ll dx0 = b.x - a.x, dy0 = b.y - a.y;
+    ll dx1 = c.x - a.x, dy1 = c.y - a.y;
+    return dx0 * dy1 - dx1 * dy0;
+}
+// returns whether point c is to the LEFT (1), COLLINEAR (0) or to the RIGHT (-1)
+// with respect to the ray (a -> b) based on the sign of the cross product (b - a) x (c - a)
 // inspired by: https://www.geeksforgeeks.org/orientation-3-ordered-points/
 int orientation(Point& a, Point& b, Point& c) {
-    ll tmp = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x); // cross product (b - a) x (c - a)
-    return (tmp < 0) ? -1 : (tmp == 0) ? 0 : 1; // sign
+    ll tmp = cross(a,b,c);
+    return tmp < 0 ? -1 : tmp == 0 ? 0 : 1; // sign
 }
+
+/* ========================================================= */
+/* Set of Line Segments sorted by intersection order wrt Ray */
+/* ========================================================= */
+// assumptions:
+// 1) for each segment:
+// p1 should be LEFT (or COLLINEAR) and p2 should be RIGHT (or COLLINEAR) wrt ray
+// 2) segments do not intersect each other
+// 3) segments are not collinear to the ray
+struct Segment { Point p1, p2;};
+Segment segments[MAXN]; // array of line segments
+bool segment_cmp(int i, int j) { // custom comparator based on cross prod
+    Segment& si = segments[i];
+    Segment& sj = segments[j];
+    return (si.p1.x >= sj.p1.x) ?
+        cross(si.p1, sj.p2, sj.p1) > 0:
+        cross(sj.p1, si.p1, si.p2) > 0;
+}
+set<int, bool(*)(int,int)> active_segments(segment_cmp); // ordered set
 
 /* ======================= */
 /* Rectangle Intersection */
@@ -41,7 +66,7 @@ bool do_rectangles_intersect(Point& dl1, Point& ur1, Point& dl2, Point& ur2) {
 // https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
 bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
     int o11 = orientation(p1, q1, p2);
-    int o12 = orientation(p1, e1, q2);
+    int o12 = orientation(p1, q1, q2);
     int o21 = orientation(p2, q2, p1);
     int o22 = orientation(p2, q2, q1);
     if (o11 != o12 and o21 != o22) // general case
@@ -55,6 +80,30 @@ bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
     }
     return false;
 }
+
+/* =================== */
+/* Circle Intersection */
+/* =================== */
+struct Circle { double x, y, r; }
+bool is_fully_outside(double r1, double r2, double d_sqr) {
+    double tmp = r1 + r2;
+    return d_sqr > tmp * tmp;
+}
+bool is_fully_inside(double r1, double r2, double d_sqr) {
+    if (r1 > r2) return false;
+    double tmp = r2 - r1;
+    return d_sqr < tmp * tmp;
+}
+bool do_circles_intersect(Circle& c1, Circle& c2) {
+    double dx = c1.x - c2.x;
+    double dy = c1.y - c2.y;
+    double d_sqr = dx * dx + dy * dy;
+    if (is_fully_inside(c1.r, c2.r, d_sqr)) return false;
+    if (is_fully_inside(c2.r, c1.r, d_sqr)) return false;
+    if (is_fully_outside(c1.r, c2.r, d_sqr)) return false;
+    return true;
+}
+
 
 /* ======================== */
 /* Point - Segment distance */
@@ -99,27 +148,4 @@ Line getLine(Point p1, Point p2) {
     b /= f;
     c /= f;
     return {a, b, c};
-}
-
-/* ============================ */
-/* Circle - Circle Intersection */
-/* ============================ */
-struct Circle { double x, y, r; }
-bool is_fully_outside(double r1, double r2, double d_sqr) {
-    double tmp = r1 + r2;
-    return d_sqr > tmp * tmp;
-}
-bool is_fully_inside(double r1, double r2, double d_sqr) {
-    if (r1 > r2) return false;
-    double tmp = r2 - r1;
-    return d_sqr < tmp * tmp;
-}
-bool do_circles_intersect(Circle& c1, Circle& c2) {
-    double dx = c1.x - c2.x;
-    double dy = c1.y - c2.y;
-    double d_sqr = dx * dx + dy * dy;
-    if (is_fully_inside(c1.r, c2.r, d_sqr)) return false;
-    if (is_fully_inside(c2.r, c1.r, d_sqr)) return false;
-    if (is_fully_outside(c1.r, c2.r, d_sqr)) return false;
-    return true;
 }
