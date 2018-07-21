@@ -1,6 +1,6 @@
-// tags: green's theorem, line integral, polar coordinates,
-// trigonometry, cosine theorem, union of intervals,
-// circle intersection detection, geometry
+// tags: area of union of regions, green's theorem, line integral, polar coordinates,
+// trigonometry, cosine theorem, union of intervals, circle intersection detection,
+// geometry
 // Explanation: http://users.dsic.upv.es/swerc/ProblemSet2013/solutions.pdf
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
@@ -74,7 +74,7 @@ void append_interval(double angle_begin, double angle_end, vector<Interval>& int
 // ring's outer circle and outside the ring's inner circle).
 // In the special case that the circle (x,y,r) is fully (100%) hidden within the ring's region, we return true.
 // Otherwise, we return false.
-bool check_if_fully_hidden_and_append_intervals(
+bool check_if_fully_hidden_or_append_intervals(
         int x, int y, int r, Ring& ring, vector<Interval>& intervals) {
 
     int dx = ring.x - x;
@@ -211,7 +211,7 @@ int main() {
             // collect angular intervals in which current ring's outer circle is hidden by other rings
             rep(j,0,N-1) {
                 if (i == j) continue;
-                fully_hidden = check_if_fully_hidden_and_append_intervals(
+                fully_hidden = check_if_fully_hidden_or_append_intervals(
                     curr.x, curr.y, curr.r_out, rings[j], intervals_out
                 );
                 if (fully_hidden) {
@@ -228,7 +228,7 @@ int main() {
             // collect angular intervals in which current ring's inner circle is hidden by other rings
             rep(j,0,N-1) {
                 if (i == j) continue;
-                fully_hidden = check_if_fully_hidden_and_append_intervals(
+                fully_hidden = check_if_fully_hidden_or_append_intervals(
                     curr.x, curr.y, curr.r_in, rings[j], intervals_in
                 );
                 if (fully_hidden) {

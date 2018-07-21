@@ -25,32 +25,39 @@ ll cross(Point& a, Point& b, Point& c) {
     ll dx1 = c.x - a.x, dy1 = c.y - a.y;
     return dx0 * dy1 - dx1 * dy0;
 }
-// returns whether point c is to the LEFT (1), COLLINEAR (0) or to the RIGHT (-1)
-// with respect to the ray (a -> b) based on the sign of the cross product (b - a) x (c - a)
+// calculates the cross product (b - a) x (c - a)
+// and returns orientation:
+// LEFT (1):      c is to the left of  ray (a -> b)
+// RIGHT (-1):    c is to the right of ray (a -> b)
+// COLLINEAR (0): c is collinear to    ray (a -> b)
 // inspired by: https://www.geeksforgeeks.org/orientation-3-ordered-points/
 int orientation(Point& a, Point& b, Point& c) {
     ll tmp = cross(a,b,c);
     return tmp < 0 ? -1 : tmp == 0 ? 0 : 1; // sign
 }
 
-/* ========================================================= */
-/* Set of Line Segments sorted by intersection order wrt Ray */
-/* ========================================================= */
-// assumptions:
+/* ======================================================= */
+/* Check if a segment is below another segment (wrt a ray) */
+/* ======================================================= */
+// i.e: check if a segment is intersected by the ray first
+// Assumptions:
 // 1) for each segment:
-// p1 should be LEFT (or COLLINEAR) and p2 should be RIGHT (or COLLINEAR) wrt ray
+//  p1 should be LEFT (or COLLINEAR) and p2 should be RIGHT (or COLLINEAR) wrt ray
 // 2) segments do not intersect each other
 // 3) segments are not collinear to the ray
+// 4) the ray intersects all segments
 struct Segment { Point p1, p2;};
 Segment segments[MAXN]; // array of line segments
-bool segment_cmp(int i, int j) { // custom comparator based on cross prod
+bool is_si_below_sj(int i, int j) { // custom comparator based on cross product
     Segment& si = segments[i];
     Segment& sj = segments[j];
     return (si.p1.x >= sj.p1.x) ?
         cross(si.p1, sj.p2, sj.p1) > 0:
         cross(sj.p1, si.p1, si.p2) > 0;
 }
-set<int, bool(*)(int,int)> active_segments(segment_cmp); // ordered set
+// this can be used to keep a set of segments ordered by order of intersection
+// by the ray, for example, active segments during a SWEEP LINE
+set<int, bool(*)(int,int)> active_segments(is_si_below_sj); // ordered set
 
 /* ======================= */
 /* Rectangle Intersection */
@@ -69,9 +76,9 @@ bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
     int o12 = orientation(p1, q1, q2);
     int o21 = orientation(p2, q2, p1);
     int o22 = orientation(p2, q2, q1);
-    if (o11 != o12 and o21 != o22) // general case
+    if (o11 != o12 and o21 != o22) // general case -> non-collinear intersection
         return true;
-    if (o11 == o12 and o11 == 0) { // p1q1 and p2q2 are collinear
+    if (o11 == o12 and o11 == 0) { // particular case -> segments are collinear
         Point dl1 = {min(p1.x, q1.x), min(p1.y, q1.y)};
         Point ur1 = {max(p1.x, q1.x), max(p1.y, q1.y)};
         Point dl2 = {min(p2.x, q2.x), min(p2.y, q2.y)};
