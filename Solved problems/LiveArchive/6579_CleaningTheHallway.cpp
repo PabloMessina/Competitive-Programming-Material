@@ -45,6 +45,13 @@ bool is_fully_inside(int r1, int r2, int d_sqr) {
     return d_sqr <= tmp * tmp;
 }
 
+bool do_circles_intersect(int r1, int r2, int d_sqr) {
+    if (is_fully_inside(r1, r2, d_sqr)) return false;
+    if (is_fully_inside(r2, r1, d_sqr)) return false;
+    if (is_fully_outside(r1, r2, d_sqr)) return false;
+    return true;
+}
+
 // returns an equivalent angle (in radians) within range [0, 2PI]
 double correct_angle(double angle) {
     while (angle < 0) angle += _2PI;
@@ -100,12 +107,8 @@ bool check_if_fully_hidden_or_append_intervals(
     }
 
     // Case 2) There is intersection between circle and ring. There are 4 possible subcases:    
-    bool intersect_out = !is_fully_inside(r, ring.r_out, d_sqr) &&
-                         !is_fully_inside(ring.r_out, r, d_sqr) &&
-                         !is_fully_outside(r, ring.r_out, d_sqr);
-    bool intersect_in = !is_fully_inside(r, ring.r_in, d_sqr) &&
-                        !is_fully_inside(ring.r_in, r, d_sqr) &&
-                        !is_fully_outside(r, ring.r_in, d_sqr);
+    bool intersect_out = do_circles_intersect(r, ring.r_out, d_sqr);
+    bool intersect_in = do_circles_intersect(r, ring.r_in, d_sqr);
     // 2.1) circle intersects both ring's outer circle and ring's inner circle
     if (intersect_in && intersect_out) {
         // we append 2 angular intervals (we use trigonometry here, essentially atan2 and cosine theorem)
@@ -185,60 +188,59 @@ int main() {
     int T; scanf("%d", &T);
     rep(_case, 1, T) { // for each test case
 
-        // we read input making sure we don't add duplicate rings
+        // ----- read input
         scanf("%d", &N);
-        set<tuple<int,int,int,int>> input_set;
-        int j = 0;
-        while(N--) {
+        map<tuple<int,int,int>,int> unique_in_circles;
+        map<tuple<int,int,int>,int> unique_out_circles;
+        rep(i,0,N-1) {
             int x,y,D,d; scanf("%d%d%d%d", &x,&y,&D,&d);
-            int size_before = input_set.size();
-            input_set.emplace(x,y,D,d);
-            if (size_before < input_set.size()) {
-                rings[j++] = {x,y,max(D-d,0),D+d}; // notice the max(D-d,0)
+            int r_in = max(D-d,0); // notice the max(D-d,0)
+            int r_out = D+d;
+            unique_in_circles[make_tuple(x,y,r_in)] = i;
+            unique_out_circles[make_tuple(x,y,r_out)] = i;
+            rings[i] = {x,y,r_in,r_out};
+        }
+
+        // ----- calculate the area of union of all rings
+        double area = 0;
+
+        // 1) compute contribution to the area of outer circles
+        for (auto& p : unique_out_circles) {
+            int x,y,r; tie(x,y,r) = p.first;
+            int id = p.second;
+            vector<Interval> intervals;
+            bool fully_hidden = false;
+            // collect angular intervals in which current outer circle is hidden by other rings
+            rep(i,0,N-1) {
+                if (i == id) continue;
+                fully_hidden = check_if_fully_hidden_or_append_intervals(
+                    x,y,r, rings[i], intervals
+                );
+                if (fully_hidden) break;
+            }
+            if (!fully_hidden) { // add contribution to area only if not fully hidden
+                area += get_full_integral(x,r,intervals);
             }
         }
-        N = j;
-
-        // calculate the area of the union of all rings
-        double area = 0;
-        rep(i,0,N-1) { // for each ring
-            Ring& curr = rings[i];
-            bool fully_hidden;
-            
-            // 1) compute the contribution to the area of current ring's outer circle
-            vector<Interval> intervals_out;
-            fully_hidden = false;
-            // collect angular intervals in which current ring's outer circle is hidden by other rings
-            rep(j,0,N-1) {
-                if (i == j) continue;
+        // 2) compute contribution to the area of inner circles
+        for (auto& p : unique_in_circles) {
+            int x,y,r; tie(x,y,r) = p.first;
+            int id = p.second;
+            vector<Interval> intervals;
+            bool fully_hidden = false;
+            // collect angular intervals in which current inner circle is hidden by other rings
+            rep(i,0,N-1) {
+                if (i == id) continue;
                 fully_hidden = check_if_fully_hidden_or_append_intervals(
-                    curr.x, curr.y, curr.r_out, rings[j], intervals_out
+                    x,y,r, rings[i], intervals
                 );
-                if (fully_hidden) {
-                    break;
-                }
+                if (fully_hidden) break;
             }
-            if (!fully_hidden) { // calculate contribution only if not fully hidden
-                area += get_full_integral(curr.x, curr.r_out, intervals_out); // add contribution
-            }
-
-            // 2) compute the contribution to the area of current ring's inner circle
-            vector<Interval> intervals_in;
-            fully_hidden = false;
-            // collect angular intervals in which current ring's inner circle is hidden by other rings
-            rep(j,0,N-1) {
-                if (i == j) continue;
-                fully_hidden = check_if_fully_hidden_or_append_intervals(
-                    curr.x, curr.y, curr.r_in, rings[j], intervals_in
-                );
-                if (fully_hidden) {
-                    break;
-                }
-            }
-            if (!fully_hidden) { // calculate contribution only if not fully hidden
+            if (!fully_hidden) { // add contribution to area only if not fully hidden
                 // notice we substract instead because inner circles should be traveled clockwise,
-                // but the integral is computed counter-clockwise, so we compensate that by substracting
-                area -= get_full_integral(curr.x, curr.r_in, intervals_in);
+                // but the integral is computed counter-clockwise,
+                // so we compensate that by substracting
+                area -= get_full_integral(x,r,intervals);
             }
         }
         // print answer
