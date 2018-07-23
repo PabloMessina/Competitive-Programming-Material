@@ -31,14 +31,14 @@ int N;
 Ring rings[MAXN];
 
 // checks if circle of radius r1 is fully outside circle of radius r2
-// given that the distance squared between their centers is d_sqr
+// given that the distance square between their centers is d_sqr
 bool is_fully_outside(int r1, int r2, int d_sqr) {
     int tmp = r1 + r2;
     return d_sqr >= tmp * tmp;
 }
 
 // checks if circle of radius r1 is fully inside circle of radius r2
-// given that the distance squared between their centers is d_sqr
+// given that the distance square between their centers is d_sqr
 bool is_fully_inside(int r1, int r2, int d_sqr) {
     if (r1 > r2) return false;
     int tmp = r2 - r1;
@@ -147,9 +147,10 @@ bool check_if_fully_hidden_or_append_intervals(
 //  so we use polar coordinates to parameterize x(t) and y(t) as functions of t, i.e:
 //      x(t) = x + r * cost(t)
 //      y(t) = y + r * sin(t)
-// =>   x(t) * dy(t) * dt =  (x + r * cos(t)) * derivate(y + r * sin(t)) * dt = r^2 * sin^2(t) * dt
+// =>   x(t) * dy(t) * dt =  (x + r * cos(t)) * derivate(y + r * sin(t)) * dt
+//                        =  (x + r * cos(t)) * r * cost(t) * dt
 // ** Notice that y goes away in the derivative, that's why we ignore it.
-// The integral can be seen here:
+// The final integral can be seen here:
 // https://www.wolframalpha.com/input/?i=integral((x+%2B+r*cos(t))+*+derivative(y+%2B+r*sin(t))+*+dt,+t%3Da..b)
 //
 // To gain more intuition about Green's Theorem to calculate areas:

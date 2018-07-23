@@ -69,14 +69,14 @@ ll cross(Point& a, Point& b, Point& c) {
 // of elements (O(log(n))) while keeping segments sorted at all times.
 // ** Notice that we don't need to explicitly calculate the distance of intersection to sort.
 // Instead, we use cross products to check orientations.
-bool segment_cmp(int i, int j) {
+bool is_si_below_sj(int i, int j) {
     Segment& si = segments[i];
     Segment& sj = segments[j];
     return (si.p1.x >= sj.p1.x) ?
         cross(si.p1, sj.p2, sj.p1) > 0:
         cross(sj.p1, si.p1, si.p2) > 0;
 }
-set<int, bool(*)(int,int)> active_segments(segment_cmp);
+set<int, bool(*)(int,int)> active_segments(is_si_below_sj);
 
 // ----------------------------
 // functions to propagate coordinates through the dependency graph (following parent pointers)

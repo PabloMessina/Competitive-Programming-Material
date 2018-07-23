@@ -35,25 +35,23 @@ struct RadialEvent { // represents an event encountered in a radial sweep line
     }
 };
 
-// get angle in range [0, 2*PI] of point (x,y) measured counter-clockwise from positive x-axis
-const double PI = atan(1) * 4;
-double get_angle(double x, double y) {
-  double a = atan2(y, x);
-  return (a < 0) ? (a + 2 * PI) : a;
-}
-
 // returns whether point c is to the left (1), collinear (0) or to the right (-1) with respect
 // to the ray (a -> b) based on the sign of the cross product (b - a) x (c - a)
 int orientation(Point& a, Point& b, Point& c) {
-    ll tmp = (b.x - a.x) * (c.y - a.y) - (b.y - a.y) * (c.x - a.x); // cross product (b - a) x (c - a)
-    return (tmp < 0) ? -1 : (tmp == 0) ? 0 : 1; // sign
+    double dx0 = b.x - a.x, dy0 = b.y - a.y;
+    double dx1 = c.x - a.x, dy1 = c.y - a.y;
+    double cross = dx0 * dy1 - dx1 * dy0;
+    return cross > 0 ? 1 : cross == 0 ? 0 : -1;
 }
 
 // returns whether segments p1q1 and p2q2 intersect, inspired by:
 // https://www.geeksforgeeks.org/check-if-two-given-line-segments-intersect/
 bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
-    return orientation(p1, q1, p2) != orientation(p1, q1, q2) and
-        orientation(p2, q2, p1) != orientation(p2, q2, q1);
+    int o11 = orientation(p1, q1, p2);
+    int o12 = orientation(p1, q1, q2);
+    int o21 = orientation(p2, q2, p1);
+    int o22 = orientation(p2, q2, q1);
+    return o11 != o12 and o21 != o22;
 }
 
 namespace Solver {
@@ -70,20 +68,14 @@ namespace Solver {
     // https://math.stackexchange.com/questions/406864/intersection-of-two-lines-in-vector-form
     double distance(int i) {
         Segment& w = walls[i];
-        // make sure the ray (center->target) intersects the wall
-        if (orientation(center, target, w.a) == orientation(center, target, w.b))
-            return -1;
         ll dx = w.b.x - w.a.x;
         ll dy = w.b.y - w.a.y;
         ll den = dirx * dy - diry * dx;
-        if (den == 0) return -1;
         ll num = (w.a.x - center.x) * dy - (w.a.y - center.y) * dx;
         return (double)num/(double)den; 
     }
-    struct WallComparator {
-        bool operator()(int i, int j) { return distance(i) < distance(j); }
-    };
-    set<int, WallComparator> active_walls; // to keep track of active walls during radial sweep
+    bool wall_cmp(int i, int j) { return distance(i) < distance(j); }
+    set<int, bool(*)(int,int)> active_walls(wall_cmp); // to keep track of active walls during radial sweep
     // Notice that we use an ordered set with a custom comparator to sort walls according to their distance
     // from the center in the direction of the ray (center -> target)
 
@@ -91,7 +83,12 @@ namespace Solver {
     // with all the walls intersected by the ray (center -> target)
     void init_active_walls() {        
         active_walls.clear();
-        rep(i,0,W-1) if (distance(i) > 0) active_walls.insert(i);
+        rep(i,0,W-1) {
+            Segment& w = walls[i];
+            int oa = orientation(center, target, w.a);
+            int ob = orientation(center, target, w.b);
+            if (oa != ob and distance(i) > 0) active_walls.insert(i);
+        }
     }
 
     void update_target(Point& p) {
@@ -155,7 +152,7 @@ int main() {
             vector<RadialEvent> events;
             // 1) KID events
             rep(j,0,K-1) if (i != j) {                
-                double a = get_angle(kids[j].x - kids[i].x, kids[j].y - kids[i].y);
+                double a = atan2(kids[j].y - kids[i].y, kids[j].x - kids[i].x);
                 events.emplace_back(KID, kids[j], a, j);
             }
             // 2) WALL_START and WALL_END events 
@@ -164,8 +161,8 @@ int main() {
                 Point p2 = walls[j].b;
                 // make sure p1 comes before p2 counter-clockwise
                 if (orientation(kids[i], p1, p2) < 0) swap(p1, p2);
-                double a1 = get_angle(p1.x - kids[i].x, p1.y - kids[i].y);
-                double a2 = get_angle(p2.x - kids[i].x, p2.y - kids[i].y);
+                double a1 = atan2(p1.y - kids[i].y, p1.x - kids[i].x);
+                double a2 = atan2(p2.y - kids[i].y, p2.x - kids[i].x);
                 events.emplace_back(WALL_START, p1, a1, j);
                 events.emplace_back(WALL_END, p2, a2, j);
             }            
