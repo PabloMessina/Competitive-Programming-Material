@@ -2,7 +2,8 @@
 /* Point in Polygon */
 /* ================ */
 
-#include <vector>
+#include <bits/stdc++.h>
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
 struct Point { float x, y; };
 
 /* signed area of p0 with respect to (p1 -> p2) */

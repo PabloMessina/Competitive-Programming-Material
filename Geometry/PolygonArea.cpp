@@ -1,7 +1,8 @@
 /* ======================================== */
 /* Area of 2D non self intersecting Polygon */
 /* ======================================== */
-//based on Green's Theorem
+//based on Green's Theorem:
+//http://math.blogoverflow.com/2014/06/04/greens-theorem-and-area-of-polygons/
 
 #include <bits/stdc++.h>
 int N = 1000;
