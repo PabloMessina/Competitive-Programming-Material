@@ -24,7 +24,7 @@ struct Point {
 /* ========================================================= */
 /* Cross Product -> orientation of point with respect to ray */
 /* ========================================================= */
- // cross product (b - a) x (c - a)
+// cross product (b - a) x (c - a)
 ll cross(Point& a, Point& b, Point& c) {
     ll dx0 = b.x - a.x, dy0 = b.y - a.y;
     ll dx1 = c.x - a.x, dy1 = c.y - a.y;
@@ -116,24 +116,27 @@ bool do_circles_intersect(Circle& c1, Circle& c2) {
     return true;
 }
 
-
-/* ======================== */
-/* Point - Segment distance */
-/* ======================== */
-// get distance between p and truncated projection of p on segment s -> e
-double point_segment_dist(const Point& p, const Point& s, const Point& e) {
-    if (s==e) return (p-s).norm(); // segment is a single point
-    double t = min(1.0, max(0.0, (p-s).dot(e-s) / (e-s).norm2()));
-    return (s+(e-s)*t-p).norm();
-}
-
 /* ===================== */
 /* Point - Line distance */
 /* ===================== */
 // get distance between p and projection of p on line <- a - b ->
-double point_line_dist(const Point& p, const Point& a, const Point& b) {
-    double t = (p-a).dot(b-a) / (b-a).norm2();
-    return (a+(b-a)*t-p).norm();
+double point_line_dist(Point& p, Point& a, Point& b) {
+    Point d = b-a;
+    double t = d.dot(p-a) / d.norm2();
+    return (a + d * t - p).norm();
+}
+
+/* ======================== */
+/* Point - Segment distance */
+/* ======================== */
+// get distance between p and truncated projection of p on segment a -> b
+double point_segment_dist(Point& p, Point& a, Point& b) {
+    if (a==b) return (p-a).norm(); // segment is a single point
+    Point d = b-a; // direction
+    double t = d.dot(p-a) / d.norm2();
+    if (t <= 0) return (p-a).norm(); // truncate left
+    if (t >= 1) return (p-b).norm(); // truncate right
+    return (a + d * t - p).norm();
 }
 
 /* ====================================== */

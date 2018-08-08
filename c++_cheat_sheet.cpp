@@ -14,6 +14,7 @@ using namespace std;
 #define uset unordered_set
 // typedefs
 typedef unsigned int uint;
+typedef unsigned long long int ull;
 typedef long long int ll;
 typedef vector<int> vi;
 typedef pair<int,int> ii;

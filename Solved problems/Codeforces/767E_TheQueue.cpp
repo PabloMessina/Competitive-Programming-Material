@@ -16,21 +16,12 @@ typedef tuple<int,int,int> iii;
 // -------------------------------
 
 const int MAXN = 100000;
-ll ts, tf, t;
+ll TS, TF, T;
 int n;
-enum Type { RECEPT_ARRIVAL, RECEPT_DEPART, CLIENT };
-struct Event {
-    ll time; Type type; int count;
-    bool operator<(const Event& rhs) {
-        return time < rhs.time || (time == rhs.time and type < rhs.type);
-    }
-};
 
 int main() {
-    scanf("%lld%lld%lld%d", &ts, &tf, &t, &n);
-    vector<Event> events;
-    events.push_back({ts, RECEPT_ARRIVAL});
-    events.push_back({ts, RECEPT_DEPART});
+    scanf("%lld%lld%lld%d", &TS, &TF, &T, &n);
+    if (n == 0) { puts("0"); return 0; }
     map<ll,int> counts;
     rep(i,0,n-1) {
         ll a; scanf("%lld", &a);
@@ -41,9 +32,32 @@ int main() {
             it->second++;
         }
     }
-    for (auto& p : counts) {
-        events.push_back{p.first, CLIENT, p.second};
-    }
+    if (counts.size() == 1) { puts("0"); return 0; }
+    
+    // -------------
+    ll tbest=-1, minwait = LLONG_MAX;    
+    ll next_free_time = TS;
 
+    for (auto& p : counts) {
+        ll a = p.first;
+        int count = p.second;
+        if (next_free_time < a) {
+            tbest = next_free_time;
+            break;
+        } else {
+            if (a > 0) {
+                ll t = a - 1;
+                ll wait = next_free_time - t;                
+                if (wait < minwait) {
+                    minwait = wait;
+                    tbest = t;
+                }
+            }
+            next_free_time += count * T;
+        }
+    }
+    if (next_free_time < TF) tbest = next_free_time;
+    assert(tbest >= 0);
+    printf("%lld\n", tbest);
     return 0;
 }

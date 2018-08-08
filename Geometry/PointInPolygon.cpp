@@ -4,12 +4,17 @@
 
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-struct Point { float x, y; };
+struct Point { double x, y; };
 
-/* signed area of p0 with respect to (p1 -> p2) */
-float isLeft(Point p0, Point p1, Point p2) {
-    return (p1.x - p0.x) * (p2.y - p0.y)
-        - (p2.x - p0.x) * (p1.y - p0.y);
+// cross product (b - a) x (c - a)
+double cross(Point& a, Point& b, Point& c) {
+    double dx0 = b.x - a.x, dy0 = b.y - a.y;
+    double dx1 = c.x - a.x, dy1 = c.y - a.y;
+    return dx0 * dy1 - dx1 * dy0;
+}
+int orientation(Point& a, Point& b, Point& c) {
+    double tmp = cross(a,b,c);
+    return tmp < 0 ? -1 : tmp == 0 ? 0 : 1; // sign
 }
 
 // ----------------------------------------------
@@ -22,10 +27,10 @@ bool inPolygon_nonzero(Point p, vector<Point>& pts) {
     rep (i, 0, (int)pts.size() - 1) {
         Point curr = pts[i];
         if (prev.y <= p.y) {
-            if (p.y < curr.y && isLeft(p, prev, curr) > 0)
+            if (p.y < curr.y && cross(prev, curr, p) > 0)
                 ++ wn; // upward & left
         } else {
-            if (p.y >= curr.y && isLeft(p, prev, curr) < 0)
+            if (p.y >= curr.y && cross(prev, curr, p) < 0)
                 -- wn; // downward & right
         }
         prev = curr;
@@ -42,7 +47,7 @@ bool inPolygon_evenodd(Point p, vector<Point>& pts) {
         if (((prev.y <= p.y) && (p.y < curr.y)) // upward crossing
             || ((prev.y > p.y) && (p.y >= curr.y))) { // downward crossing
             // check intersect's x-coordinate to the right of p
-            float t = (p.y - prev.y) / (curr.y - prev.y);
+            double t = (p.y - prev.y) / (curr.y - prev.y);
             if (p.x < prev.x + t * (curr.x - prev.x))
                 ++cn;
         }
@@ -53,19 +58,14 @@ bool inPolygon_evenodd(Point p, vector<Point>& pts) {
 
 // -------------------------------------------------
 // Convex Polygon method: check orientation changes
-bool inConvexPolygon(Point p, vector<Point>& pts) {
-    Point prev_p = pts.back();
-    Point curr_p;
-    float prev_orient = 0;
-    float curr_orient;
-    rep (i, 0, (int)pts.size() - 1) {
-        curr_p = pts[i];
-        curr_orient = isLeft(p, prev, curr);
-        if ((prev_orient < 0 && curr_orient > 0)
-            || (prev_orient > 0 && curr_orient < 0))
-            return false;
-        prev_p = curr_p;
-        prev_orient = curr_orient;
+bool inConvexPolygon(Point& p, vector<Point>& pts) {
+    int n = pts.size();
+    int o_min = 0, o_max = 0;
+    for (int i=0, j=n-1; i < n; j=i++) {
+        int o = orientation(pts[j], pts[i], p);
+        if (o == 1) o_max = 1;
+        else if (o == -1) o_min = -1;
+        if (o_max - o_min == 2) return false;
     }
     return true;
 }
