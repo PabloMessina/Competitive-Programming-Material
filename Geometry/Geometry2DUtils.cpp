@@ -15,6 +15,7 @@ struct Point {
     double norm2() const { return x*x + y*y; }
     double norm() const { return sqrt(norm2()); }
     double dot(const Point& p) const { return x*p.x + y*p.y; }
+    double cross(const Point& p) const { return x*p.y - y*p.x; }
     Point unit() const {
         double d = norm();
         return {x/d,y/d};
@@ -29,7 +30,9 @@ ll cross(Point& a, Point& b, Point& c) {
     ll dx0 = b.x - a.x, dy0 = b.y - a.y;
     ll dx1 = c.x - a.x, dy1 = c.y - a.y;
     return dx0 * dy1 - dx1 * dy0;
+    // return (b - a).cross(c - a); // alternatively, using struct function
 }
+
 // calculates the cross product (b - a) x (c - a)
 // and returns orientation:
 // LEFT (1):      c is to the left of  ray (a -> b)
