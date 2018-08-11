@@ -1,4 +1,4 @@
-// tags: geometry, cross product, segment intersection
+// tags: geometry, cross product, segment intersection detection
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines

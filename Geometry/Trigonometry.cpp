@@ -1,7 +1,9 @@
 /* ================= */
 /* Angle of a vector */
 /* ================= */
-const double _2PI = atan(1) * 8;
+const double PI = acos(-1);
+const double _2PI = 2 * PI;
+
 double correct_angle(double angle) { // to ensure 0 <= angle <= 2PI
     while (angle < 0) angle += _2PI;
     while (angle > _2PI) angle -= _2PI;
