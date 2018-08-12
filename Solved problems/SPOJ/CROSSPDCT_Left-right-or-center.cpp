@@ -18,6 +18,7 @@ int main() {
     while (n--) {
         Point p; cin >> p.x >> p.y;
         ll tmp = cross(a, b, p);
+        // ternary operator: https://www.cprogramming.com/reference/operators/ternary-operator.html
         char ans = tmp > 0 ? 'I' : tmp < 0 ? 'D' : 'C';
         cout << ans << endl;
     }
