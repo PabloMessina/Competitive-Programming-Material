@@ -31,9 +31,10 @@ Point pts_a[MAXN], pts_b[MAXN];
 
 // computes the minimum distance between segments a->b and c->d
 // assuming that:
-// 1) their traveled at the same speed
-// 2) the segments have the same length, i.e (b-a).norm() == (d-c).norm()
-// basically we minimize the function:
+// 1) the segments have the same length, i.e (b-a).norm() == (d-c).norm()
+// 2) the segments are traveled at the same speed
+// both trajectories are parameterized with respect to time (t), thus we
+// need to find t that minimizes the function:
 //    f(t) = ((a + (b-a) * t) - (c + (d-c) * t)).norm2(), with 0 <= t <= 1
 //    which is a quadratic function, whose derivate is linear
 double min_dist(Point& a, Point& b, Point& c, Point& d) {
@@ -43,7 +44,7 @@ double min_dist(Point& a, Point& b, Point& c, Point& d) {
     if (v_norm2 < 1e-10) return u.norm(); // almost zero (to handle precision noise)
     double t = - u.dot(v) / v_norm2;
     if (t < 0) t = 0;
-    if (t > 1) t = 1;
+    else if (t > 1) t = 1;
     return (u + v * t).norm();
 }
 

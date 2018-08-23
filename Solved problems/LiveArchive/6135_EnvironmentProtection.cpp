@@ -1,3 +1,4 @@
+// tags: binary search, numerical integration
 #include <bits/stdc++.h>
 using namespace std;
 // defines

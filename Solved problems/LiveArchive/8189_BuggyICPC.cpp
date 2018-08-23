@@ -67,7 +67,7 @@ int main() {
             if (isvowel[input[i]-'a']) count++;
             vowcount[i] = count;
         }
-        printf("%d\n", count_ways(0,len-1,NORMAL));
+        cout << count_ways(0,len-1,NORMAL) << endl;
     }
     return 0;
 }

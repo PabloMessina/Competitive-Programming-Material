@@ -1,9 +1,6 @@
-#include <cstdio>
-#include <algorithm>
-#include <vector>
+// tags: backtracking
+#include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
-
-#define infinity 99999999
 
 int N;
 int mtime[20];
@@ -42,7 +39,7 @@ int main() {
 		sort(mtime2, mtime2 + N);
 
 		//read museum to museum travel times
-		minTravelTime = infinity;
+		minTravelTime = INT_MAX;
 		for (int i = 0; i < N; ++i) {
 			for (int j = 0; j < N; ++j) {
 				scanf("%d", &m2mtime[i][j]);

@@ -2,6 +2,7 @@
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 typedef long long int ll;
+
 // -------------------------------
 // references:
 // https://github.com/PabloMessina/Competitive-Programming-Material/blob/master/Geometry/Geometry2DUtils.cpp
