@@ -87,8 +87,7 @@ double segment_integral(Point& A, Point& B, vector<AngleEvent>& angle_events) {
 }
 
 double arc_integral(double a, double b) {
-    double ans = C.x * r * (sin(b) - sin(a)) + r2 * 0.5 * (0.5 * (sin(2*b) - sin(2*a)) + b - a);
-    return ans;
+    return C.x * r * (sin(b) - sin(a)) + r2 * 0.5 * (0.5 * (sin(2*b) - sin(2*a)) + b - a);
 }
 
 int main() {
