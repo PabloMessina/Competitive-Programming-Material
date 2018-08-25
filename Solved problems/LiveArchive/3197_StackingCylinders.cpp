@@ -8,7 +8,7 @@ const int MAXN = 11;
 
 struct Point {
     double x, y;
-    bool operator<(const Point& o) const { return x < b.x; }
+    bool operator<(const Point& o) const { return x < o.x; }
 };
 int n;
 Point pts[MAXN];

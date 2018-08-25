@@ -2,6 +2,8 @@
 using namespace std;
 typedef long long int ll;
 // -------------------------------
+const double PI = acos(-1);
+const double EPS = 1e-8;
 
 /* =========================== */
 /* Example of Point Definition */
@@ -12,11 +14,16 @@ struct Point {
     Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }
     Point operator-(const Point& p) const { return {x-p.x, y-p.y}; }
     Point operator*(double d) const { return {x*d, y*d}; }
-    double norm2() const { return x*x + y*y; }
-    double norm() const { return sqrt(norm2()); }
-    double dot(const Point& p) const { return x*p.x + y*p.y; }
-    double cross(const Point& p) const { return x*p.y - y*p.x; }
-    Point unit() const {
+    double norm2() { return x*x + y*y; }
+    double norm() { return sqrt(norm2()); }
+    double dot(const Point& p) { return x*p.x + y*p.y; }
+    double cross(const Point& p) { return x*p.y - y*p.x; }
+    double angle() {
+        double angle = atan2(y, x);
+        if (angle < 0) angle += 2 * PI;
+        return angle;
+    }
+    Point unit() {
         double d = norm();
         return {x/d,y/d};
     }
