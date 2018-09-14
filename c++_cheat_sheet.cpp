@@ -21,7 +21,8 @@ typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
 
 int main() {
-    // setvbuf(stdout, NULL, _IONBF, 0);  //debugging
+    ios::sync_with_stdio(false); // for greater performance if only using cin/cout
+    // setvbuf(stdout, NULL, _IONBF, 0);  // if debugging with printf/scanf
     return 0;
 }
 
