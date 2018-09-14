@@ -95,8 +95,9 @@ void init_primes() {
 // prime numbers), then we return -1
 // Else, the two BFS's will eventually collide, and the first collision
 // will give us the shortest distance between 'x' and 'y'
-// * notice we don't an explicit graph, instead we assume each cell is a node
-// and cells up, down, left and right (4) are neighbors, except for those cells
+// * notice we don't use an explicit graph, instead we assume each cell is a node
+// and cells up, down, left and right (4) are neighbors (like a flood fill
+// https://en.wikipedia.org/wiki/Flood_fill), except for those cells
 // corresponding to prime numbers
 int shortest_path(int x, int y) {
     static int dist1[300000], dist2[300000];
