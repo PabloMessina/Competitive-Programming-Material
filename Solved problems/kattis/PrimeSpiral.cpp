@@ -101,10 +101,10 @@ void init_primes() {
 // corresponding to prime numbers
 int shortest_path(int x, int y) {
     static int dist1[300000], dist2[300000];
-    memset(dist1, -1, sizeof dist1);
-    memset(dist2, -1, sizeof dist2);
 
     // init variables for each BFS
+    memset(dist1, -1, sizeof dist1);
+    memset(dist2, -1, sizeof dist2);
     queue<pair<int,Cell>> q1, q2;
     q1.emplace(x, num2cell(x));
     q2.emplace(y, num2cell(y));
