@@ -1,11 +1,7 @@
 // tags: math, sieve of eratosthenes, binary modular exponentiation,
 // prime factorization of factorials
-#include <cstdio>
-#include <cstring>
-#include <vector>
-#include <cmath>
+#include <bits/stdc++.h>
 using namespace std;
-
 #define MAXN 1000000
 
 char buffer[MAXN + 1];
@@ -14,7 +10,7 @@ vector<bool> isPrime(MAXN + 1, true);
 vector<int> primes;
 int pcount[MAXN + 1];
 
-//Sieve of Eratosthenes
+// Sieve of Eratosthenes
 void collect_primes_up_to(int n) {
 	int limit = (int) floor(sqrt(n));
 	for (int i = 2; i <= limit; ++i)
@@ -26,7 +22,7 @@ void collect_primes_up_to(int n) {
 			primes.push_back(i);
 }
 
-//binary modular exponentiation
+// binary modular exponentiation
 int mod_pow(int b, int e, int m) {
 	if (e == 1)
 		return b % m;
@@ -39,17 +35,13 @@ int mod_pow(int b, int e, int m) {
 }
 
 int main() {
-
 	collect_primes_up_to(MAXN);
-
 	while (gets(buffer) != NULL) {
-
 		//read string and count repeated characters
 		memset(counts, 0, sizeof counts);
 		int length = strlen(buffer);
 		for (int i = 0; i < length; ++i)
 			counts[buffer[i] - 'a']++;
-
 		//add prime factors of length!
 		for (int i = 0; i < (int)primes.size() && primes[i] <= length; ++i) {
 			int p = primes[i];
@@ -58,7 +50,6 @@ int main() {
 			while ((n /= p) > 0)
 				pcount[p] += n;
 		}
-
 		//remove prime factors of repeated letters
 		for (int i = 0; i < 26; ++i) {
 			int count = counts[i];
@@ -71,14 +62,12 @@ int main() {
 				}
 			}
 		}
-
 		//remove 10s
 		if (length >= 5) {
 			int m = min(pcount[2], pcount[5]);
 			pcount[2] -= m;
 			pcount[5] -= m;
 		}
-
 		//compute multiplication mod 10
 		int x = 1;
 		for (int i = 0; i < (int)primes.size() && primes[i] <= length; ++i) {
@@ -88,5 +77,4 @@ int main() {
 		}
 		printf("%d\n", x);
 	}
-
 }

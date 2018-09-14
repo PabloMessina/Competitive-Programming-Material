@@ -5,7 +5,7 @@
 //=============================================
 // Sieve of Eratosthenes (all primes up to N)
 //=============================================
-vector<int> get_primes(int n) {
+vector<int> get_primes_up_to(int n) {
 	vector<bool> is_prime(n + 1, true);
 	int limit = (int) floor(sqrt(n));
 	rep (i,2,limit)

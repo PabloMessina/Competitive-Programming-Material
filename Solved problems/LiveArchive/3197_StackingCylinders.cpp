@@ -18,7 +18,7 @@ int main() {
         scanf("%d",&n);
         if(n==0) break;
         rep(i,0,n-1) {
-            scanf("%lf", &pts[i].x);
+            scanf("%lf", &pts[i].x); 
             pts[i].y = 1.0;
         }
         sort(pts, pts+n);
@@ -26,7 +26,7 @@ int main() {
             rep(i, 0, k-2) {
                 double dx = pts[i+1].x - pts[i].x;
                 double dy = pts[i+1].y - pts[i].y;
-                double d = sqrt(dx * dx + dy * dy);
+                double d  = sqrt(dx * dx + dy * dy);
                 double alpha = acos(d * 0.25);
                 double theta = abs(atan2(dy, dx));
                 double mx = 2 * cos(alpha + theta);

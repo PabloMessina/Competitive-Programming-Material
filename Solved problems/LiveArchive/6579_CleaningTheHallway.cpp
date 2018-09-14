@@ -158,7 +158,7 @@ bool check_if_fully_hidden_or_append_intervals(
 //    Green's Theorem: https://www.youtube.com/watch?v=a_zdFvYXX_c
 //    78 - Finding area with Green's theorem: https://www.youtube.com/watch?v=42vEvHpXYP8
 //    Green's Theorem: area under an arch | MIT 18.02SC Multivariable Calculus, Fall 2010: https://www.youtube.com/watch?v=KXof0q88xbg
-double integral(int x, int r, double a, double b) {
+double arc_integral(int x, int r, double a, double b) {
     return x * r * (sin(b) - sin(a)) + r * r * 0.5 * (0.5 * (sin(2*b) - sin(2*a)) + b - a);
 }
 
@@ -173,14 +173,14 @@ double get_full_integral(int x, int r, vector<Interval>& intervals) {
     double ans = 0;
     for (auto& i : intervals) {
         if (end < i.a) { // gap detected
-            ans += integral(x, r, end, i.a); // integrate over the gap
+            ans += arc_integral(x, r, end, i.a); // integrate over the gap
             end = i.b;
         } else {
             end = max(end, i.b);
         }
     }
     if (end < _2PI) { // possible last gap between 'end' and 2PI
-        ans += integral(x, r, end, _2PI); // integrate over the gap
+        ans += arc_integral(x, r, end, _2PI); // integrate over the gap
     }
     return ans;
 }

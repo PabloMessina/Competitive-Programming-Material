@@ -1,157 +1,156 @@
-// tags: implicit graph, BFS, sieve of eratosthenes
-
-#include <bits/stdc++.h>
+// tags: concurrent BFS's, math, prime numbers, sieve of eratosthenes,
+// implementation
+#include <bits/stdc++.h> // import everything in one shot
 using namespace std;
+// defines
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define umap unordered_map
+#define uset unordered_set
+// typedefs
+typedef unsigned int uint;
+typedef unsigned long long int ull;
+typedef long long int ll;
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef tuple<int,int,int> iii;
+// -------------------------------
 
-#define rep(i,a,b) for(int i=a; i<=b; ++i)
-#define MAXN 1000000
-
-typedef pair<int,int> pii;
-
-vector<bool> is_prime;
-
-void find_primes_up_to(int n) {
-  is_prime.assign(n+1, true);
-  is_prime[1] = false;
-  int limit = (int) floor(sqrt(n));
-  rep(i, 2, limit)
-    if (is_prime[i])
-      for (int j = i*i; j <= n; j += i)
-        is_prime[j] = false;
-}
-
-int dirs[4][2] = {
-  {0, 1},
-  {-1, 0},
-  {0, -1},
-  {1, 0}
+struct Cell {
+    int x,y;
+    Cell() {}
+    Cell(int x, int y) : x(x), y(y) {}
 };
 
-pii num_to_cell(int x) {
+// unitary vectors: up, left, down, right
+int dirs[4][2] = {{0, 1}, {-1, 0}, {0, -1}, {1, 0}};
 
-  int n = (int)ceil ((-1 + sqrt(x)) / 2);
+// return the number of cells up to level 'n', i.e.
+// the area of a square of side = 2 * n + 1
+inline int count_up_to_level(int n) {
+    int tmp = (2 * n + 1); return tmp * tmp;
+}
 
-  if (n == 0) return pii(0, 0);
-
-  int h = n, v = -n;
-  int dirsize = 2 * n;
-  int ref = 4*n*(n-1) + 1;
-  int steps = x - ref;
-
-  rep(i, 0, 3) {
-    if (steps <= dirsize) {
-      h += dirs[i][0] * steps;
-      v += dirs[i][1] * steps;
-      break;
+// given Cell c = {x,y}, return its corresponding number
+// according to the spiral pattern
+int cell2num(Cell p) {
+    int n = max(abs(p.x), abs(p.y));
+    int ans = count_up_to_level(n-1);
+    if (p.x == n) {
+        if (p.y == -n) return count_up_to_level(n);
+        return ans + p.y + n;
     }
-    h += dirs[i][0] * dirsize;
-    v += dirs[i][1] * dirsize;
-    steps -= dirsize;
-  }
-
-  return pii(h,v);
+    int _2n = 2 * n;
+    ans += _2n;
+    if (p.y == n) return ans + n - p.x;
+    ans += _2n;
+    if (p.x == -n) return ans + n - p.y;
+    ans += _2n;
+    // assert(p.y == -n); // debugging
+    return ans + p.x + n;
 }
 
-int cell_to_num(int h, int v) {
-  int n = max(abs(h), abs(v));
-  if (n == 0) return 1;
-  int offset = 1 + 4*n*(n-1);
-  int dirsize = 2*n;
-
-  if (h == n && v > -n) // right
-    return offset + v + n;
-
-  if (v == n && h < n) // top
-    return offset + dirsize + n - h;
-
-  if (h == -n && v < n) // left
-    return offset + dirsize * 2 + n - v;
-
-  // bottom
-  return offset + dirsize * 3 + h + n;
-}
-
-
-struct triple {int h, v, num; };
-
-int steps1[MAXN];
-int steps2[MAXN];
-
-int path_length(int x, int y) {
-
-  if (x == y) return 0;
-
-  memset(steps1, -1, sizeof steps1);
-  memset(steps2, -1, sizeof steps2);
-  queue<triple> q1, q2;
-
-  pii c1 = num_to_cell(x);
-  pii c2 = num_to_cell(y);
-
-  q1.push({c1.first, c1.second, x});
-  q2.push({c2.first, c2.second, y});
-  steps1[x] = 0;
-  steps2[y] = 0;
-
-  while (!q1.empty() && !q2.empty()) {
-    triple t1 = q1.front(); q1.pop();
-    triple t2 = q2.front(); q2.pop();
-
+// given number k, return its corresponding cell {x, y}
+// according to the spiral pattern
+// * we assume that 1 maps to {0, 0}
+Cell num2cell(int k) {
+    if (k == 1) return {0, 0};
+    int n = (int)ceil((sqrt(k) - 1.) / 2.);
+    // assert(count_up_to_level(n-1) < k); // debugging
+    // assert(count_up_to_level(n) >= k); // debugging
+    int delta = k - count_up_to_level(n-1);
+    int x = n, y = -n;
+    int _2n = 2 * n;
     rep(i,0,3) {
-      int h = t1.h + dirs[i][0];
-      int v = t1.v + dirs[i][1];
-      int num = cell_to_num(h,v);
-
-      if (is_prime[num]) continue;
-      if (steps1[num] != -1) continue;
-
-      if (steps2[num] != -1) {
-        return steps1[t1.num] + steps2[num] + 1;
-      }
-
-      steps1[num] = steps1[t1.num] + 1;
-      q1.push({h, v, num});
+        if (delta <= _2n) {
+            x += dirs[i][0] * delta;
+            y += dirs[i][1] * delta;
+            break;
+        }
+        x += dirs[i][0] * _2n;
+        y += dirs[i][1] * _2n;
+        delta -= _2n;
     }
-
-    rep(i,0,3) {
-      int h = t2.h + dirs[i][0];
-      int v = t2.v + dirs[i][1];
-      int num = cell_to_num(h,v);
-
-      if (is_prime[num]) continue;
-      if (steps2[num] != -1) continue;
-
-      if (steps1[num] != -1) {
-        return steps1[num] + steps2[t2.num] + 1;
-      }
-
-      steps2[num] = steps2[t2.num] + 1;
-      q2.push({h, v, num});
-    }
-  }
-
-  return -1;
-
+    return {x,y};
 }
 
+// we anotate in 'is_prime' all numbers that are primes
+// up to a large enough position
+const int MAXK = 1000000;
+vector<bool> is_prime;
+void init_primes() {
+	is_prime.assign(MAXK + 1, true);
+    is_prime[1] = false;
+	int limit = (int) floor(sqrt(MAXK));
+	rep (i,2,limit)
+		if (is_prime[i])
+			for (int j = i * i; j <= MAXK; j += i)
+				is_prime[j] = false;
+}
 
+// we run 2 BFS's simultaneously, one from 'x' and one from 'y'
+// If either of the two BFS's gets stuck (say, either 'x' or 'y' is surrounded by
+// prime numbers), then we return -1
+// Else, the two BFS's will eventually collide, and the first collission
+// will give us the shortest distance between 'x' and 'y'
+int shortest_path(int x, int y) {
+    static int dist1[300000], dist2[300000];
+    memset(dist1, -1, sizeof dist1);
+    memset(dist2, -1, sizeof dist2);
+
+    // init variables for each BFS
+    queue<pair<int,Cell>> q1, q2;
+    q1.emplace(x, num2cell(x));
+    q2.emplace(y, num2cell(y));
+    dist1[x] = 0;
+    dist2[y] = 0;
+
+    // run 2 BFS's simultaneously
+    while (!q1.empty() and !q2.empty()) {
+        // BFS 1: expand
+        auto u1 = q1.front(); q1.pop();
+        int k1 = u1.first;
+        Cell c1 = u1.second;
+        rep(i,0,3) {
+            int xx = c1.x + dirs[i][0];
+            int yy = c1.y + dirs[i][1];
+            int kk = cell2num({xx,yy});
+            if (dist2[kk] != -1) {
+                return dist1[k1] + dist2[kk] + 1;
+            }
+            if (dist1[kk] != -1 or is_prime[kk]) continue;
+            q1.push({kk, {xx, yy}});
+            dist1[kk] = dist1[k1] + 1;
+        }
+
+        // BFS 2: expand
+        auto u2 = q2.front(); q2.pop();
+        int k2 = u2.first;
+        Cell c2 = u2.second;
+        rep(i,0,3) {
+            int xx = c2.x + dirs[i][0];
+            int yy = c2.y + dirs[i][1];
+            int kk = cell2num({xx,yy});
+            if (dist1[kk] != -1) {
+                return dist2[k2] + dist1[kk] + 1;
+            }            
+            if (dist2[kk] != -1 or is_prime[kk]) continue;
+            q2.push({kk, {xx, yy}});
+            dist2[kk] = dist2[k2] + 1;
+        }
+    }
+    return -1;
+}
 
 int main() {
-
-  find_primes_up_to(MAXN);
-
-  int x,y;
-  int _case = 1;
-  while(scanf("%d%d",&x,&y) == 2) {
-
-    int len = path_length(x,y);
-    if (len == -1) {
-      printf("Case %d: impossible\n", _case);
-    } else {
-      printf("Case %d: %d\n", _case, len);
+    init_primes();
+    int x, y;
+    int _case = 1;
+    while (cin >> x >> y) {
+        int d = shortest_path(x,y);
+        cout << "Case " << _case++ << ": ";
+        if (d == -1) cout << "impossible\n";
+        else cout << d << '\n';
     }
-
-    _case++;
-  }
-  return 0;
+    return 0;
 }
