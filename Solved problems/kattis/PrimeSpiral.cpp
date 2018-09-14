@@ -75,7 +75,8 @@ Cell num2cell(int k) {
 }
 
 // we anotate in 'is_prime' all numbers that are primes
-// up to a large enough position
+// up to a large enough position, using the well known
+// "Sieve of Eratosthenes" algorithm
 const int MAXK = 1000000;
 vector<bool> is_prime;
 void init_primes() {
@@ -91,7 +92,7 @@ void init_primes() {
 // we run 2 BFS's simultaneously, one from 'x' and one from 'y'
 // If either of the two BFS's gets stuck (say, either 'x' or 'y' is surrounded by
 // prime numbers), then we return -1
-// Else, the two BFS's will eventually collide, and the first collission
+// Else, the two BFS's will eventually collide, and the first collision
 // will give us the shortest distance between 'x' and 'y'
 int shortest_path(int x, int y) {
     static int dist1[300000], dist2[300000];
