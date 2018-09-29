@@ -1,6 +1,6 @@
-// ===========================================
-// Suffix Array : Prefix Doubling + Radix Sort
-// ===========================================
+// ========================================================
+// Suffix Array Construction : Prefix Doubling + Radix Sort
+// ========================================================
 // Complexity: O(N*log(N))
 // source: https://www.cs.helsinki.fi/u/tpkarkka/opetus/10s/spa/lecture11.pdf
 #include <bits/stdc++.h>
