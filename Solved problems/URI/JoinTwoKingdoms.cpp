@@ -76,7 +76,7 @@ int set_maxdist_and_get_diameter(vector<vi>& g, int* maxdist) {
 	// It turns out this is a property of the extreme nodes of a diameter of a tree :)
 	// 3) finally, we return the diameter of 'g', which is exactly the farthest
 	// distance from any end node of the diameter
-	assert(maxdist[e1] == maxdist[e2]) // this should be true
+	assert(maxdist[e1] == maxdist[e2]); // this should be true
 	return maxdist[e1];
 }
 

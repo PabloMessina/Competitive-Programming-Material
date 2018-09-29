@@ -81,13 +81,13 @@ Cell num2cell(int k) {
 const int MAXK = 1000000;
 vector<bool> is_prime;
 void init_primes() {
-	is_prime.assign(MAXK + 1, true);
+    is_prime.assign(MAXK + 1, true);
     is_prime[1] = false;
-	int limit = (int) floor(sqrt(MAXK));
-	rep (i,2,limit)
-		if (is_prime[i])
-			for (int j = i * i; j <= MAXK; j += i)
-				is_prime[j] = false;
+    int limit = (int) floor(sqrt(MAXK));
+    rep (i,2,limit)
+        if (is_prime[i])
+            for (int j = i * i; j <= MAXK; j += i)
+                is_prime[j] = false;
 }
 
 // we run 2 BFS's simultaneously, one from 'x' and one from 'y'

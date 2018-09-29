@@ -74,30 +74,35 @@ double dp(int mask, int curr_i) {
 }
 
 int main() {
-    scanf("%d", &N);    
-    rep(i,0,N-1) {
-        Tile& tile = tiles[i];
-        int k; scanf("%d", &k);
-        int offset = -1;
-        rep(j,0,k-1) {
-            double x, y; scanf("%lf%lf", &x, &y);
-            pts[j] = {x,y};
-            if (j > 2 and pts[j].y == pts[j-1].y) {
-                offset = j;
+    while (scanf("%d", &N) == 1) {
+        rep(i,0,N-1) {
+            Tile& tile = tiles[i];
+            tile.right_pts.clear();
+            tile.left_pts.clear();
+            tile.min_x = 0;
+            tile.max_x = 0;
+            int k; scanf("%d", &k);
+            int offset = -1;
+            rep(j,0,k-1) {
+                double x, y; scanf("%lf%lf", &x, &y);
+                pts[j] = {x,y};
+                if (j > 2 and pts[j].y == pts[j-1].y) {
+                    offset = j;
+                }
+                tile.min_x = min(tile.min_x, x);
+                tile.max_x = max(tile.max_x, x);
             }
-            tile.min_x = min(tile.min_x, x);
-            tile.max_x = max(tile.max_x, x);
+            tile.width = tile.max_x - tile.min_x;            
+            rep(j,1,offset-1) tile.right_pts.push_back(pts[j]);
+            tile.left_pts.push_back(pts[0]);
+            invrep(j,k-1,offset) tile.left_pts.push_back(pts[j]);
         }
-        tile.width = tile.max_x - tile.min_x;
-        rep(j,1,offset-1) tile.right_pts.push_back(pts[j]);
-        tile.left_pts.push_back(pts[0]);
-        invrep(j,k-1,offset) tile.left_pts.push_back(pts[j]);
+        rep(i,0,N-1) rep(j,0,N-1) if (i != j) overlap[i][j] = get_overlap(i, j);
+        int M = (1 << N);
+        rep(i,0,M-1) rep(j,0,N-1) memo[i][j] = -1.0;
+        double ans = 1e9;
+        rep(i,0,N-1) ans = min(ans, dp((M-1) & ~(1 << i), i));
+        printf("%.3lf\n", ans);
     }
-    rep(i,0,N-1) rep(j,0,N-1) if (i != j) overlap[i][j] = get_overlap(i, j);
-    int M = (1 << N);
-    rep(i,0,M-1) rep(j,0,N-1) memo[i][j] = -1.0;
-    double ans = 1e9;
-    rep(i,0,N-1) ans = min(ans, dp((M-1) & ~(1 << i), i));
-    printf("%.3lf\n", ans);
     return 0;
 }
