@@ -1,4 +1,5 @@
-// tags: simulation, implementation
+// tags: simulation, implementation,
+// shortest repeating cycle (KMP)
 #include <bits/stdc++.h>
 using namespace std;
 typedef tuple<int,int,int> iii;
@@ -14,25 +15,22 @@ int states[MAXN][MAXN][MAXN];
 int inline hash_cell(int r, int c) { return N * r + c; }
 
 int shortest_repeating_cycle(vector<int>& sequence) {
-    int cycle = -1;
+    // KMP : lps step
     int n = sequence.size();
-    rep(k,1,n) {
-        if (n % k == 0) {
-            bool found = true;
-            for (int i = k; i < n; i += k) {
-                rep(j, 0, k-1) if (sequence[j] != sequence[i+j]) {
-                    found = false;
-                    goto checkfound;
-                }
-            }
-            checkfound:
-            if (found) {
-                cycle = k; break;
-            }
-        }
+    int lps[n];
+    lps[0] = 0;
+    int i = 0, j = 1;
+    while (j < n) {
+        while (i > 0 and sequence[i] != sequence[j])
+            i = lps[i-1];
+        if (sequence[i] == sequence[j])
+            lps[j] = ++i;
+        else
+            lps[j] = 0;
+        j++;
     }
-    assert (cycle != -1); // this should be always true
-    return cycle;
+    int len = n - lps[n-1];
+    return (n % len) ? n : len;
 }
 
 int main() {

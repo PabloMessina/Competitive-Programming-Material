@@ -9,7 +9,7 @@ typedef long long int ll;
 const int MAXN = 5 * 100000;
 const ll MOD = (ll)1e9 + 7;
 
-namespace SA {
+namespace SA { // suffix array
     int n;
     int rank[MAXN], rank_tmp[MAXN];
     int sa[MAXN], sa_tmp[MAXN];
