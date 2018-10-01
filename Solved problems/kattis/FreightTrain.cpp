@@ -1,10 +1,8 @@
 // tags: binary search
 #include <bits/stdc++.h>
 using namespace std;
-
 #define rep(i,a,b) for(int i=a; i<=b;  ++i)
 #define MAXW 10000
-
 int N, W, L;
 int pos[MAXW];
 
@@ -37,7 +35,6 @@ int main() {
             scanf("%d", &pos[i]);
             pos[i]--;
         }
-        //
         int kmin = 1, kmax = N;
         while (kmin < kmax) {
             int kmid = (kmin + kmax) / 2;
