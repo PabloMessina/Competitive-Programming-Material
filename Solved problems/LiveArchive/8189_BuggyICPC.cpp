@@ -1,4 +1,4 @@
-// tags: recursion, backtracking, pruning
+// tags: implementation, recursion
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
