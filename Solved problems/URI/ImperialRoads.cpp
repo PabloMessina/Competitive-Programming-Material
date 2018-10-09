@@ -26,10 +26,11 @@ namespace Prim { // minimun spanning tree
             return cost > o.cost;
         }
     };
-    bool visited[MAXN] = {0};
+    bool visited[MAXN];
     int find_mst() {
         int total_cost = 0;
         priority_queue<Edge> q;
+        memset(visited, 0, sizeof(bool) * N);
         visited[0] = true;
         for (ii& p : g[0]) q.push({0, p.first, p.second});
         int count = 1;
@@ -132,26 +133,31 @@ int get_cost(int a, int b) {
 
 int main() {
     // read and build graph
-    scanf("%d%d", &N, &R);
-    while (R--) {
-        int a, b, c;
-        scanf("%d%d%d", &a, &b, &c);
-        --a, --b;
-        g[a].emplace_back(b, c);
-        g[b].emplace_back(a, c);
-        save_cost(a, b, c);
-    }
-    // build minimum spanning tree and get its total cost
-    int mstcost = Prim::find_mst();
-    // init LCA sparse tables
-    LCA::init();
-    // answer queries
-    int q; scanf("%d", &q);
-    while (q--) {
-        int u, v; scanf("%d%d", &u, &v); --u, --v;
-        int pathmax = LCA::find_path_maxcost(u, v);
-        int edgecost = get_cost(u,v);
-        printf("%d\n", mstcost + edgecost - pathmax);
+    while (scanf("%d%d", &N, &R) == 2) {
+        // reset data structures
+        edge2cost.clear();
+        rep(i,0,N-1) g[i].clear();
+        rep(i,0,N-1) mst[i].clear();
+        while (R--) {
+            int a, b, c;
+            scanf("%d%d%d", &a, &b, &c);
+            --a, --b;
+            g[a].emplace_back(b, c);
+            g[b].emplace_back(a, c);
+            save_cost(a, b, c);
+        }
+        // build minimum spanning tree and get its total cost
+        int mstcost = Prim::find_mst();
+        // init LCA sparse tables
+        LCA::init();
+        // answer queries
+        int q; scanf("%d", &q);
+        while (q--) {
+            int u, v; scanf("%d%d", &u, &v); --u, --v;
+            int pathmax = LCA::find_path_maxcost(u, v);
+            int edgecost = get_cost(u,v);
+            printf("%d\n", mstcost + edgecost - pathmax);
+        }
     }
     return 0;
 }
