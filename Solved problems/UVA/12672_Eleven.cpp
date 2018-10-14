@@ -20,7 +20,7 @@ ll choose(int n, int k) {
     return ans = add(choose(n-1, k), choose(n-1, k-1));
 }
 
-ll memo[10][11][101][101];
+ll memo[10][11][52][52];
 ll dp(int i, int s, int p, int n) {
     if (i == 10) return s == 0;
     ll& ans = memo[i][s][p][n];
@@ -47,15 +47,14 @@ int main() {
         for (char c : line) f[c-'0']++;
         ll ans = 0;
         int len = line.size();
-        int p = len / 2 + (len % 2) - 1;
+        int p = len / 2 + (len % 2);
         int n = len / 2;
-        rep(i,1,9) {
-            if (f[i] > 0) {
-                f[i]--;
-                memset(memo, -1, sizeof memo);
-                ans = add(ans, dp(0, 11 - i, p, n));
-                f[i]++;
-            }
+        memset(memo, -1, sizeof memo);
+        ans = dp(0, 0, p, n);
+        if (f[0] > 0) {
+            memset(memo, -1, sizeof memo);
+            f[0]--;
+            ans = add(ans, MOD - dp(0, 0, p-1, n));
         }
         cout << ans << endl;
     }
