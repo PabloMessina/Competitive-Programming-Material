@@ -1,4 +1,5 @@
-// tags: Rolling Hashing, strings, DP, graphs
+// tags: Rolling Hashing, strings, DP,
+// DAG (directed acyclic graph)
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
