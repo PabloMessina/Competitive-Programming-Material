@@ -3,45 +3,43 @@
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-typedef long long int ll;
+typedef long long int ull;
 // -------------------------------
 
 const int MAXLEN = 1e6;
 const int MAXN = 1e4;
 
 struct RH { // rolling hashing
-    static const ll B = 33; // base
-    static const ll P = 1e9 + 7; // prime
-    static ll pow[MAXLEN];
+    static const ull B = 127; // base
+    static const ull P = 1e9 + 7; // prime
+    static ull pow[MAXLEN];    
+
+    static ull add(ull x, ull y) { return (x + y) % P; }
+    static ull mul(ull x, ull y) { return (x * y) % P; }
+
     static void init() {
         pow[0] = 1;
-        rep(i, 1, MAXLEN-1) pow[i] = (B * pow[i-1]) % P;
+        rep(i, 1, MAXLEN-1) pow[i] = mul(B, pow[i-1]);
     }
-
-    ll inline add(ll x, ll y) { return (x + y) % P; }
-    ll inline mul(ll x, ll y) { return (x * y) % P; }
     
-    vector<ll> hash;
+    vector<ull> h;
     int len;
     RH(string& s) {
         len = s.size();
-        hash.resize(len);
-        hash[0] = s[0] - 'a';
-        rep(i,1,len-1) hash[i] = add(mul(hash[i-1], B),s[i] - 'a');
+        h.resize(len);
+        h[0] = s[0] - 'a';
+        rep(i,1,len-1) h[i] = add(mul(h[i-1], B),s[i] - 'a');
     }
 
-    ll get_hash(int i, int j) {
-        if (i == 0) return hash[j];
-        return add(hash[j], P - mul(hash[i-1], pow[j - i + 1]));
+    ull hash(int i, int j) {
+        if (i == 0) return h[j];
+        return add(h[j], P - mul(h[i-1], pow[j - i + 1]));
     }
-
-    ll get_hash() {
-        return hash[len-1];
-    }
-
-    bool operator<(const RH& o) { return len < o.len; }
+    ull hash() { return h[len-1]; }
+    
+    bool operator<(const RH& o) const { return len < o.len; }
 };
-ll RH::pow[MAXLEN];
+ull RH::pow[MAXLEN]; // necessary for the code to compile
 
 vector<vector<int>> g;
 int memo[MAXN];
@@ -54,6 +52,8 @@ int dp(int i) {
 }
 
 int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(0);
     RH::init();
     vector<RH> rhs;
     rhs.reserve(MAXN);
@@ -70,12 +70,13 @@ int main() {
         int j = 1;
         rep(i,0,n-2) {
             RH& rhi = rhs[i];
+            ull hash_i = rhi.hash();
             while (j < n and rhs[j].len == rhs[i].len) j++;
             if (j == n) break;
             rep(k,j,n-1) {
                 RH& rhk = rhs[k];
                 int d = rhk.len - rhi.len;
-                rep(x,0,d) if (rhk.get_hash(x, x + rhi.len - 1) == rhi.get_hash()) {
+                rep(x,0,d) if (rhk.hash(x, x + rhi.len - 1) == hash_i) {
                     g[i].push_back(k);
                     break;
                 }
