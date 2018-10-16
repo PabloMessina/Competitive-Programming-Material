@@ -2,7 +2,7 @@
 // Suffix Array Construction : Prefix Doubling + Radix Sort
 // ========================================================
 // Complexity: O(N*log(N))
-// source: https://www.cs.helsinki.fi/u/tpkarkka/opetus/10s/spa/lecture11.pdf
+// reference: https://www.cs.helsinki.fi/u/tpkarkka/opetus/10s/spa/lecture11.pdf
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
@@ -29,9 +29,13 @@ namespace SA {
     // word: sequence of values
     // maxv: maximum value in 'word'
     // suffix_indexes: suffix indexes to be sorted
+    // ** 1 <= word[i] <= maxv
     void sort_suffix_indexes(vector<int>& word, int maxv, vector<int>& suffix_indexes) {
         n = word.size();
-        rep(i,0,n-1) { sa[i] = i; rank[i] = word[i]; }
+        rep(i,0,n-1) {
+            sa[i] = i; rank[i] = word[i];
+            assert(word[i] >= 1 and word[i] <= maxv);
+        }
         for (int h=1; h < n; h <<= 1) {
             // two counting sort passes to achieve O(n) sorting complexity
             // (i.e. 2-pass radix sort)

@@ -43,10 +43,11 @@ int main() {
     // --- find starting position
     rep(i,0,N-1) rep(j,0,N-1) {
         if (grid[i][j] == 'R') {
-            sr = i; sc = j; break;
+            sr = i; sc = j; goto simulation;
         }
     }
     // --- simulate and find loop in states
+    simulation:
     vector<iii> state_sequence;
     vector<int> trail;
     state_sequence.reserve(N * N * N);
