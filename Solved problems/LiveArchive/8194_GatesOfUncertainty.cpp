@@ -1,139 +1,47 @@
-// TODO: fix this
+// tags: DP, modular arithmetics, math
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef long long int ll;
 // -------------------------------
 
-const int MAXN = 100000 + 1;
+const int MAXN = (int)1e5 + 1;
 int N;
-ll MOD = 1000000000 + 7;
-
+ll MOD = (ll)1e9 + 7;
 struct Gate {
     int x, y, f;
 } gates[MAXN];
 
-ll inline add(ll x, ll y) { return (x+y)%MOD; }
-ll inline mul(ll x, ll y) { return (x*y)%MOD; }
+inline ll mod(ll x) { return x % MOD; }
+inline ll mul(ll x, ll y) { return mod(x*y); }
+inline ll add(ll x, ll y) { return mod(x+y); }
 
-ll incorrect(int i, int b);
-
-ll correct_memo[MAXN][2];
-ll correct(int i, int b) {
-    // printf("correct:: i=%d, b=%d\n", i, b);
-    ll& ans = correct_memo[i][b];
+ll memo[MAXN][2][2];
+ll dp(int i, int u, int v) {
+    ll& ans = memo[i][u][v];
     if (ans != -1) return ans;
-    if (i == 0) return ans = 1;    
-    Gate& g = gates[i];
-    ll tmp = 0;
-    if (g.f == -1) { // normal
-        if (b == 0) { // correct-0
-            tmp = add(tmp, mul(correct(g.x, 1), correct(g.y, 1)));
-        } else { // correct-1
-            assert (b == 1);
-            // C0 vs all
-            tmp = add(tmp, mul(correct(g.x, 0), correct(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 0), correct(g.y, 1)));
-            tmp = add(tmp, mul(correct(g.x, 0), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 0), incorrect(g.y, 1)));
-            // C1,I0,I1 vs C0
-            tmp = add(tmp, mul(correct(g.x, 1), correct(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), correct(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), correct(g.y, 0)));
-        }
-    } else if (g.f == 0) { // stuck 0
-        if (b == 0) { // correct-0
-            tmp = add(tmp, mul(correct(g.x, 1), correct(g.y, 1)));
-            tmp = add(tmp, mul(correct(g.x, 1), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), correct(g.y, 1)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), incorrect(g.y, 0)));
-        } else { // correct-1
-            assert (b == 1);
-            tmp = 0;
-        }
+    if (i == 0) return ans = (u == v);
+    Gate& gate = gates[i];
+    ll a = dp(gate.x, 0, 0); // x c0
+    ll b = dp(gate.x, 0, 1); // x i1
+    ll c = dp(gate.x, 1, 0); // x i0
+    ll d = dp(gate.x, 1, 1); // x c1
+    ll e = dp(gate.y, 0, 0); // y c0
+    ll f = dp(gate.y, 0, 1); // y i1
+    ll g = dp(gate.y, 1, 0); // y i0
+    ll h = dp(gate.y, 1, 1); // y c1
+    ll tmp = 0;    
+    if (gate.f == -1) { // normal        
+        /* c0 */if (u == 0 && v == 0) tmp = mul(d,h);
+        /* i1 */if (u == 0 && v == 1) tmp = mod(mul(d,g)+mul(c,h)+mul(c,g));
+        /* i0 */if (u == 1 && v == 0) tmp = mod(mul(b,h)+mul(b,f)+mul(d,f));
+        /* c1 */if (u == 1 && v == 1) tmp = mod(mul(a, e+f+g+h) + mul(b,e+g) + mul(d,e) + mul(c,e+f));
+    } else if (gate.f == 0) { // stuck 0
+        /* c0 */if (u == 0 && v == 0) tmp = mul(c+d,g+h);
+        /* i0 */if (u == 1 && v == 0) tmp = mod(mul(a+b, e+f+g+h) + mul(c+d,e+f));
     } else { // stuck 1
-        assert (g.f == 1);
-        if (b == 0) { // correct-0
-            tmp = 0;
-        } else { // correct-1
-            assert (b == 1);
-            // C0 vs all
-            tmp = add(tmp, mul(correct(g.x, 0), correct(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 0), correct(g.y, 1)));
-            tmp = add(tmp, mul(correct(g.x, 0), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 0), incorrect(g.y, 1)));
-            // I1 vs all
-            tmp = add(tmp, mul(incorrect(g.x, 1), correct(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), correct(g.y, 1)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), incorrect(g.y, 1)));
-            // C1 vs C0,I1
-            tmp = add(tmp, mul(correct(g.x, 1), correct(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 1), incorrect(g.y, 1)));
-            // I0 vs C0,I1
-            tmp = add(tmp, mul(incorrect(g.x, 0), correct(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), incorrect(g.y, 1)));
-        }
-    }
-    return ans = tmp;
-}
-
-ll incorrect_memo[MAXN][2];
-ll incorrect(int i, int b) {
-    // printf("incorrect:: i=%d, b=%d\n", i, b);
-    ll& ans = incorrect_memo[i][b];
-    if (ans != -1) return ans;
-    if (i == 0) return ans = 0;
-    Gate& g = gates[i];
-    ll tmp = 0;
-    if (g.f == -1) { // normal
-        if (b == 0) { // incorrect-0        
-            tmp = add(tmp, mul(incorrect(g.x, 1), incorrect(g.y, 1)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), correct(g.y, 1)));
-            tmp = add(tmp, mul(correct(g.x, 1), incorrect(g.y, 1)));
-        } else { // incorrect-1
-            assert (b == 1);
-            // I0 vs C1,I0,I1
-            tmp = add(tmp, mul(incorrect(g.x, 0), correct(g.y, 1)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), incorrect(g.y, 1)));
-            // C1,I1 vs I0
-            tmp = add(tmp, mul(correct(g.x, 1), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), incorrect(g.y, 0)));
-        }
-    } else if (g.f == 0) { // stuck 0
-        if (b == 0) { // incorrect-0
-            // C0 vs all
-            tmp = add(tmp, mul(correct(g.x, 0), correct(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 0), correct(g.y, 1)));
-            tmp = add(tmp, mul(correct(g.x, 0), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 0), incorrect(g.y, 1)));
-            // I1 vs all
-            tmp = add(tmp, mul(incorrect(g.x, 1), correct(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), correct(g.y, 1)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 1), incorrect(g.y, 1)));            
-            // C1 vs C0,I1
-            tmp = add(tmp, mul(correct(g.x, 1), correct(g.y, 0)));
-            tmp = add(tmp, mul(correct(g.x, 1), incorrect(g.y, 1)));
-            // I0 vs C0,I1
-            tmp = add(tmp, mul(incorrect(g.x, 0), correct(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), incorrect(g.y, 1)));
-        } else { // incorrect-1
-            assert (b == 1);
-            tmp = 0;
-        }
-    } else { // stuck 1
-        assert (g.f == 1);
-        if (b == 0) { // incorrect-0
-            tmp = 0;
-        } else { // incorrect-1
-            assert (b == 1);
-            tmp = add(tmp, mul(correct(g.x, 1), correct(g.y, 1)));
-            tmp = add(tmp, mul(correct(g.x, 1), incorrect(g.y, 0)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), correct(g.y, 1)));
-            tmp = add(tmp, mul(incorrect(g.x, 0), incorrect(g.y, 0)));
-        }
+        /* i1 */if (u == 0 && v == 1) tmp = mul(c+d,g+h);
+        /* c1 */if (u == 1 && v == 1) tmp = mod(mul(a+b, e+f+g+h) + mul(c+d,e+f));
     }
     return ans = tmp;
 }
@@ -144,9 +52,8 @@ int main() {
             Gate& g = gates[i];
             cin >> g.x >> g.y >> g.f;
         }
-        memset(correct_memo, -1, sizeof(correct_memo));
-        memset(incorrect_memo, -1, sizeof(incorrect_memo));
-        cout << add(incorrect(1,0), incorrect(1,1)) << endl;
+        memset(memo, -1, sizeof memo);
+        cout << add(dp(1,0,1),dp(1,1,0)) << endl;
     }
     return 0;
 }
