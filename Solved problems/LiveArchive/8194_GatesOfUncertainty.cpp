@@ -17,6 +17,8 @@ inline ll mul(ll x, ll y) { return mod(x*y); }
 inline ll add(ll x, ll y) { return mod(x+y); }
 
 ll memo[MAXN][2][2];
+// number of value assignments (mod 1e9+7) so that node i
+// should output u (theory) but instead outputs v (reality)
 ll dp(int i, int u, int v) {
     ll& ans = memo[i][u][v];
     if (ans != -1) return ans;
