@@ -363,7 +363,8 @@ ptcounts[{1, 2}] = 1;
 // it returns a pair { iterator(key, value) , bool }
 // if the key already exists, it doesn't overwrite the value
 void update_count(Point& p) {
-    auto ret = ptcounts.insert(make_pair(p, 1));
+    auto ret = ptcounts.emplace(p, 1);
+    // auto ret = ptcounts.insert(make_pair(p, 1)); //
     if (!ret.second) ret.first->second++;
 }
 

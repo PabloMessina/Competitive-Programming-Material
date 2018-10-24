@@ -1,4 +1,4 @@
-// tags: trie, DP, recursive distribution
+// tags: strings, trie, DP, recursive distribution
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i=a; i<=b; i++)
@@ -30,7 +30,7 @@ int dp(int u, int n);
 // among the children of node u in index range i ... 25.
 // u = current trie node
 // i = start index for u's child nodes
-// n = numer of words to choose as strees (the rest goes to avenues)
+// n = numer of words to choose as streets (the rest goes to avenues)
 // tot_words = total number of words to be splitted (from index i onwards)
 int search(int u, int i, int n, int tot_words) {
     // find the first child node from i to the right
