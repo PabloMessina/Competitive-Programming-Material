@@ -4,11 +4,9 @@ using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef tuple<int,int,int> iii;
 // -------------------------------
-
 string s1, s2, virus;
 int n1, n2, nv;
 int lps[100];
-
 int memo_lcs[100][100][100]; // remember solutions
 iii memo_next[100][100][100]; // remember next subproblem in optimal solution
 // dp(i,j,k) = length of the longest common subsequence between s1[i .. n1-1] and s2[j .. n2-1]
@@ -17,40 +15,26 @@ iii memo_next[100][100][100]; // remember next subproblem in optimal solution
 int dp(int i, int j, int k) {
     // bases cases
     if (k == nv) return -1;
-    if (i == n1) return 0;
-    if (j == n2) return 0;
+    if (i == n1 or j == n2) return 0;
     // already solved
     int& ans = memo_lcs[i][j][k];
     if (ans != -1) return ans;
-
     int tmp;
     iii& nxt = memo_next[i][j][k];
-
     // option 1
     if (s1[i] == s2[j]) {
         int kk = k;
         while (virus[kk] != s1[i] and kk > 0) kk = lps[kk-1];
         if (virus[kk] == s1[i]) kk++;
         tmp = dp(i+1, j+1, kk);
-        if (tmp != -1 and tmp + 1 > ans) {
-            ans = tmp + 1;
-            nxt = iii(i+1, j+1, kk);
-        }
+        if (tmp != -1 and tmp + 1 > ans) { ans = tmp + 1; nxt = iii(i+1, j+1, kk); }
     }
     // option 2
     tmp = dp(i+1, j, k);
-    if (tmp != -1 and tmp > ans) {
-        ans = tmp;
-        nxt = iii(i+1, j, k);
-    }
+    if (tmp != -1 and tmp > ans) { ans = tmp; nxt = iii(i+1, j, k); }
     // option 3
     tmp = dp(i, j+1, k);
-    if (tmp != -1 and tmp > ans) {
-        ans = tmp;
-        nxt = iii(i, j+1, k);
-    }
-
-    if (ans == -1) nxt = iii(-1, -1, -1);
+    if (tmp != -1 and tmp > ans) { ans = tmp; nxt = iii(i, j+1, k); }
     return ans;
 }
 
