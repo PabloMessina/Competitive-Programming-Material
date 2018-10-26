@@ -5,7 +5,7 @@ using namespace std;
 // Build longest proper prefix/suffix array (lps) for pattern
 // lps[i] = length of the longest proper prefix which is also proper suffix
 // in pattern[0 .. i]
-void preKMP(string& pattern, int lps[]) {
+void init_lps(string& pattern, int lps[]) {
     int n = pattern.size();
     lps[0] = 0; // base case: no proper prefix/suffix for pattern[0 .. 0] (length 1)
     rep(j, 1, n-1) { // for each pattern[0 .. j]
@@ -16,10 +16,10 @@ void preKMP(string& pattern, int lps[]) {
 }
 
 // Count number of matches of pattern string in target string using KMP algorithm
-int KMP(string& pattern, string& target) {
+int count_matches(string& pattern, string& target) {
     int n = pattern.size(), m = target.size();
     int lps[n];
-    preKMP(pattern, lps); // build lps array
+    init_lps(pattern, lps); // build lps array
     int matches = 0;
     int i = 0; // i tracks current char in pattern to compare
     rep(j, 0, m-1) { // j tracks each char in target to compare
@@ -39,7 +39,7 @@ int main() {
     string target, pattern;
     while (true) {
         cin >> target >> pattern;
-        cout << KMP(pattern, target) << " matches" << endl;
+        cout << count_matches(pattern, target) << " matches" << endl;
     }
     return 0;
 }
