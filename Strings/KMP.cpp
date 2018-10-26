@@ -3,8 +3,7 @@ using namespace std;
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
 
 // Build longest proper prefix/suffix array (lps) for pattern
-// lps[i] = length of the longest proper prefix which is also proper suffix
-// in pattern[0 .. i]
+// lps[i] = length of the longest proper prefix which is also suffix in pattern[0 .. i]
 void init_lps(string& pattern, int lps[]) {
     int n = pattern.size();
     lps[0] = 0; // base case: no proper prefix/suffix for pattern[0 .. 0] (length 1)
