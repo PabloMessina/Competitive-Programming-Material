@@ -24,7 +24,7 @@ ull add(ull x, ull y, bool& overflow) {
 }
 
 // choose(n,k,overflow):
-// it computes the binomial coefficient C(n,k) = n!/(k!*(n-k)!)
+// computes the binomial coefficient C(n,k) = n!/(k!*(n-k)!)
 // using the recurrence relation C(n,k) = C(n-1,k) + C(n-1,k-1)
 // We use dynamic programming over this recurrence.
 // The argument bool& overflow is used to tell the caller whether
