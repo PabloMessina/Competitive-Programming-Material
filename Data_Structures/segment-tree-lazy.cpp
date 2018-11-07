@@ -36,7 +36,7 @@ struct SegmentTreeLazy {
             return;
             
         if(a >= i && b <= j) { // segment is fully within range
-            tree[node] += value; 
+            tree[node] += value;
             if(a != b) { // not leaf node
                 lazy[left(node)] += value;
                 lazy[right(node)] += value;

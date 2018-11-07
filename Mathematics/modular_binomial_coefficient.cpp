@@ -1,3 +1,4 @@
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef long long int ll;
 const ll MOD = 1000000007ll; // a prime number
 const int MAXN = 1000;
