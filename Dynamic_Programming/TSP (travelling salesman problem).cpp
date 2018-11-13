@@ -48,7 +48,7 @@ int tsp(int n) {
 // Travelling Salesman Problem (TSP) - Variant 2
 // ----------------------------------------------
 // find the minimum cost of visiting all nodes RETURNING to the initial node
-// complexity: O(2^N * N^2)
+// complexity: O(2^N * N)
 
 const int MAXN = 14; // maximum number of nodes in the problem statement
 int cost[MAXN][MAXN]; // cost[i][j]: cost to travel from node i to node j
@@ -81,13 +81,9 @@ int dp(int bitmask, int i) {
     return ans = tmp;
 }
 
-int tsp(int n) {    
-    int ans = INT_MAX;
-    int mask = (1 << n) - 1;
-    rep(i, 0, n-1) {
-        initial_i = i;
-        memset(memo, -1, sizeof memo); // were reset every iteration because initial_i has changed
-        ans = min(ans, dp(mask & ~(1 << i), i));
-    }
+int tsp(int n) {
+    initial_i = 0;
+    memset(memo, -1, sizeof memo); 
+    ans = dp((1 << n) - 2, 0);
     cout << ans << endl;
 }
