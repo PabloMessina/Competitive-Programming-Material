@@ -65,7 +65,7 @@ int initial_i; // we will use this global variable to remember the initial node
 //        so the i-th bit in bitmask should be 0)
 int memo[1 << MAXN][MAXN]; // 2^MAXN x MAXN
 int dp(int bitmask, int i) {
-    // base case 1: nothing visit, come back to initial node
+    // base case 1: nothing to visit, come back to initial node
     if (bitmask == 0) return cost[i][initial_i];
     // base case 2: problem already solved
     int& ans = memo[bitmask][i];

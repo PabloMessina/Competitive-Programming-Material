@@ -28,9 +28,10 @@ double get_x(Point& a, Point& b, double y) {
 // Find the x-axis overlap between the shadows of tiles i and j assuming
 // that tile j is placed to the right of tile i and the tiles are touching
 // each other in a single point/edge.
-// This x-axis overlap can be computed by finding the minimun horizontal
-// distance between  tile i's right boundary and tile j's left boundary,
+// This x-axis overlap can be computed by first finding the minimun horizontal
+// distance (mind) between  tile i's right boundary and tile j's left boundary,
 // which can be done in O(N) using two pointers.
+// Then, the overlap can be found translating tile j 'mind' units to the left.
 double overlap[MAXN][MAXN];
 double get_xaxis_overlap(int i, int j) {
     Tile& ti = tiles[i];
@@ -54,7 +55,7 @@ double get_xaxis_overlap(int i, int j) {
         if (y_down == pi2.y) i--;
         if (y_down == pj2.y) j--;
     }
-    return ti.max_x  - tj.min_x + mind;
+    return ti.max_x - tj.min_x + mind;
 }
 
 // Travelling Salesman Problem (adapted to the problem 'Arranging Tiles')
@@ -69,7 +70,7 @@ double get_xaxis_overlap(int i, int j) {
 //        so the i-th bit in bitmask should be 0)
 double memo[1 << MAXN][MAXN]; // 2^MAXN x MAXN
 double dp(int bitmask, int i) {
-    // base case 1: nothing visit
+    // base case 1: nothing to visit
     if (bitmask == 0) return 0; 
     // base case 2: problem already solved
     double& ans = memo[bitmask][i];
