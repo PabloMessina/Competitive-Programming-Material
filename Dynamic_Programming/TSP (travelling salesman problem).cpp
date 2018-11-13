@@ -11,7 +11,8 @@ int cost[MAXN][MAXN]; // cost[i][j]: cost to travel from node i to node j
 // starting from node 'i'.
 // 
 //   * bitmask: an int whose bits indicate the nodes to be visited next
-//      if j-th bit in bitmask is 1, the j-th node should be visited
+//      ** if j-th bit in bitmask is 1, the j-th node should be visited
+//         else, the j-th node should be ignored
 //
 //   * i: node we are starting the travel from (i is already visited,
 //        so the i-th bit in bitmask should be 0)

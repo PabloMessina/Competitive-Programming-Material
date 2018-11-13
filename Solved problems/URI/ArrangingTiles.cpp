@@ -1,18 +1,9 @@
-// tags: DP, TSP, bitmask, two pointers, straight line equation, geometry
-#include <bits/stdc++.h> // add almost everything in one shot
+// tags: DP, TSP (travelling salesman problem), bitmask,
+// two pointers, straight line equation, geometry
+#include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef unsigned long long int ull;
-typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
 
 int N;
@@ -22,19 +13,26 @@ struct Point { double x, y; };
 Point pts[MAXK];
 
 struct Tile {
-    vector<Point> left_pts;
-    vector<Point> right_pts;
-    double width;
-    double min_x=0;
-    double max_x=0;
-};
-Tile tiles[MAXN];
+    vector<Point> left_pts; // left boundary points (bottom-up)
+    vector<Point> right_pts; // right boundary points (bottom-up)
+    double width; // tile's width
+    double min_x=0; // minimum x among all points
+    double max_x=0; // maximum x among all points
+} tiles[MAXN];
 
-double overlap[MAXN][MAXN];
+// Find the x-axis coordinate of the point whose y-axis coordinate is 'y'
+// and is located in the straight line <-a-b->
 double get_x(Point& a, Point& b, double y) {
     return a.x + (y - a.y) * (a.x - b.x) / (a.y - b.y);
 }
-double get_overlap(int i, int j) {
+// Find the x-axis overlap between the shadows of tiles i and j assuming
+// that tile j is placed to the right of tile i and the tiles are touching
+// each other in a single point/edge.
+// This x-axis overlap can be computed by finding the minimun horizontal
+// distance between  tile i's right boundary and tile j's left boundary,
+// which can be done in O(N) using two pointers.
+double overlap[MAXN][MAXN];
+double get_xaxis_overlap(int i, int j) {
     Tile& ti = tiles[i];
     Tile& tj = tiles[j];
     i = ti.right_pts.size()-1;
@@ -59,50 +57,78 @@ double get_overlap(int i, int j) {
     return ti.max_x  - tj.min_x + mind;
 }
 
-double memo[1 << MAXN][MAXN];
-double dp(int mask, int curr_i) {
-    if (mask == 0) return tiles[curr_i].width;
-    if (memo[mask][curr_i] >= -0.5)
-        return memo[mask][curr_i];
-    double extra = (double)INT_MAX;
-    for (int i=0, b=1; i < N; b<<=1, ++i) {
-        if (mask & b) {
-            extra = min(extra, dp(mask & ~b, i) - overlap[curr_i][i]);
+// Travelling Salesman Problem (adapted to the problem 'Arranging Tiles')
+// dp(bitmask, i): find the maximum total overlap of visiting all nodes(tiles)
+//   indicated by 'bitmask' in sequence, starting from node 'i'.
+// 
+//   * bitmask: an int whose bits indicate the nodes(tiles) to be visited next
+//      ** if j-th bit in bitmask is 1, the j-th node should be visited
+//         else, the j-th node should be ignored
+//
+//   * i: node(tile) we are starting the travel from (i is already visited,
+//        so the i-th bit in bitmask should be 0)
+double memo[1 << MAXN][MAXN]; // 2^MAXN x MAXN
+double dp(int bitmask, int i) {
+    // base case 1: nothing visit
+    if (bitmask == 0) return 0; 
+    // base case 2: problem already solved
+    double& ans = memo[bitmask][i];
+    if (ans >= -0.5) return ans;
+    // general case: try all possible next nodes
+    double tmp = 0;
+    for (int j=0, b=1; b <= bitmask; ++j, b <<= 1) {
+        if (bitmask & b) {
+            assert (i != j);
+            tmp = max(tmp, overlap[i][j] + dp(bitmask & ~b, j));
         }
     }
-    return memo[mask][curr_i] = tiles[curr_i].width + extra;
+    // return maximum overlap
+    return ans = tmp;
 }
 
 int main() {
-    while (scanf("%d", &N) == 1) {
-        rep(i,0,N-1) {
+    while (scanf("%d", &N) == 1) { // for each test case
+        // STEP 1: read input and define Tile instances from it
+        double total_width = 0;
+        rep(i,0,N-1) { // for each tile (convex polygon)
+            // reset tile
             Tile& tile = tiles[i];
             tile.right_pts.clear();
             tile.left_pts.clear();
             tile.min_x = 0;
             tile.max_x = 0;
+            // read points into the temporal 'pts' array
             int k; scanf("%d", &k);
             int offset = -1;
             rep(j,0,k-1) {
                 double x, y; scanf("%lf%lf", &x, &y);
                 pts[j] = {x,y};
+                // the if below detects the position at which the 'left' boundary
+                // of the polygon starts in counter clockwise order
                 if (j > 2 and pts[j].y == pts[j-1].y) {
                     offset = j;
                 }
+                // update tile's min_x and max_x
                 tile.min_x = min(tile.min_x, x);
                 tile.max_x = max(tile.max_x, x);
             }
+            // collect points in the tile's right boundary 
             tile.width = tile.max_x - tile.min_x;            
+            total_width += tile.width;
             rep(j,1,offset-1) tile.right_pts.push_back(pts[j]);
+            // collect points in the tile's left boundary
             tile.left_pts.push_back(pts[0]);
             invrep(j,k-1,offset) tile.left_pts.push_back(pts[j]);
         }
-        rep(i,0,N-1) rep(j,0,N-1) if (i != j) overlap[i][j] = get_overlap(i, j);
-        int M = (1 << N);
-        rep(i,0,M-1) rep(j,0,N-1) memo[i][j] = -1.0;
-        double ans = 1e9;
-        rep(i,0,N-1) ans = min(ans, dp((M-1) & ~(1 << i), i));
-        printf("%.3lf\n", ans);
+        // STEP 2: create overlap matrix in O(N^2)
+        rep(i,0,N-1) rep(j,0,N-1) if (i != j) overlap[i][j] = get_xaxis_overlap(i, j);
+        // STEP 3: find maximum total overlap using DP
+        int M = (1 << N); // M = 2^N
+        rep(i,0,M-1) rep(j,0,N-1) memo[i][j] = -1.0; // reset memo
+        double maxoverlap = 0;
+        rep(i,0,N-1) maxoverlap = max(maxoverlap, dp((M-1) & ~(1 << i), i));
+        // STEP 4: print answer
+        printf("%.3lf\n", total_width - maxoverlap);
     }
     return 0;
 }

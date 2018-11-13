@@ -26,17 +26,17 @@ struct BIT { // binary indexed tree, aka fenwick tree
 	BIT(int n) { ft.assign(n+1, 0); }
 	// prefix sum query (sum in range 1 .. b)
 	int psq(int b) {
-		int sum = 0;
-		for (; b; b -= (b & -b)) sum += ft[b];
-		return sum;
+        int sum = 0;
+        for (; b; b -= (b & -b)) sum += ft[b];
+        return sum;
 	}
 	// range sum query (sum in range a .. b)
 	int rsq(int a, int b) {
-		return psq(b) - psq(a-1);
+        return psq(b) - psq(a-1);
 	}
 	// increment k'th value by v (and propagate)
 	void add(int k, int v) {
-		for (; k < ft.size(); k += (k & -k)) ft[k] += v;
+        for (; k < ft.size(); k += (k & -k)) ft[k] += v;
 	}
 };
 
