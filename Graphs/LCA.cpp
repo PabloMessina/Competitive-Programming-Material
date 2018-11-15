@@ -65,9 +65,10 @@ namespace LCA1 {
         }
     }
 
-    int raise(int u, int dist) {
-        // move node u "dist" steps up towards the root
-        for (int i = 0; dist; i++, dist>>=1) if (dist&1) u = P[u][i];
+    int raise(int u, int steps) {
+        // move node u "steps" steps up towards the root
+        // i.e. find the steps-th ancestor of u
+        for (int i = 0; steps; i++, steps>>=1) if (steps&1) u = P[u][i];
         return u;
     }
 
