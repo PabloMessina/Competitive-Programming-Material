@@ -29,7 +29,7 @@ string bases = "_123456789abcdefghijklmnopqrstuvwxyz0";
 
 int main() {
     int n; cin >> n;
-    getchar();
+    getchar(); // consume EOL
     while (n--) {
         string line; getline(cin, line);
         stringstream ss(line);
