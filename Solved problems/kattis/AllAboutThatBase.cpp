@@ -1,120 +1,75 @@
-// tags: parse input, change base, implementation
-
+// tags: implementation, math
 #include <bits/stdc++.h>
 using namespace std;
-
 #define rep(i,a,b) for(int i=a; i <= b; ++i)
-#define invrep(i,a,b) for(int i=a; i>= b; --i)
-
 typedef long long int ll;
 
-const ll maxval = (ll)UINT_MAX;
-
-void split(string& s, vector<string>& tokens) {
-  stringstream ss(s);
-  string item;
-  while (getline(ss, item, ' '))
-    tokens.push_back(item);
+int inline char2digit(char c) {
+    if ('0' <= c and c <= '9') return c - '0';
+    return 10 + c - 'a';
 }
 
-void update_base(string& s, int& base) {
-  for (char c : s) {
-    if ('0' <= c && c <= '9')
-      base = max(base, c-'0' + 1);
-    else
-      base = max(base, c-'a' + 11);
-  }
-}
-
-int char2int(char c) {
-  if ('0' <= c && c <= '9')
-    return c - '0';
-  return c - 'a' + 10;
-}
-
-bool try_parse_num(string& tok, ll& num, int base) {
-  ll aux = 1;
-  num = 0;
-  invrep(i, (int)tok.size()-1, 0) {
-    num += aux * char2int(tok[i]);
-    aux *= base;
-    if (num > maxval)
-      return false;
-  }
-  return true;
-}
-
-bool only_ones(string& s) {
-  for (char c : s)
-    if (c != '1')
-      return false;
-  return true;
-}
-
-bool check_operation(ll a, ll b, ll c, char op) {
-  switch(op) {
-    case '*':
-      return a * b == c;
-    case '/':
-      return b != 0 && (a % b == 0) && (a / b == c);
-    case '+':
-      return a + b == c;
-    default: // -
-      return a - b == c;
-  }
-}
-
-string bases = "123456789abcdefghijklmnopqrstuvwxyz0";
-
-void process_tokens(vector<string>& tokens) {
-  string tokA = tokens[0];
-  string tokB = tokens[2];
-  string tokC = tokens[4];
-  ll numA, numB, numC;
-  char op = tokens[1][0];
-
-  bool invalid = true;
-
-  if (only_ones(tokA) && only_ones(tokB) && only_ones(tokC)) {
-    numA = tokA.size();
-    numB = tokB.size();
-    numC = tokC.size();
-    if (check_operation(numA, numB, numC, op)) {
-      invalid = false;
-      printf("1");
+ll getval(string& s, int b) {
+    ll val = 0;
+    for (char c : s) {
+        val = val * b + char2digit(c);
     }
-  }
-
-  int base = 2;
-  update_base(tokA, base);
-  update_base(tokB, base);
-  update_base(tokC, base);
-
-  for (;base <= 36; ++base) {
-    if (try_parse_num(tokA, numA, base)
-      && try_parse_num(tokB, numB, base)
-      && try_parse_num(tokC, numC, base)
-      && check_operation(numA, numB, numC, op)) 
-    {
-      invalid = false;
-      printf("%c", bases[base-1]);
-    }
-  }
-  if (invalid)
-    puts("invalid");
-  else
-    puts("");
+    return val;
 }
+
+bool valid_equation(ll x1, ll x2, ll y, char op) {
+    if (op == '+') return x1 + x2 == y;
+    if (op == '-') return x1 - x2 == y;
+    if (op == '*') return x1 * x2 == y;
+    assert (op == '/');
+    return x1 % x2 == 0 and x1 / x2 == y;
+}
+
+string bases = "_123456789abcdefghijklmnopqrstuvwxyz0";
 
 int main() {
-  int n;
-  scanf("%d\n", &n);
-  string line;
-  while(n--) {
-    getline(cin, line);
-    vector<string> tokens;
-    split(line, tokens);
-    process_tokens(tokens);
-  }
-  return 0;
+    int n; cin >> n;
+    getchar();
+    while (n--) {
+        string line; getline(cin, line);
+        stringstream ss(line);
+        string num1, num2, result; char op, eq;
+        ss >> num1 >> op >> num2 >> eq >> result;
+        bool only_ones  = true;
+        int minb = 2;
+        for (char c : num1) {
+            if (c != '1') only_ones = false;
+            minb = max(minb, char2digit(c) + 1);
+        }
+        for (char c : num2) {
+            if (c != '1') only_ones = false;
+            minb = max(minb, char2digit(c) + 1);
+        }
+        for (char c : result) {
+            if (c != '1') only_ones = false;
+            minb = max(minb, char2digit(c) + 1);
+        }
+        bool invalid = true;
+        if (only_ones) {
+            int x1 = num1.size();
+            int x2 = num2.size();
+            int y = result.size();
+            if (valid_equation(x1,x2,y,op)) {
+                invalid = false;
+                cout << '1';
+            }
+        }
+        rep(b,minb,36) {
+            ll x1 = getval(num1, b);
+            ll x2 = getval(num2, b);
+            ll y = getval(result, b);
+            if (valid_equation(x1,x2,y,op)) {
+                invalid = false;
+                cout << bases[b];
+            }
+        }
+        if (invalid) cout << "invalid\n";
+        else cout << '\n';
+    }
+    return 0;
 }

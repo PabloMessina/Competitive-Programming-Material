@@ -1,3 +1,4 @@
+// tags: math, implementation
 #include <bits/stdc++.h>
 using namespace std;
 

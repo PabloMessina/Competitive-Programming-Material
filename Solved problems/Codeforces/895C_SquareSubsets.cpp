@@ -1,5 +1,5 @@
-// tags: DP, combinatorics, math, bitmasks, bitwise xor,
-// modular arithmetics, prime factorization
+// tags: DP, combinatorics, prime factorization,
+// math, bitmasks, bitwise xor, modular arithmetics
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)

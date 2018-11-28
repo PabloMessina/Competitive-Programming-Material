@@ -1,3 +1,4 @@
+// tags: bitwise, implementation
 #include <bits/stdc++.h>
 using namespace std;
 
