@@ -1,3 +1,4 @@
+// tags: maxflow, dinic
 #include <cstdio>
 #include <vector>
 #include <cmath>
