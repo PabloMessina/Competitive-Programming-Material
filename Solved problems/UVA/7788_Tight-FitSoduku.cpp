@@ -79,7 +79,7 @@ bool search(int r, int c, OP op) {
         next_op = SECOND;
     }
 
-    // easy cases: cell's values alredy given in the input
+    // easy cases: cell's values already given by the input
     if (cell.type == SINGLE and cell.a != 0)
         return search(next_r, next_c, next_op);
     if (cell.type == DOUBLE and

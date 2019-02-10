@@ -1,164 +1,121 @@
-/**
- *	Algorithms used: Brute Force (backtracking + pruning)
- *	+ a lot of string manipulation
- */
-#include <cstdio>
-#include <string>
-#include <iostream>
-#include <cstring>
-#include <algorithm>
-#include <cstring>
-#include <cstdlib>
+// tags: backtracking, pruning, implementation
+#include <bits/stdc++.h> // import everything in one shot
 using namespace std;
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
+// -------------------------------
 
-#define FOR(i,i0,n) for(int i = i0; i < n; ++i)
+int R, C;
+string names[4];
+string digitsArray[5];
 
-int n_prods;
-int n_sellers;
-string sellerNames[4];
-string sellerDigits[4];
-string expectedTotals;
+int cells[5][6];
+int offsets[5][7] = {0};
 
-struct Substr {
-	int offset;
-	int length;
-	int value;
-};
-Substr splits[4][6]; // 4 sellers x (5 products + total)
-int totalSums[6];
-char numBuff[50];
-
-bool isDigit(char c) {
-	return '0' <= c && c <= '9';
+bool isLetter(char c) {
+	return ('a' <= c and c <= 'z') or ('A' <= c and c <= 'Z');
 }
 
-int substr2Int(const char* str, int offset, int length) {
-	memcpy(numBuff, str + offset, length);
-	numBuff[length] = '\0';
-	return atoi(numBuff);
+int parseNum(string& s, int i, int j) {
+	int x = 0;
+	rep(k,i,j) x = x * 10 + (s[k] - '0');
+	return x;
 }
 
-bool checkTable() {
-	int offset = 0;
-	FOR(i,0,n_prods+1) {
-		int sum = 0;
-		FOR(j,0,n_sellers) sum += splits[j][i].value;
-		totalSums[i] = sum;
-		sprintf(numBuff + offset,"%d",sum);
-		offset = strlen(numBuff);
+void print_table() {
+	rep(c,1,C-1) cout << "P" << c << " ";
+	cout << "Totals\n";
+	rep(r,0,R-2) {
+		cout << names[r];
+		rep(c,0,C-1) cout << " " << cells[r][c];
+		cout << '\n';
 	}
-	return strcmp(numBuff,expectedTotals.c_str()) == 0;
+	cout << "TP";
+	rep(c,0,C-1) cout << " " << cells[R-1][c];
+	cout << '\n';
 }
 
-bool findSplit(int i_sel, int i_prod, int offset, int maxLenCarry) {
-	string& digits = sellerDigits[i_sel];
-	// not last seller
-	if (i_sel < n_sellers - 1) {
-		// product
-		if (i_prod < n_prods) {
-			int rest = digits.length() - offset - (n_prods - i_prod - 1) - maxLenCarry;
-			int lengthLimit = 1 + ((rest > maxLenCarry) ?
-				(maxLenCarry + (rest - maxLenCarry) / 2) : rest);
-			FOR(length,1,lengthLimit) {
-				if (digits[offset] == '0' && length > 1) break; // no leading 0's
-				Substr& split = splits[i_sel][i_prod];
-				split.offset = offset;
-				split.length = length;
-				split.value =  substr2Int(digits.c_str(), offset, length);
+bool validate_row(int r) {
+	int sum = 0;
+	rep(c,0,C-2) sum += cells[r][c];
+	return sum == cells[r][C-1];
+}
 
-				if (findSplit(i_sel,i_prod+1,offset+length, max(maxLenCarry,length))) return true;
-			}
-		// total
+bool validate_column(int c) {
+	int sum = 0;
+	rep(r,0,R-2) sum += cells[r][c];
+	return sum == cells[R-1][c];
+}
+
+bool _search(int r, int c) {
+	int offset = offsets[r][c];
+	string& digits = digitsArray[r];
+	int len = digits.size();
+	int r_digits = len - offset;
+	bool footer = r == R-1;
+	int maxD1 = footer ? 4 : 3;
+	int maxD2 = footer ? 5 : 4;
+
+	if (c == C-1) {
+		if (r_digits > maxD2) return false;
+		if (digits[offset] == '0' and r_digits > 1) return false;
+		int val = parseNum(digits, offset, len-1);
+		cells[r][c] = val;
+		if (footer) {
+			if (validate_row(r) and validate_column(c)) return true;
 		} else {
-			int length = digits.length() - offset;
-			if (digits[offset] == '0' && length > 1) return false; // no leading 0's
-			// check this row's sum is correct
-			int sum = 0;
-			FOR(i,0,n_prods) sum += splits[i_sel][i].value;
-			int total = substr2Int(digits.c_str(), offset, length);
-			if (total == sum) {
-				Substr& split = splits[i_sel][i_prod];
-				split.offset = offset;
-				split.length = length;
-				split.value =  total;
-				return findSplit(i_sel+1,0,0,0);
-			}
+			if (validate_row(r) and _search(r+1, 0)) return true;
 		}
-	// last seller
-	} else {
-		// product
-		if (i_prod < n_prods) {
-			int rest = digits.length() - offset - (n_prods - i_prod - 1) - maxLenCarry;
-			int lengthLimit = 1 + ((rest > maxLenCarry) ?
-				(maxLenCarry + (rest - maxLenCarry) / 2) : rest);
-			FOR(length,1,lengthLimit) {
-				if (digits[offset] == '0' && length > 1) break; // no leading 0's
-				Substr& split = splits[i_sel][i_prod];
-				split.offset = offset;
-				split.length = length;
-				split.value =  substr2Int(digits.c_str(), offset, length);
-				if (findSplit(i_sel,i_prod+1,offset+length, max(maxLenCarry,length))) return true;
-			}
-		// total
+		return false;
+	}
+
+	if (digits[offset] == '0') {
+		cells[r][c] = 0;
+		offsets[r][c+1] = offset + 1;
+		if (footer) {
+			if (validate_column(c) and _search(r, c+1)) return true;
 		} else {
-			int length = digits.length() - offset;
-			if (digits[offset] == '0' && length > 1) return false; // no leading 0's
-			// check this row's sum is correct
-			int sum = 0;
-			FOR(i,0,n_prods) sum += splits[i_sel][i].value;
-			int total = substr2Int(digits.c_str(), offset, length);
-			if (total == sum) {
-				Substr& split = splits[i_sel][i_prod];
-				split.offset = offset;
-				split.length = length;
-				split.value =  total;
-				// check the whole assignment is correct
-				return checkTable();
-			}
+			if (_search(r, c+1)) return true;
+		}
+		return false;
+	}
+
+	int r_cols = C - c;
+	int i_start = offset + max(r_digits - maxD2 - maxD1*(r_cols-2) - 1, 0);
+	int i_end = offset + min(maxD1 - 1, r_digits - r_cols);
+	rep(i, i_start, i_end) {
+		int val = parseNum(digits, offset, i);
+		cells[r][c] = val;
+		offsets[r][c+1] = i+1;
+		if (footer) {
+			if (validate_column(c) and _search(r, c+1)) return true;			
+		} else {
+			if (_search(r, c+1)) return true;
 		}
 	}
 	return false;
 }
 
 int main() {
-	int cases;
-	scanf("%d\n",&cases);
+	ios::sync_with_stdio(false);
+    cin.tie(0);
 	string line;
-	while(cases-- > 0) {
-		// header
-		getline(cin,line);
-		n_prods = (line.length() - 6) / 2;
-		// body
-		n_sellers = 0;
+	int T; cin >> T;
+	while (T--) {
+		cin >> line;
+		C = (line.size() - 6) / 2 + 1;
+		R = 0;
 		while (true) {
-			getline(cin,line);
-			if (memcmp(line.c_str(),"TP",2) == 0) {
-				expectedTotals = line.substr(2);
+			cin >> line;
+			if (memcmp("TP", line.c_str(), 2) == 0)
 				break;
-			} else {
-				FOR(i,0,line.length()) {
-					if (isDigit(line[i])) {
-						sellerNames[n_sellers] = line.substr(0,i);
-						sellerDigits[n_sellers] = line.substr(i);
-						break;
-					}
-				}
-				n_sellers++;
-			}
+			int i = 0;
+			while (isLetter(line[i])) i++;
+			names[R] = line.substr(0,i);
+			digitsArray[R++] = line.substr(i);
 		}
-		// find split
-		findSplit(0,0,0,0);
-		// print answer
-		FOR(i,0,n_prods) printf("P%d ",i+1);
-		puts("Totals");
-		FOR(i,0,n_sellers) {
-			printf("%s",sellerNames[i].c_str());
-			FOR(j,0,n_prods+1) printf(" %d",splits[i][j].value);
-			puts("");
-		}
-		printf("TP");
-		FOR(i,0,n_prods+1) printf(" %d",totalSums[i]);
-		puts("");
-	}
-	return 0;
+		digitsArray[R++] = line.substr(2);
+		_search(0, 0);
+		print_table();
+	}	
+    return 0;
 }
