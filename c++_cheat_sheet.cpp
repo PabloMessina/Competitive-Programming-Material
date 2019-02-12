@@ -5,6 +5,7 @@
 /* ========= */
 // Template  //
 /* ========= */
+#pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 // defines
@@ -21,8 +22,9 @@ typedef pair<int,int> ii;
 typedef tuple<int,int,int> iii;
 
 int main() {
-    ios::sync_with_stdio(false); // for greater performance if only using cin/cout
-    cin.tie(0); // for greater performance if only using cin/cout
+    // OPTIONAL: for greater performance if only using cin/cout
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
     // setvbuf(stdout, NULL, _IONBF, 0);  // if debugging with printf/scanf
     return 0;
 }
