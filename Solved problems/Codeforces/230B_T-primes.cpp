@@ -1,4 +1,4 @@
-// tags: prime numbers, sieve of eratosthenes
+// tags: math, prime numbers, sieve of eratosthenes
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines

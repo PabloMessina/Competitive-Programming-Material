@@ -1,4 +1,4 @@
-// tags: Sieve of Eratosthenes, greatest common divisor (GCD), segment tree
+// tags: math, Sieve of Eratosthenes, greatest common divisor (GCD), segment tree
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
