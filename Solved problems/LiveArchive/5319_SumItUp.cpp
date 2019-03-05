@@ -10,7 +10,7 @@ int values[12];
 int counts[12];
 int tmp_counts[12];
 
-bool search(int i, int accsum) {
+bool solve(int i, int accsum) {
     if (accsum > total) return false;
     if (i == n) {
         if (accsum == total) {
@@ -31,7 +31,7 @@ bool search(int i, int accsum) {
     bool success = false;
     invrep(c, counts[i], 0) {
         tmp_counts[i] = c;
-        success |= search(i+1, accsum + c * values[i]);
+        success |= solve(i+1, accsum + c * values[i]);
     }
     return success;
 }
@@ -55,7 +55,7 @@ int main() {
             i--;
         }
         cout << "Sums of " << total << ":\n";
-        if (!search(0, 0)) cout << "NONE\n";
+        if (!solve(0, 0)) cout << "NONE\n";
     }
     return 0;
 }

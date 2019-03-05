@@ -14,7 +14,7 @@ void print_stack() {
     cout << '\n';
 }
 
-void search(int i) {
+void solve(int i) {
     int n = s.size(); // number of values currently in stack
     int p = 6 - n; // number of pending values to complete a stack of 6 values
     int c = k - i; // number of candidate values from index i to the right
@@ -27,10 +27,10 @@ void search(int i) {
     assert(c >= p);
     // option 1: add i-th value to stack
     s.push_back(vals[i]);
-    search(i+1);
+    solve(i+1);
     s.pop_back();
     // option 2: do not add i-th value to stack (only if possible)
-    if (c > p) search(i+1);
+    if (c > p) solve(i+1);
 }
 
 int main() {
@@ -40,7 +40,7 @@ int main() {
         if (k == 0) break; // no more test cases
         rep(i,0,k-1) cin >> vals[i];
         if (_count++) cout << '\n';
-        search(0);
+        solve(0);
     }
     return 0;
 }

@@ -7,14 +7,8 @@ ll inline mod(ll x, ll m) {
     if (tmp < 0) tmp += m;
     return tmp;
 }
-
-ll inline mult(ll x, ll y, ll m) {
-    return (x * y) % m;
-}
-
-ll inline add(ll x, ll y, ll m) {
-    return (x + y) % m;
-}
+ll inline mult(ll x, ll y, ll m) { return (x * y) % m; }
+ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
 
 // extended euclidean algorithm
 // finds g, x, y such that
@@ -61,7 +55,7 @@ int main() {
     while (1) {
         ll r1, m1, r2, m2;
         cin >> r1 >> m1 >> r2 >> m2;
-        pair<ll,ll> ans = CRT(r1,m1,r2,m2);
+        auto ans = CRT(r1,m1,r2,m2);
         if (ans.first == -1) cout << "no solution\n";
         else cout << ans.first << " " << ans.second << '\n';
     }

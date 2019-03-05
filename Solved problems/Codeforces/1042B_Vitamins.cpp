@@ -16,7 +16,7 @@ int string2mask(string& s) {
     return mask;
 }
 
-void _search(int i, int mask, int cost) {
+void solve(int i, int mask, int cost) {
     if (mask == DONE) {
         mincost = min(mincost, cost);
         return;
@@ -24,9 +24,9 @@ void _search(int i, int mask, int cost) {
     if (i == N) return;
     if (cost > mincost) return;
     if ((mask | masks[i]) > mask) {
-        _search(i+1, mask | masks[i], cost + price[i]);
+        solve(i+1, mask | masks[i], cost + price[i]);
     }
-    _search(i+1, mask, cost);
+    solve(i+1, mask, cost);
 }
 
 int main() {
@@ -36,7 +36,7 @@ int main() {
         cin >> price[i] >> tmp;
         masks[i] = string2mask(tmp);
     }
-    _search(0,0,0);
+    solve(0,0,0);
     cout << (mincost == INT_MAX ? -1 : mincost) << '\n';
     return 0;
 }

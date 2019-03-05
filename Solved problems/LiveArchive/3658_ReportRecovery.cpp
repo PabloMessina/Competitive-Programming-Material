@@ -46,7 +46,7 @@ bool validate_column(int c) {
 	return sum == cells[R-1][c];
 }
 
-bool _search(int r, int c) {
+bool solve(int r, int c) {
 	int offset = offsets[r][c];
 	string& digits = digitsArray[r];
 	int len = digits.size();
@@ -63,7 +63,7 @@ bool _search(int r, int c) {
 		if (footer) {
 			if (validate_row(r) and validate_column(c)) return true;
 		} else {
-			if (validate_row(r) and _search(r+1, 0)) return true;
+			if (validate_row(r) and solve(r+1, 0)) return true;
 		}
 		return false;
 	}
@@ -72,9 +72,9 @@ bool _search(int r, int c) {
 		cells[r][c] = 0;
 		offsets[r][c+1] = offset + 1;
 		if (footer) {
-			if (validate_column(c) and _search(r, c+1)) return true;
+			if (validate_column(c) and solve(r, c+1)) return true;
 		} else {
-			if (_search(r, c+1)) return true;
+			if (solve(r, c+1)) return true;
 		}
 		return false;
 	}
@@ -87,9 +87,9 @@ bool _search(int r, int c) {
 		cells[r][c] = val;
 		offsets[r][c+1] = i+1;
 		if (footer) {
-			if (validate_column(c) and _search(r, c+1)) return true;			
+			if (validate_column(c) and solve(r, c+1)) return true;			
 		} else {
-			if (_search(r, c+1)) return true;
+			if (solve(r, c+1)) return true;
 		}
 	}
 	return false;
@@ -114,7 +114,7 @@ int main() {
 			digitsArray[R++] = line.substr(i);
 		}
 		digitsArray[R++] = line.substr(2);
-		_search(0, 0);
+		solve(0, 0);
 		print_table();
 	}	
     return 0;

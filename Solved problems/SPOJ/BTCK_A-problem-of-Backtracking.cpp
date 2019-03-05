@@ -11,7 +11,7 @@ ll best_perm;
 ll weights[10];
 ll K;
 
-void _search(int mask, int i, ll accsum, ll accperm) {
+void solve(int mask, int i, ll accsum, ll accperm) {
     if (accsum > K) return;
     if (accperm > best_perm) return;
     if (i == 10) {
@@ -19,7 +19,7 @@ void _search(int mask, int i, ll accsum, ll accperm) {
     } else {
         for (int b=1, j=0; j < 10; ++j, b<<=1) {
             if ((mask & b) == 0) {
-                _search(mask | b, i+1, accsum + j * weights[i], accperm + j * _pow10[9-i]);
+                solve(mask | b, i+1, accsum + j * weights[i], accperm + j * _pow10[9-i]);
             }
         }
     }
@@ -35,7 +35,7 @@ int main() {
         rep(i,0,9) cin >> weights[i];
         cin >> K;
         best_perm = LLONG_MAX;
-        _search(0,0,0,0);
+        solve(0,0,0,0);
         if (best_perm == LLONG_MAX) cout << "-1\n";
         else {
             ll tmp = best_perm;

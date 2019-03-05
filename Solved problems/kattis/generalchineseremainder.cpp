@@ -24,9 +24,6 @@ void xgcd(ll a, ll b, ll& g, ll& x, ll& y) {
         r1 = r0, x1 = x0, y1 = y0;        
     }
     g = r2, x = x2, y = y2;
-    // for debugging
-    // assert (g == a * x + b * y);
-    // assert (g == __gcd(a,b));
 }
 
 pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
@@ -35,10 +32,6 @@ pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
     ll z = m2/g;
     ll lcm = m1 * z;
     ll sol = add(mod(r1, lcm), m1*mult(mod(x,z),mod((r2-r1)/g,z),z), lcm);
-    // for debugging
-    // assert (0 <= sol and sol < lcm);
-    // assert (sol % m1 == r1 % m1);
-    // assert (sol % m2 == r2 % m2);
     return {sol, lcm};
 }
 
@@ -47,7 +40,7 @@ int main() {
     while (T--) {
         ll r1, m1, r2, m2;
         cin >> r1 >> m1 >> r2 >> m2;
-        pair<ll,ll> ans = CRT(r1,m1,r2,m2);
+        auto ans = CRT(r1,m1,r2,m2);
         if (ans.first == -1) cout << "no solution\n";
         else cout << ans.first << " " << ans.second << '\n';
     }

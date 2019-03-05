@@ -31,16 +31,16 @@ void add_queen(int r, int c, int d) {
     }
 }
 
-void search(int c, int sol) {
+void solve(int c, int sol) {
     if (c == 8) {
         sols.push_back(sol);
     } else if (c == fc) {
-        search(c+1, sol + fr * _pow8[7-c]);
+        solve(c+1, sol + fr * _pow8[7-c]);
     } else {
         rep(r,0,7) {
             if (counts[r][c] == 0) {
                 add_queen(r, c, 1);
-                search(c+1, sol + r * _pow8[7-c]);
+                solve(c+1, sol + r * _pow8[7-c]);
                 add_queen(r, c, -1);
             }
         }
@@ -68,7 +68,7 @@ int main() {
         cout << " #      1 2 3 4 5 6 7 8\n\n";
         add_queen(fr, fc, 1);
         sols.clear();
-        search(0, 0);
+        solve(0, 0);
         add_queen(fr, fc, -1);
         sort(sols.begin(), sols.end());
         rep(i,0,sols.size()-1) print_sol(i+1, sols[i]);

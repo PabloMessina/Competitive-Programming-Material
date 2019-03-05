@@ -23,7 +23,7 @@ int dirs[8][2] = { // 8 neighbour positions relative to a reference cell
 // Assuming that we have traveled a partial path of length 'i' that matches the first
 // 'i' characters in "ALLIZZWELL", verify if there exists a way to complete the path
 // such that the next step in the path is cell (r,c)
-bool search(int i, int r, int c) {
+bool solve(int i, int r, int c) {
     // already visited -> not possible
     if (visited[r][c])
         return false;
@@ -39,7 +39,7 @@ bool search(int i, int r, int c) {
         int rr = r + dirs[j][0];
         int cc = c + dirs[j][1];
         if (0 <= rr and rr < R and 0 <= cc and cc < C
-            and search(i+1, rr, cc)) return true; // if it works -> we are done
+            and solve(i+1, rr, cc)) return true; // if it works -> we are done
     }
     // nothing worked -> backtrack (= undo changes)
     visited[r][c] = false;
@@ -54,7 +54,7 @@ int main() {
         bool path_exists = false;
         memset(visited, 0, sizeof visited);
         rep(r,0,R-1) rep(c,0,C-1) {
-            if (search(0,r,c)) {
+            if (solve(0,r,c)) {
                 path_exists = true; break;
             }
         }

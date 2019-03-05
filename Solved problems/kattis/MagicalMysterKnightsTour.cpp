@@ -71,9 +71,9 @@ bool valid_update(int i, int r, int c) {
     return true;
 }
 
-bool search(int i) {
+bool solve(int i) {
     if (i == 65) return true;
-    if (placed[i]) return search(i+1);
+    if (placed[i]) return solve(i+1);
     int prev_r = i2row[i-1], prev_c = i2col[i-1];    
     bool next_placed = false;
     int next_r, next_c;
@@ -93,7 +93,7 @@ bool search(int i) {
             if (next_placed &&
                 !valid_jump[jumps][7 + next_r - r][7 + next_c - c]) continue;
             make_move(i,r,c);
-            if (valid_update(i,r,c) and search(i+1)) return true;
+            if (valid_update(i,r,c) and solve(i+1)) return true;
             undo_move(i,r,c);
         }
     }
@@ -148,7 +148,7 @@ int main() {
         i2index[i] = n_unplaced;
         n_unplaced++;
     }
-    search(unplaced_accsum[0]);
+    solve(unplaced_accsum[0]);
     print_board();
     return 0;
 }
