@@ -47,7 +47,7 @@ void dfs(int u) {
         _stack.resize(i);
     }
 }
-void tarjanSSC() {
+void tarjanSCC() {
     memset(ids, -1, sizeof(int) * N);
     memset(instack, 0, sizeof(bool) * N);
     ID = 0;
@@ -70,7 +70,7 @@ int main() {
     }
     min_totcost = 0;
     ways = 1;
-    tarjanSSC();
+    tarjanSCC();
     cout << min_totcost << " " << ways << '\n';
     return 0;
 }
