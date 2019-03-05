@@ -10,12 +10,11 @@ const int MAXN = 100000;
 namespace tarjanSCC {
     const int UNVISITED = -1;
     vector<int> _stack;
-    int ids[MAXN];
-    int lows[MAXN];
-    bool instack[MAXN];
-    int ID = 0;
-    vector<vector<int>>* g;
-    int N;
+    int ids[MAXN]; // ids[u] = id assigned to node u
+    int lows[MAXN]; // lows[u] = lowest id reachable by node u
+    bool instack[MAXN]; // instack[u] = if u is currently in stack or not
+    int ID = 0; // global variable used to assign ids to unvisited nodes
+    vector<vector<int>>* g; // pointer to graph
 
     void dfs(int u) {
         ids[u] = lows[u] = ID++; // assign ID to new visited node
@@ -46,25 +45,24 @@ namespace tarjanSCC {
 
     void tarjanSCC(vector<vector<int>>& _g) {
         _stack.reserve(MAXN); // reserve enough space to avoid memory reallocations
-        N = _g.size(); // number of nodes
+        int n = _g.size(); // number of nodes
         g = &_g; // pointer to graph
         // reset variables
-        memset(ids, -1, sizeof(int) * N);
-        memset(instack, 0, sizeof(bool) * N);
+        memset(ids, -1, sizeof(int) * n);
+        memset(instack, 0, sizeof(bool) * n);
         ID = 0;
         // run dfs's
-        rep(u, 0, N-1) if (ids[u] == UNVISITED) dfs(u);
+        rep(u, 0, n-1) if (ids[u] == UNVISITED) dfs(u);
     }
 }
 
 // example of usage
 int main() {
     // read and build graph from standard input
-    int N, m; cin >> N >> M;
-    vector<vector<int>> g(N);
-    rep(i,1,M) {
-        int u, v; cin >> u >> v;
-        u--, v--;
+    int n, m; cin >> n >> m;
+    vector<vector<int>> g(n);
+    while(m--) {
+        int u, v; cin >> u >> v; u--, v--;
         g[u].push_back(v);
     }
     // find SCCs
