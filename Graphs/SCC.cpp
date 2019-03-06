@@ -43,7 +43,7 @@ namespace tarjanSCC {
         }
     }
 
-    void tarjanSCC(vector<vector<int>>& _g) {
+    void run(vector<vector<int>>& _g) {
         _stack.reserve(MAXN); // reserve enough space to avoid memory reallocations
         int n = _g.size(); // number of nodes
         g = &_g; // pointer to graph
@@ -66,7 +66,7 @@ int main() {
         g[u].push_back(v);
     }
     // find SCCs
-    tarjanSCC(g);
+    tarjanSCC::run(g);
     return 0;
 }
 
