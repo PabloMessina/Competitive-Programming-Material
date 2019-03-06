@@ -56,7 +56,6 @@ int main() {
         sols.clear();
         solve(0, 0);
         add_queen(fr, fc, -1);
-        sort(sols.begin(), sols.end());
         rep(i,0,sols.size()-1) print_sol(i+1, sols[i]);
         if (T) cout << '\n';
     }
