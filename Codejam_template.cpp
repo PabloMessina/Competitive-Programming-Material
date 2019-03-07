@@ -1,3 +1,4 @@
+#pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 // defines
@@ -15,9 +16,8 @@ typedef tuple<int,int,int> iii;
 // -------------------------------
 
 int main() {
-    int T; scanf("%d", &T);
-    rep(_case, 1, T) {
-        printf("Case #%d:", _case);
-    }
+    // OPTIONAL: for faster input/output (only if using cin/cout)
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
     return 0;
 }
