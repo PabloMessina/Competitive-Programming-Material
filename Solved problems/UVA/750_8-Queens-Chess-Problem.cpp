@@ -26,12 +26,12 @@ void solve(int c, int sol) {
     if (c == 8) {
         sols.push_back(sol);
     } else if (c == fc) {
-        solve(c+1, sol + (fr << 3*(7-c)));
+        solve(c+1, sol + (fr << 3*c));
     } else {
         rep(r,0,7) {
             if (attacks[r][c] == 0) {
                 add_queen(r, c, 1);
-                solve(c+1, sol + (r << 3*(7-c)));
+                solve(c+1, sol + (r << 3*c));
                 add_queen(r, c, -1);
             }
         }
@@ -41,7 +41,7 @@ void solve(int c, int sol) {
 void print_sol(int i, int sol) {
     if (i > 9) cout << i << "     ";
     else cout << " " << i << "     ";
-    invrep(j,7,0) cout << " " << ((sol >> 3*j)&7) + 1;
+    rep(c,0,7) cout << " " << ((sol >> 3*c)&7) + 1;
     cout << '\n';
 }
 

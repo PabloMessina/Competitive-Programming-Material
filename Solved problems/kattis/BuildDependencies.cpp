@@ -64,6 +64,7 @@ int main() {
     assert (N == ID);
     string query; cin >> query;
     int qid = get_id(query);
+    toposorted.reserve(N);
     topo_sort(qid);
     return 0;
 }
