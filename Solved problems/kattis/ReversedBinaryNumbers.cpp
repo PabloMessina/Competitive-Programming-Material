@@ -1,17 +1,14 @@
-// tags: bitwise, implementation
+// tags: bitwise operators, bit manipulation, implementation
 #include <bits/stdc++.h>
 using namespace std;
-#define invrep(i,a,b) for(int i=a; i>=b; --i)
+
+int reverse_bits(int x) {
+    int v = 0;
+    while (x) v <<= 1, v |= x&1, x >>= 1;
+    return v;
+}
 
 int main() {
-    int n; scanf("%d", &n);
-    int len = sizeof(n) * 8 - __builtin_clz(n);
-    int n2 = 0;
-    invrep(i, len-1, 0) {
-        if ((1 << i) & n) {
-            n2 |= (1 << (len - 1 - i));
-        }
-    }
-    printf("%d", n2);
+    int n; cin >> n; cout << reverse_bits(n);
     return 0;
 }
