@@ -22,7 +22,7 @@ bool valid_equation(ll x1, ll x2, ll y, char op) {
     if (op == '-') return x1 - x2 == y;
     if (op == '*') return x1 * x2 == y;
     assert (op == '/');
-    return x1 % x2 == 0 and x1 / x2 == y;
+    return x1 == y * x2;
 }
 
 string bases = "_123456789abcdefghijklmnopqrstuvwxyz0";

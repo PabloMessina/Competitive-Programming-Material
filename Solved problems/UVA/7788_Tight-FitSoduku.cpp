@@ -61,7 +61,7 @@ void init_board() {
     }
 }
 
-bool search(int r, int c, OP op) {
+bool solve(int r, int c, OP op) {
     // base case: out of board -> we are done
     if (r == 6 or c == 6) return true;
     
@@ -81,11 +81,11 @@ bool search(int r, int c, OP op) {
 
     // easy cases: cell's values already given by the input
     if (cell.type == SINGLE and cell.a != 0)
-        return search(next_r, next_c, next_op);
+        return solve(next_r, next_c, next_op);
     if (cell.type == DOUBLE and
             ((op == FIRST and cell.a != 0) or
             (op == SECOND and cell.b != 0)))
-        return search(next_r, next_c, next_op);
+        return solve(next_r, next_c, next_op);
     
     // general cases: we need to try all possible values
     int gr = r/2, gc = c/3;
@@ -97,7 +97,7 @@ bool search(int r, int c, OP op) {
             if (grid_masks[gr][gc] & b) continue;
             toggle_masks(r,c,b);
             cell.a = x;
-            if (search(next_r, next_c, next_op))
+            if (solve(next_r, next_c, next_op))
                 return true;
             cell.a = 0; // backtrack (undo changes)
             toggle_masks(r,c,b);
@@ -111,7 +111,7 @@ bool search(int r, int c, OP op) {
             if (grid_masks[gr][gc] & b) continue;
             toggle_masks(r,c,b);
             cell.a = x;
-            if (search(next_r, next_c, next_op))
+            if (solve(next_r, next_c, next_op))
                 return true;
             cell.a = 0; // backtrack (undo changes)
             toggle_masks(r,c,b);
@@ -125,7 +125,7 @@ bool search(int r, int c, OP op) {
             if (grid_masks[gr][gc] & b) continue;
             toggle_masks(r,c,b);
             cell.b = x;
-            if (search(next_r, next_c, next_op))
+            if (solve(next_r, next_c, next_op))
                 return true;
             cell.b = 0; // backtrack (undo changes)
             toggle_masks(r,c,b);
@@ -158,7 +158,7 @@ int main() {
     while (T--) {
         int k; cin >> k;  
         init_board();      
-        search(0,0,FIRST);
+        solve(0,0,FIRST);
         cout << k << '\n';
         print_board();
     }
