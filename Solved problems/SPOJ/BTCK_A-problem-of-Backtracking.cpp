@@ -2,7 +2,6 @@
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,a,b) for(int i = a; i >= b; --i)
 typedef long long int ll;
 // -------------------------------
 
