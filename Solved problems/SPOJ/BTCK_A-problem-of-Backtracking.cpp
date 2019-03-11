@@ -6,46 +6,36 @@ using namespace std;
 typedef long long int ll;
 // -------------------------------
 
-ll _pow10[10];
-ll best_perm;
 ll weights[10];
+int permutation[10];
 ll K;
 
-void solve(int mask, int i, ll accsum, ll accperm) {
-    if (accsum > K) return;
-    if (accperm > best_perm) return;
-    if (i == 10) {
-        if (accperm < best_perm) best_perm = accperm;
-    } else {
-        for (int b=1, j=0; j < 10; ++j, b<<=1) {
-            if ((mask & b) == 0) {
-                solve(mask | b, i+1, accsum + j * weights[i], accperm + j * _pow10[9-i]);
-            }
+bool solve(int mask, int i, ll accsum) {
+    if (accsum > K) return false;
+    if (i == 10) return true;
+    for (int b=1, j=0; j < 10; ++j, b<<=1) {
+        if ((mask & b) == 0) {
+            permutation[i] = j;
+            if (solve(mask | b, i+1, accsum + j * weights[i])) return true;
         }
     }
+    return false;
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     int T; cin >> T;
-    _pow10[0] = 1;
-    rep(i,1,9) _pow10[i] = _pow10[i-1] * 10;
     while (T--) {
         rep(i,0,9) cin >> weights[i];
         cin >> K;
-        best_perm = LLONG_MAX;
-        solve(0,0,0,0);
-        if (best_perm == LLONG_MAX) cout << "-1\n";
-        else {
-            ll tmp = best_perm;
-            invrep(i,9,0) {
-                cout << tmp / _pow10[i];
+        if (solve(0,0,0)) {
+            rep(i,0,9) {
                 if (i) cout << " ";
-                tmp %= _pow10[i];
+                cout << permutation[i];
             }
             cout << '\n';
-        }
+        } else cout << "-1\n";
     }
     return 0;
 }
