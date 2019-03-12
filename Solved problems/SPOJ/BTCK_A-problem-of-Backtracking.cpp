@@ -10,7 +10,7 @@ int permutation[10];
 ll K;
 
 // i = index in the permutation list we are currently at
-// mask = an int whose bits indicte the digits used in the permutation
+// mask = an int whose bits indicate the digits used in the permutation
 //     examples:
 //            0000000000 means no digits have been used yet
 //            0000000001 means 0 is already used
