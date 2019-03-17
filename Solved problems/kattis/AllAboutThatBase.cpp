@@ -26,8 +26,7 @@ bool valid_equation(ll x1, ll x2, ll y, char op) {
 string bases = "_123456789abcdefghijklmnopqrstuvwxyz0";
 
 int main() {
-    int n; cin >> n;
-    getchar(); // consume EOL
+    int n; cin >> n >> ws; // ws = consume remaining whitespace
     while (n--) {
         string line; getline(cin, line);
         stringstream ss(line);
