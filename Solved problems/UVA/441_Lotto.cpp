@@ -23,8 +23,6 @@ void solve(int i) {
         return;
     }
     // stack not complete yet, we still need to add 'p' more values
-    assert(p > 0);
-    assert(c >= p);
     // option 1: add i-th value to stack
     s.push_back(vals[i]);
     solve(i+1);

@@ -11,9 +11,7 @@ int inline char2digit(char c) {
 
 ll getval(string& s, int b) {
     ll val = 0;
-    for (char c : s) {
-        val = val * b + char2digit(c);
-    }
+    for (char c : s) val = val * b + char2digit(c);
     return val;
 }
 
