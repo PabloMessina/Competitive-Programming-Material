@@ -9,16 +9,9 @@ bool visited[100][100]; // keep track of visited cells
 int R, C; // number of rows and columns
 string target = "ALLIZZWELL";
 
-int dirs[8][2] = { // 8 neighbour positions relative to a reference cell
-    {-1, -1},
-    {-1, 0},
-    {-1, 1},
-    {0, -1},
-    {0, 1},
-    {1, -1},
-    {1, 0},
-    {1, 1},
-};
+// 8 neighbour positions relative to a reference cell
+int movr[8] = {1,1,1,-1,-1,-1,0,0};
+int movc[8] = {0,1,-1,0,1,-1,1,-1};
 
 // Assuming that we have traveled a partial path of length 'i' that matches the first
 // 'i' characters in "ALLIZZWELL", verify if there exists a way to complete the path
@@ -36,8 +29,8 @@ bool solve(int i, int r, int c) {
     // they match but there is still work to be done -> keep searching
     visited[r][c] = true; // remeber (r,c) is now visited
     rep(j,0,7) { // try moving to each neighbor
-        int rr = r + dirs[j][0];
-        int cc = c + dirs[j][1];
+        int rr = r + movr[j];
+        int cc = c + movc[j];
         if (0 <= rr and rr < R and 0 <= cc and cc < C
             and solve(i+1, rr, cc)) return true; // if it works -> we are done
     }
