@@ -84,47 +84,29 @@ bool solve(int r, int c, OP op) {
     
     // general cases: we need to try all possible values
     int gr = r/2, gc = c/3;
+    int xmin, xmax;
+    int* p;
     if (cell.type == SINGLE) { // SINGLE
-        rep(x,1,9) {
-            int b = 1 << x;
-            if (row_masks[r] & b) continue;
-            if (col_masks[c] & b) continue;
-            if (grid_masks[gr][gc] & b) continue;
-            toggle_masks(r,c,b);
-            cell.a = x;
-            if (solve(next_r, next_c, next_op))
-                return true;
-            cell.a = 0; // backtrack (undo changes)
-            toggle_masks(r,c,b);
-        }
+        xmin = 1; xmax = 9; p = &cell.a;        
     } else if (op == FIRST) { // DOUBLE, FIRST
-        int xmax = cell.b == 0 ? 8 : cell.b - 1;
-        rep(x,1,xmax) {
-            int b = 1 << x;
-            if (row_masks[r] & b) continue;
-            if (col_masks[c] & b) continue;
-            if (grid_masks[gr][gc] & b) continue;
-            toggle_masks(r,c,b);
-            cell.a = x;
-            if (solve(next_r, next_c, next_op))
-                return true;
-            cell.a = 0; // backtrack (undo changes)
-            toggle_masks(r,c,b);
-        }
+        xmin = 1;
+        xmax = cell.b == 0 ? 8 : cell.b - 1;
+        p = &cell.a;
     } else { // DOUBLE, SECOND
-        int xmin = cell.a == 0 ? 2 : cell.a + 1;
-        rep(x,xmin,9) {
-            int b = 1 << x;
-            if (row_masks[r] & b) continue;
-            if (col_masks[c] & b) continue;
-            if (grid_masks[gr][gc] & b) continue;
-            toggle_masks(r,c,b);
-            cell.b = x;
-            if (solve(next_r, next_c, next_op))
-                return true;
-            cell.b = 0; // backtrack (undo changes)
-            toggle_masks(r,c,b);
-        }
+        xmin = cell.a == 0 ? 2 : cell.a + 1;
+        xmax = 9;
+        p = &cell.b;
+    }
+    rep(x,xmin,xmax) {
+        int b = 1 << x;
+        if (row_masks[r] & b) continue;
+        if (col_masks[c] & b) continue;
+        if (grid_masks[gr][gc] & b) continue;
+        toggle_masks(r,c,b);
+        *p = x;
+        if (solve(next_r, next_c, next_op)) return true;
+        *p = 0; // backtrack (undo changes)
+        toggle_masks(r,c,b);
     }
     return false;
 }
