@@ -8,9 +8,7 @@ typedef long long int ll;
 int T, N;
 map<string,ll> foreign;
 map<string,ll> native;
-map<string,int> pizzaIds;
 const ll bit = 1;
-char buff[200];
 
 void update_map(map<string,ll>& m, string& key, int index) {
     auto it = m.find(key);
