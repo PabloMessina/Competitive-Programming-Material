@@ -1,72 +1,48 @@
-// tags: implementation
+// tags: implementation, bitwise
 #include <bits/stdc++.h>
 using namespace std;
-
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
-
-typedef vector<int> vi;
-typedef pair<int,int> pii;
-
-char buff[201];
-bool ignored[201];
+typedef pair<int,int> ii;
 
 int main() {
-    string exp;
-    getline(cin, exp);
-
+    ios::sync_with_stdio(false);
+    cin.tie(0);
+    string line; getline(cin,line);
+    vector<ii> brackets;
     stack<int> indexes;
-    vector<pii> brackets;
-
-    rep(i,0,exp.size()-1) {
-        if (exp[i] == '(') {
-            indexes.push(i);
-        } else if (exp[i] == ')') {
-            brackets.push_back({indexes.top(), i});
+    int i = 0;
+    for (char c : line) {
+        if (c == '(') indexes.push(i);
+        else if (c == ')') {
+            brackets.emplace_back(indexes.top(), i);
             indexes.pop();
         }
+        i++;
     }
-
-    set<string> combs;
-    memset(ignored, 0, sizeof ignored);
-
-    int n = brackets.size();
-    int times = (1 << n) - 1;
-    vector<int> within(n, 0);
-    while (times--) {
-        // set chars to ignore
-        rep(i,0,n-1) {
-            pii b = brackets[i];
-            if (within[i]) {
-                ignored[b.first] = false;
-                ignored[b.second] = false;
-            } else {
-                ignored[b.first] = true;
-                ignored[b.second] = true;
+    int n = line.size();
+    bool skip[n];
+    char buf[n + 1];
+    set<string> expressions;
+    int mask = 1 << brackets.size();
+    while (--mask) {
+        memset(skip, 0, sizeof skip);
+        int j = 0;
+        for (auto& p : brackets) {
+            if ((mask >> j) & 1) {
+                skip[p.first] = true;
+                skip[p.second] = true;
             }
+            j++;
         }
-        // generate and record comb
-        int i = 0;
-        rep (j,0,exp.size()-1) {
-            if (ignored[j]) continue;
-            buff[i++] = exp[j];
+        j = 0;
+        int m = 0;
+        for (char c : line) {
+            if (!skip[j]) buf[m++] = c;
+            j++;
         }
-        buff[i] = '\0';
-        string comb(buff);
-        combs.insert(comb);
-        // next comb
-        int carry = 1;
-        rep(i,0,n-1) {
-            within[i] += carry;
-            if (within[i] <= 1)
-                break;
-            within[i] = 0;
-        }
+        buf[m] = '\0';
+        expressions.insert(string(buf));
     }
-
-    // print all combs
-    for (auto& comb : combs) {
-        printf("%s\n", comb.c_str());
-    }
-
+    for (const string& s : expressions) cout << s << '\n';
     return 0;
 }
