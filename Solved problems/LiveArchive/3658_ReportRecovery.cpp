@@ -47,75 +47,75 @@ bool validate_column(int c) {
 }
 
 bool solve(int r, int c) {
-	int offset = offsets[r][c];
-	string& digits = digitsArray[r];
+	int offset = offsets[r][c]; // build number in row 'r' and column 'c'
+	// only using digits in range [offset .. digitsArray[r]]
+	string& digits = digitsArray[r]; // row r's digits
 	int len = digits.size();
-	int r_digits = len - offset;
-	bool footer = r == R-1;
-	int maxD1 = footer ? 4 : 3;
-	int maxD2 = footer ? 5 : 4;
+	int r_digits = len - offset; // remaining digits
+	bool footer = r == R-1; // if row r is footer (TP row)
+	int maxD1 = footer ? 4 : 3; // max number of digits for number in non-last column
+	int maxD2 = maxD1 + 1; // max number of digits for number in last column
 
-	if (c == C-1) {
-		if (r_digits > maxD2) return false;
-		if (digits[offset] == '0' and r_digits > 1) return false;
-		int val = parseNum(digits, offset, len-1);
-		cells[r][c] = val;
-		if (footer) {
+	if (c == C-1) { // if we are in the last column
+		if (r_digits > maxD2) return false; // check if enough digits
+		if (digits[offset] == '0' and r_digits > 1) return false; // no leading 0s
+		int val = parseNum(digits, offset, len-1); // read all remaining digits
+		cells[r][c] = val; // save value
+		if (footer) { // if footer -> validate both row and column
 			if (validate_row(r) and validate_column(c)) return true;
-		} else {
+		} else { // not footer -> validate row and keep solving
 			if (validate_row(r) and solve(r+1, 0)) return true;
 		}
-		return false;
-	}
-
-	if (digits[offset] == '0') {
+	} else if (digits[offset] == '0') { // non-last column and leading 0
+		// -> we are forced to make cells[r][c] = 0 because leading zeros are not allowed
 		cells[r][c] = 0;
-		offsets[r][c+1] = offset + 1;
-		if (footer) {
+		offsets[r][c+1] = offset + 1; // set the offset for next cell
+		if (footer) { // if footer -> validate column and keep solving
 			if (validate_column(c) and solve(r, c+1)) return true;
-		} else {
+		} else { // not footer -> keep solving
 			if (solve(r, c+1)) return true;
 		}
-		return false;
-	}
-
-	int r_cols = C - c;
-	int i_start = offset + max(r_digits - maxD2 - maxD1*(r_cols-2) - 1, 0);
-	int i_end = offset + min(maxD1 - 1, r_digits - r_cols);
-	rep(i, i_start, i_end) {
-		int val = parseNum(digits, offset, i);
-		cells[r][c] = val;
-		offsets[r][c+1] = i+1;
-		if (footer) {
-			if (validate_column(c) and solve(r, c+1)) return true;			
-		} else {
-			if (solve(r, c+1)) return true;
+	} else { // non-last column and no leading zeroes
+		int r_cols = C - c; // remaining columns to the right
+		int i_start = offset + max(r_digits - maxD2 - maxD1*(r_cols-2) - 1, 0);
+		int i_end = offset + min(maxD1 - 1, r_digits - r_cols);
+		rep(i, i_start, i_end) { // for each i in valid range
+			int val = parseNum(digits, offset, i); // read number digits[offset .. i]
+			cells[r][c] = val; // save value
+			offsets[r][c+1] = i+1; // set the offset for next cell
+			if (footer) { // if footer -> validate column and keep solving
+				if (validate_column(c) and solve(r, c+1)) return true;			
+			} else { // not footer -> keep solving
+				if (solve(r, c+1)) return true;
+			}
 		}
 	}
-	return false;
+	return false; // nothing worked
 }
 
 int main() {
+	// for faster input/output
 	ios::sync_with_stdio(false);
     cin.tie(0);
-	string line;
+	// -----------
 	int T; cin >> T;
 	while (T--) {
-		cin >> line;
-		C = (line.size() - 6) / 2 + 1;
-		R = 0;
-		while (true) {
+		string line;
+		cin >> line; // read header
+		C = (line.size() - 6) / 2 + 1; // number of columns
+		R = 0; // number of rows
+		while (true) { // for each remaining line
 			cin >> line;
-			if (memcmp("TP", line.c_str(), 2) == 0)
+			if (memcmp("TP", line.c_str(), 2) == 0) // TP row
 				break;
 			int i = 0;
 			while (isLetter(line[i])) i++;
-			names[R] = line.substr(0,i);
-			digitsArray[R++] = line.substr(i);
+			names[R] = line.substr(0,i); // name
+			digitsArray[R++] = line.substr(i); // digits
 		}
-		digitsArray[R++] = line.substr(2);
-		solve(0, 0);
-		print_table();
+		digitsArray[R++] = line.substr(2); // TP row's digits
+		solve(0, 0); // backtracking
+		print_table(); 
 	}	
     return 0;
 }
