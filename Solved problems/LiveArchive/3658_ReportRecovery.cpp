@@ -48,7 +48,7 @@ bool validate_column(int c) {
 
 bool solve(int r, int c) {
 	int offset = offsets[r][c]; // build number in row 'r' and column 'c'
-	// only using digits in range [offset .. digitsArray[r]]
+	// only using digits in range [offset .. digitsArray[r].size()-1]
 	string& digits = digitsArray[r]; // row r's digits
 	int len = digits.size();
 	int r_digits = len - offset; // remaining digits
