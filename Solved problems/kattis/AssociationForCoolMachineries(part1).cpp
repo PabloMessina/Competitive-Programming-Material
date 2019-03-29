@@ -36,7 +36,7 @@ int shortest_repeating_cycle(vector<int>& sequence) {
 }
 
 int main() {
-    // --- increase cin's performance
+    // --- faster cin/cout
     ios::sync_with_stdio(false);
     cin.tie(0);
     // --- read input
