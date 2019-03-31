@@ -50,7 +50,7 @@ void undo_move(int i, int r, int c) {
 
 // check that the last move (placing value 'i') does not break some rules
 bool valid_update(int i) {
-    // Intuition: each row r has a partial sum of row_sum[r] and still row_free[r] values not placed yet
+    // Intuition: each row r has a partial sum of row_sum[r] and row_free[r] values not placed yet
     // This means there is a theoretical lower bound and upper bound for the sum of row r
     // The same applies to columns.
     // Here we essentially verify that

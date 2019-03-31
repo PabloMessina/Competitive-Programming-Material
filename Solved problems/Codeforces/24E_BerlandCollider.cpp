@@ -1,68 +1,37 @@
-// Tags: binary search
-#include <cstdio>
-#include <vector>
-#include <algorithm>
+// tags: binary search
+#include <bits/stdc++.h>
 using namespace std;
-#define FOR(i,a,b) for(int i=a;i<=b;++i)
-#define INF 2000000000.0
-typedef long long int ll;
+#define rep(i,a,b) for(int i = a; i <=b; ++i)
+// --------------------------------------
+const int MAXN = 500000;
+int N;
+double pos[MAXN], vel[MAXN];
 
-int n;
-vector<ll> vel;
-vector<ll> pos;
-
-bool collision(double time) {
-  double rightmost = -INF;
-  FOR(i, 0, n-1)
-    if (vel[i] > 0)
-      rightmost = max(rightmost, pos[i] + vel[i] * time);
-    else
-      if (pos[i] + vel[i] * time <= rightmost)
-        return true;
-  return false;
+bool collision(double t) {
+    double maxr = -1e18;
+    rep(i,0,N-1) {
+        if (vel[i] > 0)  maxr = max(maxr, pos[i] + vel[i] * t);
+        else if (maxr > pos[i] + vel[i] * t) return true;
+    }
+    return false;
 }
 
 int main() {
-  scanf("%d", &n);
-  bool lfound = false;
-  bool rfound = false;
-  ll lstart, rstart, lvel, rvel;
-
-  pos.resize(n);
-  vel.resize(n);
-  
-  FOR(i, 0, n-1) {
-    scanf("%I64d %I64d", &pos[i], &vel[i]);
-    if (vel[i] > 0) {
-      if (!lfound || lstart > pos[i]) {
-        lfound = true;
-        lstart = pos[i];
-        lvel = vel[i];
-      }
-    } else {
-      if (!rfound || rstart < pos[i]) {
-        rfound = true;
-        rstart = pos[i];
-        rvel = vel[i];
-      }
+    scanf("%d", &N); // I use printf/scanf because cin/cout gives TLE
+    double r_minpos = 2e9, l_maxpos = -2e9;
+    rep(i,0,N-1) {
+        scanf("%lf %lf", &pos[i], &vel[i]);
+        if (vel[i] > 0) r_minpos = min(r_minpos, pos[i]);
+        else l_maxpos = max(l_maxpos, pos[i]);
     }
-  }
-
-  if (lfound && rfound && lstart <= rstart) {
-    double tmin = 0;
-    double tmax = 0.001 + (double)(rstart - lstart) / (double)(lvel - rvel);
-    double tmid;
-    int times = 0;
-    while (times++ < 80) {
-      tmid = (tmin + tmax) * 0.5;
-      if (collision(tmid))
-        tmax = tmid;
-      else
-        tmin = tmid;
+    if (r_minpos > l_maxpos) puts("-1");
+    else {
+        double tl = 0, tr = 1e9, tm;
+        rep(_,1,70) {
+            tm = 0.5*(tl+tr);
+            if (collision(tm)) tr = tm;
+            else tl = tm;
+        }
+        printf("%.20lf\n", 0.5*(tl+tr));
     }
-    printf("%.20lf\n", tmid);
-  } else {
-    puts("-1");
-  }
-  return 0;
 }
