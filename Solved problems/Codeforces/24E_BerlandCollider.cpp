@@ -34,4 +34,5 @@ int main() {
         }
         printf("%.20lf\n", 0.5*(tl+tr));
     }
+    return 0;
 }
