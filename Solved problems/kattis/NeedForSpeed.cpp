@@ -30,7 +30,7 @@ int main() {
     r = offset + span;
 
     // find best answer in range [l,r] using binary search
-    rep(_,1,200) {
+    rep(_,1,100) {
         double m = (l+r)*0.5;
         if (total_time(m) > T) l = m;
         else r = m;
