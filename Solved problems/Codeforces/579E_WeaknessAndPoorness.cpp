@@ -1,4 +1,4 @@
-// tags: binary search, DP (maximum subarray - Kadane's algorithm)
+// tags: binary search, DP (maximum subarray sum - Kadane's algorithm)
 // Kadane's algorithm: https://en.wikipedia.org/wiki/Maximum_subarray_problem#Kadane's_algorithm
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
