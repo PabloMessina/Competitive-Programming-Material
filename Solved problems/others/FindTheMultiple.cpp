@@ -1,3 +1,4 @@
+// tags: dp, math
 #include <cstdio>
 using namespace std;
 
