@@ -4,42 +4,41 @@ using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef long long int ll;
 
-int tot_ox, tot_nit;
-int n;
-int ox[1000], nit[1000], w[1000];
+int tot_oxi, tot_nit, K;
+int oxi[1000], nit[1000], w[1000];
 int memo[22][80][1000];
 
-// minw(to, tn, i) =
+// minw(o, n, i) =
 //   minimum total weight necessary
-//   to reach oxigen >= to and nitrogen >= tn
+//   o reach oxigen >= o and nitrogen >= n
 //   only considering cylinders i, i+1, ..., n-1
 // if it's not possible -> return INT_MAX
-int minw(int to, int tn, int i) {
+int minw(int o, int n, int i) {
     // base cases    
-    if (to == 0 and tn == 0) return 0;
-    if (i == n) return INT_MAX;
+    if (o == 0 and n == 0) return 0;
+    if (i == K) return INT_MAX;
     // check if already solved
-    int& ans = memo[to][tn][i];
+    int& ans = memo[o][n][i];
     if (ans != -1) return ans;
     // general case
-    int tmp = INT_MAX;
+    ans = INT_MAX;
     // option 1: use i-th cylinder
-    int s = minw(max(to-ox[i],0),max(tn-nit[i],0),i+1);
-    if (s != INT_MAX) tmp = min(tmp, w[i] + s);
+    int s = minw(max(o-oxi[i],0),max(n-nit[i],0),i+1);
+    if (s != INT_MAX) ans = min(ans, w[i] + s);
     // option 2: don't use i-th cylinder
-    tmp = min(tmp, minw(to,tn,i+1));
+    ans = min(ans, minw(o,n,i+1));
     // return answer
-    return ans = tmp;
+    return ans;
 }
 
 int main() {
     int tests; cin >> tests;
     while (tests--) {
-        cin >> tot_ox >> tot_nit;
-        cin >> n;
-        rep(i,0,n-1) cin >> ox[i] >> nit[i] >> w[i];
+        cin >> tot_oxi >> tot_nit;
+        cin >> K;
+        rep(i,0,K-1) cin >> oxi[i] >> nit[i] >> w[i];
         memset(memo, -1, sizeof memo);
-        cout << minw(tot_ox, tot_nit, 0) << '\n';
+        cout << minw(tot_oxi, tot_nit, 0) << '\n';
     }
     return 0;
 }
