@@ -38,8 +38,8 @@ int main() {
             // find the nested doll with smallest height > doll j's height
             auto it = s.lower_bound({height[j]+1, -1});
             if (it != s.end()) s.erase(it); // remove the nested doll from the set
-            //   we do this because the nested dolls is no longer available for
-            //   remaining dolls in the same batch
+            //   we do this because this nested doll is no longer available for
+            //   the remaining dolls in the same batch
             pending_batch.push_back(j); // remember we have to include doll j
             //   as the new nested doll (we will do that when we start processing
             //   the next batch of dolls)
