@@ -10,7 +10,7 @@ int memo[22][80][1000];
 
 // minw(o, n, i) =
 //   minimum total weight necessary
-//   o reach oxigen >= o and nitrogen >= n
+//   to reach oxigen >= o and nitrogen >= n
 //   only considering cylinders i, i+1, ..., n-1
 // if it's not possible -> return INT_MAX
 int minw(int o, int n, int i) {
