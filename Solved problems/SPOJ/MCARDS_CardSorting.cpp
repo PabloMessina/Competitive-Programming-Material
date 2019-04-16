@@ -21,7 +21,7 @@ int LIS() { // LIS = Longest Increasing Subsequence
         if (cards[q[len]] < cards[i]) {
             q[++len] = i;
         } else {
-            int l=1, r=len+1;
+            int l=1, r=len;
             while (l < r) { // binary search
                 int m = (l+r) >> 1;
                 if (cards[i] < cards[q[m]]) r = m;
