@@ -56,7 +56,7 @@ int main() {
             f[0]--;
             ans = add(ans, MOD - dp(0, 0, p-1, n));
         }
-        cout << ans << endl;
+        cout << ans << '\n';
     }
     return 0;
 }
