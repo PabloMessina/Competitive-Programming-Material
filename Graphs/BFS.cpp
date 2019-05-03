@@ -17,3 +17,30 @@ void bfs(int s) {
 		}
 	}
 }
+
+//-----------------------------
+// Finding connected components
+//-----------------------------
+int count_cc() {
+	static bool visited[MAXN];
+    int count = 0;
+    memset(visited, 0, sizeof(bool)*n);
+	queue<int> q;
+    rep(i,0,n-1) {
+        if (!visited[i]) {
+            count++;
+			visited[i] = true;
+			q.push(i);
+			while (!q.empty()) {
+				int u = q.front(); q.pop();
+				for (int v : g[u]) {
+					if (!visited[v]) {
+						visited[v] = true;
+						q.push(v);
+					}
+				}
+			}
+        }
+    }
+    return count;
+}
