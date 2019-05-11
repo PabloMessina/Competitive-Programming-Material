@@ -20,7 +20,7 @@ void dfs(int u) {
 int depth[MAXN];
 void dfs(int u, int d) {
     depth[u] = d;
-    for(int v : g[u]) {
+    for(int v : g[u]) { 
         if(depth[v] == -1) { // not visited yet
             dfs(v, d+1);
         }

@@ -21,6 +21,7 @@ void bfs(int s) {
 //-----------------------------
 // Finding connected components
 //-----------------------------
+
 int count_cc() {
     static bool visited[MAXN];
     int count = 0;
