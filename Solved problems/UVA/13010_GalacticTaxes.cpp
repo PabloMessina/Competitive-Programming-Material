@@ -1,10 +1,8 @@
 // tags: Dijkstra, Ternary Search
 #include <bits/stdc++.h>
 using namespace std;
-
 #define rep(i,a,b) for(int i=a;i<=b;++i)
 #define MAXN 1000
-
 typedef pair<double, int> pdi;
 
 int N,M;
@@ -78,7 +76,6 @@ int main() {
 		// -- print answer --
 		ans = (c1+c2) * 0.5;
 		printf("%.5lf\n", ans);
-
 	}
 	return 0;
 }

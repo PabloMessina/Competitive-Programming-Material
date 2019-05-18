@@ -1,3 +1,5 @@
+typedef vector<int> vi;
+
 // ----------------------------
 // option 1: tarjan's algorithm
 // ----------------------------
@@ -19,7 +21,7 @@ void dfs(int u) {
 
 void topo_sort() {  
     memset(visited, false, sizeof(bool) * n);
-    sorted.clear();
+    sorted.clear(); 
     rep(i,0,n-1)
         if (!visited[i])
             dfs(i);
@@ -43,8 +45,9 @@ void compute_indegree() {
 
 void topoSort() {
     sorted.clear();
-    queue<int> q;
+    compute_indegree();
 
+    queue<int> q;
     rep(i,0,n-1)
         if (indegree[i] == 0)
             q.push(i);
