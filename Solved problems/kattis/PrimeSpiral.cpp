@@ -1,20 +1,8 @@
 // tags: concurrent BFS's, implicit graph, flood fill,
-// math, prime numbers, sieve of eratosthenes,
-// implementation
+// math, prime numbers, sieve of eratosthenes, implementation
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef unsigned long long int ull;
-typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
 
 struct Cell {
