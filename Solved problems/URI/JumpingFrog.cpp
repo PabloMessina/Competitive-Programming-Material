@@ -1,4 +1,4 @@
-// tags: modular arithmetics, gcd, math, DP, memoization
+// tags: modular arithmetics, gcd, math, memoization
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
