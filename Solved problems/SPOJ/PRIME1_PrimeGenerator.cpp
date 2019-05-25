@@ -1,4 +1,4 @@
-// #pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
+// tags: math, primes, sieve of eratosthenes
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
