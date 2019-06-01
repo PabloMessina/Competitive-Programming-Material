@@ -14,12 +14,6 @@ vector<vector<int>> g;
 uset<int> found_nums;
 set<ii> states;
 
-int gcd(int a, int b) {
-    int tmp;
-    while (b) tmp = a, a = b, b = tmp % b;
-    return a;
-}
-
 int main() {
     while (scanf("%d%d",&I,&S)==2) {
         g.assign(I, vector<int>());
@@ -42,7 +36,7 @@ int main() {
             ii front = q.front(); q.pop();
             int u = front.first, c = front.second;
             for (int v : g[u]) {
-                int cc = gcd(candies[v], c);
+                int cc = __gcd(candies[v], c);
                 ii state(v, cc);
                 if (!states.count(state)) {
                     states.insert(state);
