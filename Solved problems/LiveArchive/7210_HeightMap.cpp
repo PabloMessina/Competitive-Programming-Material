@@ -5,18 +5,13 @@ using namespace std;
 #define invrep(i,a,b) for(int i=a; i>=b; i--)
 typedef pair<int,int> ii;
 
-#define MAXR 100
-#define MAXC 100
+const int MAXR = 100;
+const int MAXC = 100;
 int R,C;
 int board[MAXR][MAXC];
 bool visited[MAXR][MAXC];
-int shifts[4][2] = {
-    {1, 0}, 
-    {-1, 0},
-    {0, -1},
-    {0, 1}
-};
-
+int movr[4] = {1,-1,0,0};
+int movc[4] = {0,0,-1,1};
 void bfs(int r, int c) {
     int h = board[r][c];
     queue<ii> q;
@@ -25,8 +20,8 @@ void bfs(int r, int c) {
     while (!q.empty()) {
         ii u = q.front(); q.pop();
         rep(i,0,3) {
-            int rr = u.first + shifts[i][0];
-            int cc = u.second + shifts[i][1];
+            int rr = u.first + movr[0];
+            int cc = u.second + movc[1];
             if (0 <= rr && rr < R && 0 <= cc && cc < C &&
             !visited[rr][cc] && board[rr][cc] == h) {
                 q.push(ii(rr,cc));
