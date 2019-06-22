@@ -1,4 +1,4 @@
-// tags: polygon area, two pointers
+// tags: geometry, polygon area, two pointers
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines

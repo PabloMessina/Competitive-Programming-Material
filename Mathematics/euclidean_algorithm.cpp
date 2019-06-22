@@ -6,6 +6,7 @@ int gcd (int a, int b) {
     while (b) { a %= b; swap(a,b); }
     return a;
 }
+// or you can also use __gcd(a,b)
 
 /* ============ */
 /* extended GCD */
@@ -35,6 +36,9 @@ void xgcd(int a, int b, int&g, int& x, int& y) {
 /* ====================== */
 int mulinv(int a, int m) {
     int g, x, y; xgcd(a, m, g, x, y);
-    if (g == 1) return x % m;
+    if (g == 1) {
+        int i = x % m;
+        return i < 0 ? i+m : i;
+    }
     return -1;
 }
