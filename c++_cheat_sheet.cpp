@@ -23,8 +23,8 @@ typedef tuple<int,int,int> iii;
 
 int main() {
     // OPTIONAL: for greater performance if only using cin/cout
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false);
+    cin.tie(0); cout.tie(0);
     // setvbuf(stdout, NULL, _IONBF, 0);  // if debugging with printf/scanf
     return 0;
 }

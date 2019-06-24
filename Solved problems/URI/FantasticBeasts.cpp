@@ -1,80 +1,117 @@
+// tags: CRT, implementation, number theory, modular arithmetic, math
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
 using namespace std;
+typedef long long int ll;
 
 int B,Z;
-int next[10][101];
-int count[101] = {0};
-bool vis[10][101] = {0};
-vector<int> trace[10];
-int cycle_offset[10];
-int cycle_size[10];
-int z2index[10][101];
-vector<ll> R, M;
+int cur_zoo[10];
+int next_zoo[10][100];
+int cycle_index[10][100];
+int zoo_count[100];
+ll remainders[10];
+ll cycle_size[10];
 
-int CRT(vector<ll>& R, vector<ll>& M) {
-    
+ll inline mod(ll x, ll m) { 
+    ll tmp = x % m;
+    if (tmp < 0) tmp += m;
+    return tmp;
+}
+ll inline mult(ll x, ll y, ll m) { return (x * y) % m; }
+ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
+
+void xgcd(ll a, ll b, ll& g, ll& x, ll& y) {
+    ll r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
+    r2 = a, x2 = 1, y2 = 0;
+    r1 = b, x1 = 0, y1 = 1;
+    while (r1) {
+        q = r2 / r1;
+        r0 = r2 % r1;
+        x0 = x2 - q * x1;
+        y0 = y2 - q * y1;
+        r2 = r1, x2 = x1, y2 = y1;
+        r1 = r0, x1 = x0, y1 = y0;        
+    }
+    g = r2, x = x2, y = y2;
+}
+
+ll CRT(ll* r, ll* m, int n) {
+    // assert (n > 1);
+    ll r1 = r[0], m1 = m[0];
+    rep(i,1,n-1) {
+        ll r2 = r[i], m2 = m[i];
+        ll g, x, y; xgcd(m1, m2, g, x, y);
+        if ((r1 - r2) % g != 0) return -1; // no solution
+        ll z = m2/g;
+        ll lcm = m1 * z;
+        ll sol = add(mod(r1, lcm), m1*mult(mod(x,z),mod((r2-r1)/g,z),z), lcm);
+        r1 = sol;
+        m1 = lcm;
+    }
+    // rep(i,0,n-1) assert (r1 % m[i] == r[i]);
+    return r1;
 }
 
 int main() {
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
     cin >> B >> Z;
-    int P,T;
-    T = INT_MAX;
-    rep(b,0,B-1) {
-        int tmp; cin >> tmp;
-        trace[b].push_back(tmp);
-        count[tmp]++;
-        z2index[tmp] = 0;
-        vis[b][tmp] = true;
-        rep(z,1,Z) cin >> next[b][z];
+    rep(i,0,B-1) {
+        cin >> cur_zoo[i];
+        cur_zoo[i]--;
+        rep(j,0,Z-1) {
+            cin >> next_zoo[i][j];
+            next_zoo[i][j]--;
+        }
     }
-    rep(z,1,Z) if (count[z] == B) {
-        P = z; T = 0; goto answer;
-    }
-    rep(t,1,Z) {
-        rep(b,0,B-1) {
-            int curr = trace[b].back();
-            int nxt = next[b][curr];
-            if (vis[nxt]) {
-                if (!cycle_size[b]) {
-                    cycle_offset[b] = z2index[b][nxt];
-                    cycle_size[b] = trace[b].size() - cycle_offset[b];
-                }
-            } else {
-                z2index[b][nxt] = trace[b].size();
-                vis[nxt] = true;
+    rep(t,0,Z) {        
+        int tmp = cur_zoo[0];
+        bool same = true;
+        rep(i,1,B-1) {
+            if (cur_zoo[i] != tmp) {
+                same = false; break;
             }
-            count[curr]--;
-            count[nxt]++;
-            trace[b].push_back(nxt);
         }
-        rep(z,1,Z) if (count[z] == B) {
-            P = z; T = t; goto answer;
+        if (same) {
+            cout << tmp+1 << ' ' << t << '\n';
+            return 0;
         }
-    }
-    rep(b,0,B-1) { assert (cycle_size[b] > 0); }
-    int freq[Z+1] = {0};
-    rep(b,0,B-1) {
-        rep(i,0,cycle_size[b]-1) {
-            freq[trace[cycle_offset[b] + i]]++;
+        if (t == Z) break;
+        rep(i,0,B-1) {
+            cur_zoo[i] = next_zoo[i][cur_zoo[i]];
         }
     }
-    R.resize(B);
-    M.resize(B);
-    rep(z,1,Z) {
-        if (freq[z] == B) {
-            rep(b,0,B-1) {
-                R[b] = ((z2index[z] - cycle_offset[b]) - 
-                    (z2index[b][trace[b].back()] - cycle_offset[b])
-                    + cycle_size[b]) % cycle_size[b];
-                M[b] = cycle_size[b];                
+    memset(cycle_index, -1, sizeof cycle_index);
+    memset(zoo_count, 0, sizeof zoo_count);
+    rep(i,0,B-1) {
+        int u = cur_zoo[i];
+        int index = 0;
+        while (cycle_index[i][u] == -1) {
+            zoo_count[u]++;
+            cycle_index[i][u] = index++;
+            u = next_zoo[i][u];
+        }
+        cycle_size[i] = index;
+    }
+    ll t_min = LLONG_MAX;
+    int z_min = -1;
+    rep(z,0,Z-1) {
+        if (zoo_count[z] == B) {
+            rep(i,0,B-1) {
+                remainders[i] = cycle_index[i][z];
+                // assert (remainders[i] != -1);
             }
-            int t = CRT(R, M);
-            if (t != -1 && Z + t < T) { T = Z + t; P = z; }
+            ll t = CRT(remainders, cycle_size, B);
+            if (t != -1 and t < t_min) {
+                t_min = t;
+                z_min = z;
+            }
         }
     }
-    answer:
-    if (T == INT_MAX) cout << "*\n";
-    else cout << P << ' ' << T << '\n';
+    if (z_min != -1) {
+        cout << (z_min+1) << ' ' << (t_min+Z) << '\n';
+    } else {
+        cout << "*\n";
+    }
     return 0;
 }
