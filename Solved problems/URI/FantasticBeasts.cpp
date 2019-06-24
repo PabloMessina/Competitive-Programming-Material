@@ -12,11 +12,7 @@ int zoo_count[100];
 ll remainders[10];
 ll cycle_size[10];
 
-ll inline mod(ll x, ll m) { 
-    ll tmp = x % m;
-    if (tmp < 0) tmp += m;
-    return tmp;
-}
+ll inline mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
 ll inline mult(ll x, ll y, ll m) { return (x * y) % m; }
 ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
 
