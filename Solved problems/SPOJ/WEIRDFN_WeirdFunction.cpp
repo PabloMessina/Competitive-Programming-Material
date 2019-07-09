@@ -1,3 +1,4 @@
+// tags: std::priority_queue, implementation
 #pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
 #include <bits/stdc++.h>
 using namespace std;
