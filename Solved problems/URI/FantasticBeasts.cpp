@@ -53,7 +53,7 @@ int main() {
     cin.tie(0); cout.tie(0);
     cin >> B >> Z;
     rep(i,0,B-1) {
-        cin >> cur_zoo[i];
+        cin >> [i];
         cur_zoo[i]--;
         rep(j,0,Z-1) {
             cin >> next_zoo[i][j];
@@ -61,6 +61,7 @@ int main() {
         }
     }
     rep(t,0,Z) {        
+        // check if everyone is in the same zoo
         int tmp = cur_zoo[0];
         bool same = true;
         rep(i,1,B-1) {
@@ -71,12 +72,14 @@ int main() {
         if (same) {
             cout << tmp+1 << ' ' << t << '\n';
             return 0;
-        }
+        }        
         if (t == Z) break;
+        // move every bear one step further
         rep(i,0,B-1) {
             cur_zoo[i] = next_zoo[i][cur_zoo[i]];
         }
     }
+    // find cycles for each bear
     memset(cycle_index, -1, sizeof cycle_index);
     memset(zoo_count, 0, sizeof zoo_count);
     rep(i,0,B-1) {
@@ -89,6 +92,7 @@ int main() {
         }
         cycle_size[i] = index;
     }
+    // use CRT to find the answer
     ll t_min = LLONG_MAX;
     int z_min = -1;
     rep(z,0,Z-1) {

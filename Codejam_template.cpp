@@ -18,6 +18,6 @@ typedef tuple<int,int,int> iii;
 int main() {
     // OPTIONAL: for faster input/output (only if using cin/cout)
     ios::sync_with_stdio(false); 
-    cin.tie(0);
+    cin.tie(0); cout.tie(0);
     return 0;
 }

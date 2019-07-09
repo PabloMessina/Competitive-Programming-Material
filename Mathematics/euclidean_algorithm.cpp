@@ -1,21 +1,23 @@
 /* ============================= */
 /* GCD (greatest common divisor) */
 /* ============================= */
-// euclid's algorithm
+// OPTION 1: using C++ builtin function __gcd
+__gcd(a,b)
+// OPTION 2: manually usings euclid's algorithm
 int gcd (int a, int b) {
     while (b) { a %= b; swap(a,b); }
     return a;
 }
-// or you can also use __gcd(a,b)
 
 /* ============ */
 /* extended GCD */
 /* ============ */
-// extended euclid's algorithm
+// extended euclid's algorithm: find g, x, y such that
 // a * x + b * y = g = gcd(a, b)
-// x = x0 + n * (b/g)
-// y = y0 - n * (a/g)
-// where n is integer
+// The algorithm finds a solution (x0,y0) but there are infinite more:
+//   x = x0 + n * (b/g)
+//   y = y0 - n * (a/g)
+// where n is integer, are the set of all solutions
 void xgcd(int a, int b, int&g, int& x, int& y) {
     int r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
     r2 = a, x2 = 1, y2 = 0;
@@ -29,16 +31,19 @@ void xgcd(int a, int b, int&g, int& x, int& y) {
         r1 = r0, x1 = x0, y1 = y0;        
     }
     g = r2, x = x2, y = y2;
+    // for debugging (in case you think you might have bugs)
+    // assert (g == a * x + b * y);
+    // assert (g == __gcd(a,b));
 }
 
 /* ====================== */
 /* multiplicative inverse */
 /* ====================== */
+// find x such that a * x = 1 (mod m)
+// this is the same as finding x, y such that
+// a * x + m * y = 1, which can be done with xgcd
 int mulinv(int a, int m) {
     int g, x, y; xgcd(a, m, g, x, y);
-    if (g == 1) {
-        int i = x % m;
-        return i < 0 ? i+m : i;
-    }
-    return -1;
+    if (g == 1) return ((x %= m) < 0) ? x+m : x;
+    return -1; // no inverse exists
 }
