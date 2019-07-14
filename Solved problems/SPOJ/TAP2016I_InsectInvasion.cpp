@@ -39,7 +39,7 @@ ll gcdext(ll a, ll b, ll& x, ll& y) {
         r2 = r1, x2 = x1, y2 = y1;
         r1 = r0, x1 = x0, y1 = y0;        
     }
-    g = r2, x = x2, y = y2;
+    ll g = r2; x = x2, y = y2;
     if (g < 0) g = -g, x = -x, y = -y;
     return g;
 }

@@ -30,7 +30,7 @@ int gcdext(int a, int b, int& x, int& y) {
         r2 = r1, x2 = x1, y2 = y1;
         r1 = r0, x1 = x0, y1 = y0;        
     }
-    g = r2, x = x2, y = y2;
+    int g = r2; x = x2, y = y2;
     if (g < 0) g = -g, x = -x, y = -y; // make sure g > 0
     // for debugging (in case you think you might have bugs)
     // assert (g == a * x + b * y);
