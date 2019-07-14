@@ -1,10 +1,14 @@
+typedef long long int ll;
+
+ll inline mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
+
 /* ============================= */
 /* GCD (greatest common divisor) */
 /* ============================= */
 // OPTION 1: using C++ builtin function __gcd
 __gcd(a,b)
 // OPTION 2: manually usings euclid's algorithm
-int gcd (int a, int b) {
+int gcd (ll a, ll b) {
     while (b) { a %= b; swap(a,b); }
     return a;
 }
@@ -18,8 +22,8 @@ int gcd (int a, int b) {
 //   x = x0 + n * (b/g)
 //   y = y0 - n * (a/g)
 // where n is integer, are the set of all solutions
-int gcdext(int a, int b, int& x, int& y) {
-    int r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
+ll gcdext(ll a, ll b, ll& x, ll& y) {
+    ll r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
     r2 = a, x2 = 1, y2 = 0;
     r1 = b, x1 = 0, y1 = 1;
     while (r1) {
@@ -30,7 +34,7 @@ int gcdext(int a, int b, int& x, int& y) {
         r2 = r1, x2 = x1, y2 = y1;
         r1 = r0, x1 = x0, y1 = y0;        
     }
-    int g = r2; x = x2, y = y2;
+    ll g = r2; x = x2, y = y2;
     if (g < 0) g = -g, x = -x, y = -y; // make sure g > 0
     // for debugging (in case you think you might have bugs)
     // assert (g == a * x + b * y);
@@ -45,9 +49,52 @@ int gcdext(int a, int b, int& x, int& y) {
 // this is the same as finding x, y such that
 // a * x + m * y = 1, which can be done with gcdext
 // and then returning x (mod m)
-int inline mod(int x, int m) { return ((x %= m) < 0) ? x+m : x; }
-int mulinv(int a, int m) {
-    int x, y;
+ll mulinv(ll a, ll m) {
+    ll x, y;
     if (gcdext(a, m, x, y) == 1) return mod(x, m); // make sure 0 <= x < m
     return -1; // no inverse exists
+}
+
+/* =========================== */
+/* Linear Diophantine Equation */
+/* =========================== */
+// find intengers x and y such that a * x + b * y = c
+bool lindiopeq(ll a, ll b, ll c, ll& x, ll& y) {
+    if (a == 0 and b == 0) { // special case
+        if (c == 0) { x = y = 0; return true; }
+        return false;
+    }
+    // general case
+    ll s, t;
+    ll g = gcdext(a,b,s,t);
+    if (c % g == 0) {
+        x = s*(c/g), y = t*(c/g);
+        return true;
+    }
+    return false;
+}
+
+/* ========================== */
+/* Linear Congruence Equation */
+/* ========================== */
+// find smallest integer x (mod m) that solves the equation
+//   a * x = b (mod m)
+bool lincongeq(ll a, ll b, ll m, ll& x) {
+    assert (m > 0);
+    a = mod(a,m);
+    b = mod(b,m);
+    ll s, t;
+    ll g = gcdext(a,m,s,t);
+    if (b % g == 0) {
+        b /= g;
+        m /= g;
+        ll n = -s*b/m;
+        x = s*b + n*m;
+        if (x < 0) x += m;
+        // for debugging
+        // assert (0 <= x and x < m);
+        // assert (mod(a*x,m) == b);
+        return true;
+    }
+    return false;
 }
