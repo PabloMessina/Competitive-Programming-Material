@@ -35,3 +35,5 @@
 *.pdfsync
 
 .vscode/
+_ignoreme/
+_debug*.cpp
