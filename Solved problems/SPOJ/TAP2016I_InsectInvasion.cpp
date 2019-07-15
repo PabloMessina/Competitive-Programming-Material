@@ -62,7 +62,7 @@ ll gcdext(ll a, ll b, ll& x, ll& y) {
 //    which is equivalent to solving a linear diophantine equation, which can
 //    be done using the extended euclidean algorithm
 // Then we simply try out all k's (k = 0 ... K-1) and choose the minimum
-//    non-negative c we find
+//    non-negative c we find in each case, and the minimum t overall
 // For more details about linear congruence equations, check out these lectures:
 //   http://gauss.math.luc.edu/greicius/Math201/Fall2012/Lectures/linear-congruences.article.pdf
 //   http://gauss.math.luc.edu/greicius/Math201/Fall2012/Lectures/linear-diophantine.article.pdf

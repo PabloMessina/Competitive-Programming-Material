@@ -9,7 +9,7 @@ ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
 // extended euclidean algorithm
 // finds g, x, y such that
 //    a * x + b * y = g = GCD(a,b)
-void xgcd(ll a, ll b, ll& g, ll& x, ll& y) {
+ll gcdext(ll a, ll b, ll& x, ll& y) {
     ll r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
     r2 = a, x2 = 1, y2 = 0;
     r1 = b, x1 = 0, y1 = 1;
@@ -21,10 +21,12 @@ void xgcd(ll a, ll b, ll& g, ll& x, ll& y) {
         r2 = r1, x2 = x1, y2 = y1;
         r1 = r0, x1 = x0, y1 = y0;        
     }
-    g = r2, x = x2, y = y2;
+    ll g = r2; x = x2, y = y2;
+    if (g < 0) g = -g, x = -x, y = -y; // make sure g > 0
     // for debugging (in case you think you might have bugs)
     // assert (g == a * x + b * y);
-    // assert (g == __gcd(a,b));
+    // assert (g == __gcd(abs(a),abs(b)));
+    return g;
 }
 
 // ==============================================
@@ -37,14 +39,14 @@ void xgcd(ll a, ll b, ll& g, ll& x, ll& y) {
 //    sol = r1 + m1 * (r2-r1)/g * x' (mod LCM(m1,m2))
 // where x' comes from
 //   m1 * x' + m2 * y' = g = GCD(m1,m2)
-//   where x' and y' are the values found by extended euclidean algorithm (xgcd)
+//   where x' and y' are the values found by extended euclidean algorithm (gcdext)
 // Useful references:
 //   https://codeforces.com/blog/entry/61290
 //   https://forthright48.com/chinese-remainder-theorem-part-1-coprime-moduli
 //   https://forthright48.com/chinese-remainder-theorem-part-2-non-coprime-moduli
 // ** Note: this solution works if lcm(m1,m2) fits in a long long (64 bits)
 pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
-    ll g, x, y; xgcd(m1, m2, g, x, y);
+    ll g, x, y; g = gcdext(m1, m2, x, y);
     if ((r1 - r2) % g != 0) return {-1, -1}; // no solution
     ll z = m2/g;
     ll lcm = m1 * z;
@@ -73,7 +75,7 @@ pair<ll,ll> CRT(ll* r, ll* m, int n) {
     ll r1 = r[0], m1 = m[0];
     rep(i,1,n-1) {
         ll r2 = r[i], m2 = m[i];
-        ll g, x, y; xgcd(m1, m2, g, x, y);
+        ll g, x, y; g = gcdext(m1, m2, x, y);
         if ((r1 - r2) % g != 0) return {-1, -1}; // no solution
         ll z = m2/g;
         ll lcm = m1 * z;

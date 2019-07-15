@@ -1,10 +1,11 @@
-int mod_pow(int b, int e, int m) {
-  if (e == 1)
-    return b % m;
-  int he = e / 2;
-  int x = mod_pow(b, he, m);
-  x = (x * x) % m;
-  if (e % 2 == 1)
-    x = (x * b) % m;
-  return x;
+// compute a^b (mod m)
+int binary_exp(int a, int b, int m) {	
+    a %= m;
+    int res = 1;
+    while (b > 0) {
+        if (b&1) res = (res * a) % m;
+        a = (a * a) % m;
+        b >>= 1;
+    }
+    return res;
 }
