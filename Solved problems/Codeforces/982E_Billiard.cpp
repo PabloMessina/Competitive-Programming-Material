@@ -1,4 +1,4 @@
-// tags: linear congruence equation, 
+// tags: linear congruence equation, modular arithmetics, math
 #pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
