@@ -23,20 +23,7 @@ int gcd (ll a, ll b) {
 //   y = y0 - n * (a/g)
 // where n is integer, are the set of all solutions
 
-// --- version 1: recursive
-ll gcdext(ll a, ll b, ll& x, ll& y) {
-    if (a == 0) {
-        x = 0, y = 1;
-        return b;
-    }
-    ll x1, y1;
-    ll g = gcdext(b % a, a, x1, y1);
-    x = y1 - (b / a) * x1;
-    y = x1;
-    return g;
-}
-
-// --- version 2: iterative
+// --- version 1: iterative
 ll gcdext(ll a, ll b, ll& x, ll& y) {
     ll r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
     r2 = a, x2 = 1, y2 = 0;
@@ -57,6 +44,19 @@ ll gcdext(ll a, ll b, ll& x, ll& y) {
     return g;
 }
 
+// --- version 2: recursive
+ll gcdext(ll a, ll b, ll& x, ll& y) {
+    if (a == 0) {
+        x = 0, y = 1;
+        return b;
+    }
+    ll x1, y1;
+    ll g = gcdext(b % a, a, x1, y1);
+    x = y1 - (b / a) * x1;
+    y = x1;
+    return g;
+}
+
 /* ====================== */
 /* multiplicative inverse */
 /* ====================== */
@@ -73,6 +73,10 @@ ll mulinv(ll a, ll m) {
 /* =========================== */
 /* Linear Diophantine Equation */
 /* =========================== */
+// recommended readings:
+// http://gauss.math.luc.edu/greicius/Math201/Fall2012/Lectures/linear-diophantine.article.pdf
+// http://mathonline.wikidot.com/solutions-to-linear-diophantine-equations
+
 // find intengers x and y such that a * x + b * y = c
 bool lindiopeq(ll a, ll b, ll c, ll& x, ll& y) {
     if (a == 0 and b == 0) { // special case
@@ -92,6 +96,9 @@ bool lindiopeq(ll a, ll b, ll c, ll& x, ll& y) {
 /* ========================== */
 /* Linear Congruence Equation */
 /* ========================== */
+// recommended reading:
+// http://gauss.math.luc.edu/greicius/Math201/Fall2012/Lectures/linear-congruences.article.pdf
+
 // find smallest integer x (mod m) that solves the equation
 //   a * x = b (mod m)
 bool lincongeq(ll a, ll b, ll m, ll& x) {

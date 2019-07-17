@@ -1,5 +1,5 @@
 // compute a^b (mod m)
-int binary_exp(int a, int b, int m) {	
+int binary_exp(int a, int b, int m) {
     a %= m;
     int res = 1;
     while (b > 0) {
