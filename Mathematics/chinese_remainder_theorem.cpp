@@ -3,7 +3,7 @@ typedef long long int ll;
 using namespace std;
 
 ll inline mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
-ll inline mult(ll x, ll y, ll m) { return (x * y) % m; }
+ll inline mul(ll x, ll y, ll m) { return (x * y) % m; }
 ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
 
 // extended euclidean algorithm
@@ -50,7 +50,7 @@ pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
     if ((r1 - r2) % g != 0) return {-1, -1}; // no solution
     ll z = m2/g;
     ll lcm = m1 * z;
-    ll sol = add(mod(r1, lcm), m1*mult(mod(x,z),mod((r2-r1)/g,z),z), lcm);
+    ll sol = add(mod(r1, lcm), m1*mul(mod(x,z),mod((r2-r1)/g,z),z), lcm);
     // for debugging (in case you think you might have bugs)
     // assert (0 <= sol and sol < lcm);
     // assert (sol % m1 == r1 % m1);
@@ -79,7 +79,7 @@ pair<ll,ll> CRT(ll* r, ll* m, int n) {
         if ((r1 - r2) % g != 0) return {-1, -1}; // no solution
         ll z = m2/g;
         ll lcm = m1 * z;
-        ll sol = add(mod(r1, lcm), m1*mult(mod(x,z),mod((r2-r1)/g,z),z), lcm);
+        ll sol = add(mod(r1, lcm), m1*mul(mod(x,z),mod((r2-r1)/g,z),z), lcm);
         r1 = sol;
         m1 = lcm;
     }
