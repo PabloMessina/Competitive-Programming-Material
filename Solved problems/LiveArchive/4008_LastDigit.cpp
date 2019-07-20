@@ -47,7 +47,7 @@ int binary_exp(int a, int b, int m) {
 
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0);
+    cin.tie(0); cout.tie(0);
     primes = get_primes_up_to(MAXN);
     string line;	
     while (cin >> line) {
