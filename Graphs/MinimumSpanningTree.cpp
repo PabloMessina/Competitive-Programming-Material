@@ -1,6 +1,5 @@
 #include <bits/stdc++.h>
 using namespace std;
-vector<int> vi;
 typedef pair<int,int> ii;
 
 /* ================= */
@@ -15,7 +14,7 @@ struct Edge {
 };
 namespace Kruskal {
     struct UnionFind {
-        vi p, rank;
+        vector<int> p, rank;
         int numSets;
         UnionFind(int n) {
             numSets = n;

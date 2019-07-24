@@ -192,7 +192,7 @@ namespace LCA2 {
 int main() {
     // build graph
     int n, m;
-    scanf("%d", &n, &m);
+    scanf("%d%d", &n, &m);
     vector<vi> g(n);
     while (m--) {
         int u, v; scanf("%d%d", &u, &v);

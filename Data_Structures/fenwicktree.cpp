@@ -1,10 +1,10 @@
 struct FenwickTree {
     vector<int> ft;
     FenwickTree(int n) { ft.assign(n+1, 0); }
-    // prefix sum query (sum in range 1 .. b)
-    int psq(int b) {
+    // prefix sum query (sum in range 1 .. k)
+    int psq(int k) {
         int sum = 0;
-        for (; b; b -= (b & -b)) sum += ft[b];
+        for (; k; k -= (k & -k)) sum += ft[k];
         return sum;
     }
     // range sum query (sum in range a .. b)
