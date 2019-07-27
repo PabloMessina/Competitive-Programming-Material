@@ -21,7 +21,8 @@ struct Query {
         b = l / N_BINS;
     }
     bool operator<(const Query& q) const {
-        return (b < q.b or (b == q.b and r < q.r));
+        if (b != q.b) return b < q.b;
+        return (b & 1) ? r < q.r : r > q.r;
     }
 };
 
