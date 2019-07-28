@@ -13,7 +13,9 @@ namespace SparseTable {
 
     void reset(vector<int>& _values) {
         values = &_values;
-        // we are using -1 to m
+        // we are using -1 to mark unsolved cells in the DP table,
+        // so make sure -1 is not a valid value, otherwise use
+        // a different value
         memset(DP, -1, sizeof DP);
     }
 
