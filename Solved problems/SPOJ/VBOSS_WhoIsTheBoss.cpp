@@ -66,7 +66,7 @@ int main() {
             int id; cin >> id;
             int i = id2index[id];
             cout << get_parent(i) << " "
-                 << count_descendants(i) << endl;
+                 << count_descendants(i) << '\n';
         }
     }
     return 0;

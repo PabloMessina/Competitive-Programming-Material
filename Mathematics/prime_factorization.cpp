@@ -18,7 +18,7 @@ vector<int> trial_division(int n) {
 }
 
 // method 2: precomputed primes
-// complexity: ~ O(   /log(sqrt(n)) + log_2(n) )
+// complexity: ~ O( sqrt(n) / log(sqrt(n)) + log_2(n) )
 //   + time of precomputing primes
 vector<int> trial_division_precomp(int n, vector<int>& primes) {
 	vector<int> factors;

@@ -41,11 +41,9 @@ void init_la(int n) {
     }
 }
 
-int lev_anc(int u, int k) {
-    if (k == 0) return u; // trivial case
-    if (L[u] < k) return -1; // check ancestor exists
-    for (int j = 0; k; j++, k>>=1) {
-        if (k & 1) u = P[u][j]; // u = 2^j th ancestor of u
-    }
+int raise(int u, int steps) {
+    // move node u "steps" levels up towards the root
+    // i.e. find the steps-th ancestor of u
+    for (int i = 0; steps; i++, steps>>=1) if (steps&1) u = P[u][i];
     return u;
 }
