@@ -4,7 +4,7 @@
 // http://www.cplusplus.com/reference/stack/stack/
 // https://www.geeksforgeeks.org/stack-in-cpp-stl/
 
-// ---- QUEUE
+//===== QUEUE =====
 queue<int> q;
 // adding to queue
 rep(i,1,5) q.push(i); // q = {1, 2, 3, 4, 5}
@@ -16,7 +16,7 @@ while (!q.empty()) {
     q.pop();
 } // output: 1 2 3 4 5
 
-// ---- STACK
+//===== STACK =====
 stack<int> s;
 // adding to stack
 rep(i,1,5) s.push(i); // s = {1, 2, 3, 4, 5}

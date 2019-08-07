@@ -2,9 +2,9 @@
 // http://www.cplusplus.com/reference/list/list/
 // https://www.geeksforgeeks.org/list-cpp-stl/
 
-// -------
+//========
 // INSERT
-// -------
+//========
 // http://www.cplusplus.com/reference/list/list/insert/
 
 list<int> mylist;
@@ -26,9 +26,9 @@ for (int x : mylist) cout << ' ' << x;
 cout << '\n';
 // mylist contains: 1 10 20 30 30 20 2 3 4 5
 
-// ------
+//=======
 // ERASE
-// ------
+//=======
 // http://www.cplusplus.com/reference/list/list/erase/
 
 list<int> mylist;

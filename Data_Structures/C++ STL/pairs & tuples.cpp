@@ -3,9 +3,9 @@
 // http://www.cplusplus.com/reference/utility/pair/
 // http://www.cplusplus.com/reference/tuple/
 
-// -----
+//======
 // PAIR
-// -----
+//======
 // Example: pair of ints
 typedef pair<int,int> ii; // use ii as abbreviation
 // initialization
@@ -17,9 +17,9 @@ int x = p.first, y = p.second;
 // modifying values
 p.first++, p.second--; // p = {6, 4}
 
-// ------
-// TUPLES
-// ------
+//=======
+// TUPLE
+//=======
 // Example: tuples of 3 ints
 typedef tuple<int,int,int> iii; // use iii as abbreviation
 // initialization

@@ -2,9 +2,9 @@
 // http://www.cplusplus.com/reference/queue/priority_queue/
 // https://www.geeksforgeeks.org/priority-queue-in-cpp-stl/
 
-// -------------------
+//====================
 // 1) MAXHEAP of ints
-// -------------------
+//====================
 priority_queue<int> q;
 q.push(30);
 q.push(100);
@@ -18,9 +18,9 @@ while (!q.empty()) {
 cout << '\n';
 // Popping out elements... 100 40 30 25
 
-// -------------------
+//====================
 // 2) MINHEAP of ints
-// -------------------
+//====================
 priority_queue<int, vector<int>, greater<int>> q;
 q.push(30);
 q.push(100);
@@ -34,15 +34,15 @@ while (!q.empty()) {
 cout << '\n';
 // Popping out elements... 25 30 40 100
 
-// ----------------------------------
+//====================================
 // 3) custom data + custom comparator
-// ----------------------------------
+//====================================
 
 // option 1: overload operator< inside your struct/class
 struct Event {
     double time; string name;
     Event (double t, string n) : time(t), name(n) {}
-    bool overload<(const Event& rhs) {
+    bool overload<(const Event& rhs) const {
         // define your < operator however you want
         return time > rhs.time;
     }

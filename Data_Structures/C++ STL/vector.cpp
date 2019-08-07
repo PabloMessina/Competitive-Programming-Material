@@ -5,9 +5,9 @@
 #define rep(i,a,b) for(int i=a; i<=b; i++)
 using namespace std;
 
-// ----------------------------
+//==============================
 // DECLARATION & INITIALIZATION
-// ----------------------------
+//==============================
 
 // vector of ints
 vector<int> v; // empty
@@ -22,9 +22,9 @@ v[1] = 0; // v = { -8, 0, 3, 5, 6 }
 // a matrix of R rows by C columns filled with -1
 vector<vector<int>> matrix(R, vector<int>(C,-1));
 
-// ---------------------------------------------------
+//=====================================================
 // MODIFYING A VECTOR (capacity, size, adding elements)
-// ---------------------------------------------------
+///=====================================================
 
 vector<int> v; //  v = {}, v.size() == 0
 v.reserve(1000); // reserve 1000 x sizeof(int) bytes of contiguous memory in advance
@@ -39,17 +39,17 @@ v.pop_back(); // remove last element -> v = { 1, 2, 3, ..., 9 }, v.size() == 9
 // clearing
 v.clear(); // v = {}, v.size() == 0
 
-// -------
+//========
 // RESIZE
-// -------
+//========
 rep(i,1,10) v.push_back(i); // v = { 1, 2, ..., 10 }
 v.resize(5); // v = { 1, 2, 3, 4, 5 }
 v.resize(8,100); // v = { 1, 2, 3, 4, 5, 100, 100, 100 }
 v.resize(12); // v = { 1, 2, 3, 4, 5, 100, 100, 100, 0, 0, 0, 0 }
 
-// -------
+//========
 // ASSIGN
-// -------
+//========
 v.assign(N, 4); // v = { 4, 4, ..., 4 } (N times)
 
 vector<int> v2;
@@ -60,9 +60,9 @@ int arr[5] = {1, 2, 3, 4, 5};
 v2.assign(arr, arr + 5); // v2 = {1, 2, 3, 4, 5}
 v2.assign(arr, arr + 3); // v2 = {1, 2, 3}
 
-// --------------------------
+//===========================
 // EMPLACE_BACK VS PUSH_BACK
-// -------------------------
+//===========================
 struct CustomData {
     int x; double y; string z;
     CustomData(int x, double y, string z) : x(x), y(y), z(z) {}
@@ -77,9 +77,9 @@ v.emplace_back(1, 2.32, "foo");
 //          for push_back(), no need to define a constructor
 
 
-// -----------------------
+//========================
 // ITERATING OVER VECTORS
-// -----------------------
+//========================
 // reference:
 // https://stackoverflow.com/questions/15176104/c11-range-based-loop-get-item-by-value-or-reference-to-const
 
@@ -110,9 +110,9 @@ for (auto it = v.rbegin(); it != v.rend(); ++it) {
     const auto& x = *it;
 }
 
-// -------------------
+//====================
 // SWAPPING 2 VECTORS 
-// -------------------
+//====================
 vector<int> v1 = {1, 1, 1, 1};
 vector<int> v2 = {2, 2, 2};
 v1.swap(v2); // v1 = {2, 2, 2}, v2 = {1, 1, 1, 1}
