@@ -78,7 +78,8 @@ q.emplace(5.3, "John");
 q.emplace(0.3, "Bob");
 cout << "Events:";
 while (!q.empty()) {
-    Event& e = q.top(); q.pop();
-    cout << " (" << e.time << ',' << e.name << ")\n";
+    Event& e = q.top();
+    cout << " (" << e.time << ',' << e.name << ")";
+    q.pop();
 }
 // Events: (0.3,Bob) (2.7,Mary) (5.3,John) (10.2,Peter)
