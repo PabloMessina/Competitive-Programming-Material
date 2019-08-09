@@ -13,7 +13,7 @@ ll H[MAXN], L[MAXN], R[MAXN];
 int main() {
     ios::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
-    vector<pair<ll,ll>> s;
+    vector<pair<ll,ll>> s; // we use a vector to simulate a stack
     s.reserve(MAXN+1);
     while ((cin >> N) and N > 0) {
         rep(i,0,N-1) cin >> H[i];        

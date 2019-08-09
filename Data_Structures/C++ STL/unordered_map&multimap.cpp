@@ -2,9 +2,9 @@
 // http://www.cplusplus.com/reference/unordered_map/unordered_map/
 // http://www.cplusplus.com/reference/unordered_map/unordered_multimap/
 // ** SUMMARY **
-//  same as map and multimap, except that for each key
+//  same as unordered_set and unordered_multiset, except that for each key
 //  now there is a value associated to it (if we only consider
-//  the keys is the same as map/multimap)
+//  the keys is the same as unordered_set/unordered_multiset)
 
 //================
 // INITIALIZATION
