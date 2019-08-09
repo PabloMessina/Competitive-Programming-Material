@@ -1,6 +1,6 @@
 // tags: geometry, sweep line, std::set, implementation
-#pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
-#include <bits/stdc++.h> // import everything in one shot
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef long long int ll;
@@ -9,7 +9,7 @@ const int MAXN = 200000;
 ll rw_dist[MAXN];
 ll p_dist[MAXN];
 int N, Q;
-enum Type { Start, End, Person };
+enum Type { RoadworkStart, RoadworkEnd, Person };
 struct Event {
     Type type;
     ll score;
@@ -31,8 +31,8 @@ int main() {
     rep(i,0,N-1) {
         ll s, t, x; cin >> s >> t >> x;
         rw_dist[i] = x;
-        events.emplace_back(Start, i, 2*s-1, 2*x);
-        events.emplace_back(End, i, 2*t-1, 2*x);
+        events.emplace_back(RoadworkStart, i, 2*s-1, 2*x);
+        events.emplace_back(RoadworkEnd, i, 2*t-1, 2*x);
     }
     rep(i,0,Q-1) {
         ll d; cin >> d;
@@ -45,9 +45,9 @@ int main() {
     };
     set<int, decltype(cmp)> active_roadworks(cmp);
     for (Event& e : events) {
-        if (e.type == Start) {
+        if (e.type == RoadworkStart) {
             active_roadworks.insert(e.id);
-        } else if (e.type == End) {
+        } else if (e.type == RoadworkEnd) {
             active_roadworks.erase(e.id);
         } else { // Person
             if (active_roadworks.empty()) {

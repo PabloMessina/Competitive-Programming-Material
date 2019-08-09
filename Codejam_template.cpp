@@ -1,5 +1,5 @@
-#pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
-#include <bits/stdc++.h> // import everything in one shot
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
 // defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
@@ -16,7 +16,6 @@ typedef tuple<int,int,int> iii;
 // -------------------------------
 
 int main() {
-    // OPTIONAL: for faster input/output (only if using cin/cout)
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
     return 0;
