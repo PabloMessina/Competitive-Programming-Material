@@ -6,8 +6,8 @@ using namespace std;
 #define uset unordered_set
 // -------------------------------
 int N, M, A, B;
-vector<uset<int>> g;
-set<pair<int,int>> s;
+vector<uset<int>> g; // graph
+set<pair<int,int>> s; // set
 
 void remove_node(set<pair<int,int>>::iterator it) {
     s.erase(it);
