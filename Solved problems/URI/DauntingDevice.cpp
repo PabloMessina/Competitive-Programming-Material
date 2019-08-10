@@ -1,19 +1,11 @@
-// tags: implementation, ordered sets
-#include <bits/stdc++.h> // import everything in one shot
+// tags: implementation, std::set
+#include <bits/stdc++.h>
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
 typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
-
+const int MAXC = 100005;
+ll color_counts[MAXC] = {0}; // color_counts initialized filled with 0s
 struct Interval {
     int start;
     int end;
@@ -22,9 +14,6 @@ struct Interval {
         return start < o.start;
     }
 };
-
-const int MAXC = 100005;
-ll color_counts[MAXC] = {0}; // color_counts initialized filled with 0s
 
 int main() {
     int L,C,N;
@@ -60,7 +49,7 @@ int main() {
             // http://www.cplusplus.com/reference/set/set/insert/
             auto ret = intervals.insert(aux);
             if (ret.second == true) { // succesful insertion, it_first should be set to the previous one
-                it_first = std::prev(ret.first);
+                it_first = prev(ret.first);
                 intervals.erase(ret.first); // remove "fake" interval
             } else { // no insertion, just set "it_first" to the already existing interval's iterator
                 it_first = ret.first;
@@ -86,7 +75,7 @@ int main() {
             // remove range [it_first, it_last]
             // check out the documentation of set::erase
             // http://www.cplusplus.com/reference/set/set/erase/
-            intervals.erase(it_first, std::next(it_last));
+            intervals.erase(it_first, next(it_last));
 
             // -------------------------------------
             // STEP 3) insert new Interval(s)
