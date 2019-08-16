@@ -3,7 +3,7 @@ using namespace std;
 
 // time complexity:
 //  - filling DP table: O(N log N)
-//  - answering queries: O (log N)
+//  - answering queries: O(1) / O(log N)
 
 namespace SparseTable {
     const int MAXN = 10000;
@@ -27,22 +27,26 @@ namespace SparseTable {
         return ans = dp(i, e-1) + dp(i+(1<<(e-1)), e-1);
     }
 
-    // range minimun query
+    // RMQ = Range Minimun Query
     // rmq(l,r) = min { values[j] } for j in {l, l+1, ..., r}
-    int rmq(int l, int r) {
+    // option 1: complexity O(1)
+    int rmq_O1(int l, int r) {
+        int e = 31 - __builtin_clz(r - l + 1);
+        return min(dp(l,e), dp(r - (1 << e) + 1, e));
+    }
+    // option 2: complexity O(log N)
+    int rmq_Ologn(int l, int r) {
         int ans = INT_MAX;
         int d = r-l+1;
-        assert (d >= 1);
-        int i = l;
         for (int e = 0; d; e++, d>>=1) {
             if (d & 1) {
-                ans = min(ans, dp(i, e));
-                i += 1 << e;
+                ans = min(ans, dp(l, e));
+                l += 1 << e;
             }
         }
-        assert (i == r);
         return ans;
     }
+
 }
 
 // example of usage
@@ -51,7 +55,7 @@ int main() {
     SparseTable::reset(values);
     while (true) {
         int l, r; cin >> l >> r; // read query
-        cout << SparseTable::rmq(l,r) << '\n'; // print minimum
+        cout << SparseTable::rmq_O1(l,r) << '\n'; // print minimum
     }
     return 0;    
 }
