@@ -1,4 +1,4 @@
-// tags: fenwick tree
+// tags: fenwick tree, difference array (conceptually)
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
