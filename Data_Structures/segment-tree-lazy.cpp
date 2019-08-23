@@ -8,76 +8,75 @@ struct SegmentTreeLazy {
     inline int left (int p) { return p << 1; }
     inline int right(int p) { return (p << 1) + 1; }
      
-    // build the tree
-    void build(int node, int a, int b) {
-        if(a > b) return; // out of range 
-        if(a == b) { // leaf node
-            tree[node] = arr[a]; // init value
+    // u = node, [i, j] = u's range
+    void build(int u, int i, int j) {
+        if(i == j) { // base case: a leaf node
+            tree[u] = arr[i]; // init value
             return;
         }
-        int lnode = left(node), rnode = right(node);
-        build(lnode, a, (a+b)/2); // init left child
-        build(rnode, (a+b)/2 + 1, b); // init right child 
-        tree[node] = max(tree[lnode], tree[rnode]); // init root value
+        int lu = left(u), ru = right(u), m = (i+j)/2;
+        build(lu, i, m); // init left child
+        build(ru, m+1, j); // init right child
+        tree[u] = max(tree[lu], tree[ru]); // set u's value
     }
      
     // increment elements within range [i, j] with value
-    void range_update(int node, int a, int b, int i, int j, int value) {
-        if(lazy[node] != 0) { // this node needs to be updated
-            tree[node] += lazy[node]; // update it 
+    void range_update(int u, int a, int b, int i, int j, int value) {
+        if(lazy[u] != 0) { // this u needs to be updated
+            tree[u] += lazy[u]; // update it 
             if(a != b) {
-                lazy[left(node)] += lazy[node]; // mark left child as lazy
-                lazy[right(node)] += lazy[node]; // mark right child as lazy  
+                lazy[left(u)] += lazy[u]; // mark left child as lazy
+                lazy[right(u)] += lazy[u]; // mark right child as lazy  
             }   
-            lazy[node] = 0; // Reset it
+            lazy[u] = 0; // Reset it
         }
         
-        if(a > b || a > j || b < i) // current segment is not within range [i, j]
+        if(a > j or b < i) // current segment is not within range [i, j]
             return;
             
-        if(a >= i && b <= j) { // segment is fully within range
-            tree[node] += value;
-            if(a != b) { // not leaf node
-                lazy[left(node)] += value;
-                lazy[right(node)] += value;
+        if(a >= i and b <= j) { // segment is fully within range
+            tree[u] += value;
+            if(a != b) { // not leaf
+                lazy[left(u)] += value;
+                lazy[right(u)] += value;
             } 
             return;
         }
-     
-        range_update(left(node), a, (a+b)/2, i, j, value); // updating left child
-        range_update(right(node), 1+(a+b)/2, b, i, j, value); // updating right child 
-        tree[node] = max(tree[left(node)], tree[right(node)]); // Updating root with max value
+        int lu = left(u), ru = right(u), m = (a+b)/2;
+        range_update(lu, a, m, i, j, value); // update left child
+        range_update(ru, m+1, b, i, j, value); // update right child 
+        tree[u] = max(tree[lu], tree[ru]); // update u
     }
      
     // query tree to get max element value within range [i, j]
-    int range_query(int node, int a, int b, int i, int j) {  
-        if(a > b || a > j || b < i) return INT_MIN; // out of range 
-        if(lazy[node] != 0) { // this node needs to be updated
-            tree[node] += lazy[node]; // update it 
+    int range_query(int u, int a, int b, int i, int j) {  
+        if(a > j or b < i) return INT_MIN; // out of range 
+        if(lazy[u] != 0) { // this u needs to be updated
+            tree[u] += lazy[u]; // update it 
             if(a != b) {
-                lazy[left(node)] += lazy[node]; // mark child as lazy
-                lazy[right(node)] += lazy[node]; // mark child as lazy
+                lazy[left(u)] += lazy[u]; // mark child as lazy
+                lazy[right(u)] += lazy[u]; // mark child as lazy
             } 
-            lazy[node] = 0; // reset it
+            lazy[u] = 0; // reset it
         } 
-        if(a >= i && b <= j) // current segment is totally within range [i, j]
-            return tree[node]; 
-        int q1 = range_query(left(node), a, (a+b)/2, i, j); // Query left child
-        int q2 = range_query(right(node), 1+(a+b)/2, b, i, j); // Query right child 
-        return = max(q1, q2); // Return final result  
+        if(a >= i and b <= j) // current segment is totally within range [i, j]
+            return tree[u];
+        int m = (a+b)/2;
+        int q1 = range_query(left(u), a, m, i, j); // query left child
+        int q2 = range_query(right(u), m+1, b, i, j); // query right child
+        return = max(q1, q2); // return final result
     }
 
-    SegmentTree(const vi& A) {
-        arr = A; n = (int)A.size();              // copy content for local usage
-        tree.assign(4 * n, 0);            // create large enough vector of zeroes
-        lazy.assign(4 * n, 0);
-        build(1, 0, n - 1);                                  // recursive build
+    SegmentTreeLazy(const vi& A) {
+        arr = A; n = (int)A.size();           // copy content for local usage
+        tree.assign(4 * n + 5, 0);            // create large enough vector of zeroes
+        lazy.assign(4 * n + 5, 0);
+        build(1, 0, n - 1);                   // recursive build
     }
     // overloading
     int range_update(int i, int j, int value) { return range_update(1, 0, n - 1, i, j, value); }
     int range_query(int i, int j) { return range_query(1, 0, n - 1, i, j); }
-
-}; 
+};
 
 // usage
 int main() {
