@@ -1,84 +1,54 @@
-// Tags: fenwick tree 2D
-#include <cstdio>
-#include <vector>
-#include <cstring>
-#include <algorithm>
-#include <cmath>
+// tags: fenwick tree 2D
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
-
-#define FOR(i,a,b) for(int i=a; i<= b; ++i)
-typedef long long int ll;
-
-#define MAXN 1024
-
-template<class T> class FenwickTree2D {
-    vector<vector<T> > t;
-    int n, m;
-    
-public:
-    FenwickTree2D() {}
-
-    FenwickTree2D(int n, int m) {
-    t.assign(n, vector<T>(m, 0));
-    this->n = n; this->m = m;
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
+// -------------------------------
+struct BIT2D {
+    vector<int> bit;
+    int R, C;
+    BIT2D(int _R, int _C) : R(_R), C(_C) {
+        bit.assign((R+1)*(C+1), 0);
     }
-
-    void add(int r, int c, T value) {
-    for (int i = r; i < n; i |= i + 1)
-      for (int j = c; j < m; j |= j + 1)
-        t[i][j] += value;
+    void add(int r, int c, int value) {
+        for (int i = r; i <= R; i += (i&-i))
+            for (int j = c; j <= C; j += (j&-j))
+                bit[i * C + j] += value;
     }
-
-    // sum[(0, 0), (r, c)]
-    T sum(int r, int c) {
-    T res = 0;
-    for (int i = r; i >= 0; i = (i & (i + 1)) - 1)
-      for (int j = c; j >= 0; j = (j & (j + 1)) - 1)
-        res += t[i][j];
-    return res;
+    int sum(int r, int c) {
+        int res = 0;
+        for (int i = r; i; i -= (i&-i))
+            for (int j = c; j; j -= (j&-j))
+                res += bit[i * C + j];
+        return res;
     }
-
-    // sum[(r1, c1), (r2, c2)]
-    T sum(int r1, int c1, int r2, int c2) {
-    return sum(r2, c2) - sum(r1 - 1, c2) - sum(r2, c1 - 1) + sum(r1 - 1, c1 - 1);
+    int sum(int r1, int c1, int r2, int c2) {
+        return sum(r2, c2) - sum(r1-1, c2) - sum(r2, c1-1) + sum(r1-1, c1-1);
     }
-
-    T get(int r, int c) {
-    return sum(r, c, r, c);
-    }
-
-    void set(int r, int c, T value) {
-    add(r, c, -get(r, c) + value);
+    int get(int r, int c) {
+        return sum(r, c, r, c);
     }
 };
-
-
-int N;
-char buff[10];
-
 int main() {
-  int t;
-  scanf("%d", &t);
-  while(t--) {
-    scanf("%d", &N);
-
-    FenwickTree2D<ll> ft(N,N);
-
-    while (true) {
-      scanf("%s", buff);
-      if (strcmp(buff, "SET") == 0) {
-        int x, y; ll num;
-        scanf("%d%d%lld", &x, &y, &num);
-        ft.set(x, y, num);
-      } else if (strcmp(buff, "SUM") == 0) {
-        int x1, y1, x2, y2;
-        scanf("%d%d%d%d", &x1,&y1,&x2,&y2);
-        printf("%lld\n", ft.sum(x1,y1,x2,y2));
-      } else
-        break;
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int T; cin >> T;
+    while (T--) {
+        int N; cin >> N;
+        BIT2D bit(N,N);
+        string op;
+        while (1) {
+            cin >> op;
+            if (op == "END") break;
+            if (op == "SET") {
+                int x, y, v; cin >> x >> y >> v;
+                bit.add(x+1, y+1, -bit.get(x+1, y+1) + v);
+            } else {
+                int x1, y1, x2, y2; cin >> x1 >> y1 >> x2 >> y2;
+                cout << bit.sum(x1+1, y1+1, x2+1, y2+1) << '\n';
+            }
+        }
+        cout << '\n';
     }
-  }
-  return 0;
+    return 0;
 }
-
-

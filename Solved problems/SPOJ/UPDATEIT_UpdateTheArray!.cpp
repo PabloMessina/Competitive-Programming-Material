@@ -1,4 +1,3 @@
-// tags: dfs, segment tree lazy
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
@@ -74,55 +73,23 @@ struct RSQ {
     static ll range_op(int i, int j, ll x) { return (j - i + 1) * x; }
 };
 
-struct RMQ {
-    static ll const neutro = LLONG_MAX;
-    static ll merge_op(ll x, ll y) { return min(x, y); }
-    static ll range_op(int a, int b, ll x) { return x; }
-};
-
-const int MAXN = 100000;
-vector<ll> salary;
-vector<ll> salary_dfs;
-vector<vector<int>> g;
-int L[MAXN], R[MAXN];
-
-int ID;
-void dfs(int u) {
-    salary_dfs[ID] = salary[u];
-    L[u] = ID++;
-    for (int v : g[u]) dfs(v);
-    R[u] = ID-1;
-}
-
 int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
-    salary.reserve(MAXN);
-    salary_dfs.reserve(MAXN);
-    g.reserve(MAXN);
     int T; cin >> T;
-    rep(t,1,T) {
-        int N, Q; cin >> N >> Q;
-        salary.resize(N);
-        salary_dfs.resize(N);
-        g.assign(N, vector<int>());
-        rep(i,0,N-1) {
-            int p; cin >> p >> salary[i];
-            if (p > 0) g[p-1].push_back(i);
+    vector<ll> arr;
+    while (T--) {
+        int n, u; cin >> n >> u;
+        arr.assign(n, 0);
+        SegTreeLazy<RSQ> lst(arr);
+        while (u--) {
+            int l, r, val; cin >> l >> r >> val;
+            lst.update(l, r, val);
         }
-        ID = 0; dfs(0);
-        SegTreeLazy<RMQ> stl_rmq(salary_dfs);
-        SegTreeLazy<RSQ> stl_rsq(salary_dfs);
-        cout << "Case " << t << ":\n";
-        while (Q--) {
-            int c, v; cin >> c >> v; --v;
-            if (c == 1) {
-                cout << stl_rsq.query(L[v], R[v]) << '\n';
-            } else {
-                ll val = min((ll)1000, stl_rmq.query(L[v], R[v]));
-                stl_rmq.update(L[v], R[v], val);
-                stl_rsq.update(L[v], R[v], val);
-            }
+        int q; cin >> q;
+        while (q--) {
+            int i; cin >> i;
+            cout << lst.query(i, i) << '\n';
         }
     }
     return 0;
