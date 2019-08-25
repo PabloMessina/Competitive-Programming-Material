@@ -80,7 +80,7 @@ struct RMaxQ { // range maximum query
     static ll const neutro = LLONG_MIN;
     static ll merge_op(ll x, ll y) { return max(x, y); }
     static ll range_op(int a, int b, ll x) { return x; }
-}
+};
 
 // usage
 int main() {

@@ -68,13 +68,13 @@ public:
     }
 };
 
-struct RSQ {
+struct RSQ { // range sum query
     static ll const neutro = 0;
     static ll merge_op(ll x, ll y) { return x + y; }
     static ll range_op(int i, int j, ll x) { return (j - i + 1) * x; }
 };
 
-struct RMQ {
+struct RMQ { // range minimun query
     static ll const neutro = LLONG_MAX;
     static ll merge_op(ll x, ll y) { return min(x, y); }
     static ll range_op(int a, int b, ll x) { return x; }

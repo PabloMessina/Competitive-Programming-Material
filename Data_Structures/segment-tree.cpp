@@ -1,87 +1,159 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef vector<int> vi;
 
-// Example of SegmentTree for rmq (range minimum query)
-// Note: instead of storing the minimum value, each node will store 
-//  the index of the leftmost position of the range in which the minimum
-//  value of that range is found
+//=============================
+// 1) Segment Tree - ITERATIVE
+//=============================
+// source: https://docs.google.com/document/d/1rcex_saP4tExbbU62qGUjR3eenxOh-50i9Y45WtHkc4/
+/* 
+Se requiere un struct para el nodo (ej: prodsgn).
+Un nodo debe tener tres constructores:
+    Aridad 0: Construye el neutro de la operación
+    Aridad 1: Construye un nodo hoja a partir del input
+    Aridad 2: Construye un nodo según sus dos hijos
 
-struct SegmentTreeRMQ {
-    vi arr; // store original array values
-    vi tree; // store rmq for each node in segment tree
-    vi leaf; // store index of leaf nodes in segment tree
-    int n; // number of leaf nodes (length of arr)
-    
-    inline int left (int u) { return u << 1; } // index of left child
-    inline int right(int u) { return (u << 1) + 1; } // index of right child
+Construcción del segment tree:
+    Hacer un arreglo de nodos (usar ctor de aridad 1).
+    ST<miStructNodo> miSegmentTree(arregloDeNodos);
+Update:
+    miSegmentTree.set_point(indice, miStructNodo(input));
+Query:
+    miSegmentTree.query(l, r) es inclusivo exclusivo y da un nodo. Usar la info del nodo para obtener la respuesta.
+ */
+template<class node> struct ST {
+    vector<node> t; int n;
+    ST(vector<node> &arr) {
+        n = arr.size();
+        t.resize(n*2);
+        copy(arr.begin(), arr.end(), t.begin() + n);
+        for (int i = n-1; i > 0; --i)
+            t[i] = node(t[i<<1], t[i<<1|1]);
+    }
+    // 0-indexed
+    void set_point(int p, const node &value) {
+        for (t[p += n] = value; p > 1; p >>= 1)
+            t[p>>1] = node(t[p], t[p^1]);
+    }
+    // inclusive exclusive, 0-indexed
+    node query(int l, int r) {
+        node ansl, ansr;
+        for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+            if (l&1) ansl = node(ansl, t[l++]);
+            if (r&1) ansr = node(t[--r], ansr);
+        }
+        return node(ansl, ansr);
+    }
+};
 
-    // u = node, [a, b] = u's range
-    void build(int u, int a, int b) {
-        if (a == b) { // base case: a leaf node
-            tree[u] = a; // u's rmq = a
-            leaf[a] = u;
-        } else { // recursive case
-            int lu = left(u), ru = right(u), m = (a+b)/2;
-            build(lu, a, m); // build left child, range = [a, m]
-            build(ru, m+1, b); // build right child, range = [m+1, b]
-            // store the index of the minimum value,
-            // in case of draw choose the leftmost
-            int min_i = tree[lu], min_j = tree[ru];
-            tree[u] = (arr[min_i] <= arr[min_j]) ? min_i : min_j;
-        }        
+// Interval Product (LiveArchive)
+struct prodsgn {
+    int sgn;
+    prodsgn() {sgn = 1;}
+    prodsgn(int x) { sgn = (x > 0) - (x < 0); }
+    prodsgn(const prodsgn &a, const prodsgn &b) { sgn = a.sgn*b.sgn; }
+};
+
+// Maximum Sum (SPOJ)
+struct maxsum {
+    int first, second;
+    maxsum() {first = second = -1;}
+    maxsum(int x) { first = x; second = -1; }
+    maxsum(const maxsum &a, const maxsum &b) {
+        if (a.first > b.first) {
+            first = a.first;
+            second = max(a.second, b.first);
+        } else {
+            first = b.first; second = max(a.first, b.second);
+        }
+    }
+    int answer() { return first + second; }
+};
+
+// Range Minimum Query
+struct rminq {
+    int value;
+    rminq() {value = INT_MAX;}
+    rminq(int x) {value = x;}
+    rminq(const rminq &a, const rminq &b) {
+        value = min(a.value, b.value);
+    }
+};
+
+//=============================
+// 2) Segment Tree - RECURSIVE
+//=============================
+
+template<class t> class ST {
+    vector<ll> *arr, st; int n;
+
+    void build(int u, int i, int j) {
+        if (i == j) {
+            st[u] = (*arr)[i];
+            return;
+        }
+        int m = (i+j)/2, l = u*2+1, r = u*2+2;
+        build(l, i, m);
+        build(r, m+1, j);
+        st[u] = t::merge_op(st[l], st[r]);
     }
 
-    // update arr[i] with new_val, and propagate updates in the tree
-    // from leaf[i] upwards
-    void update(int i, int new_val) {
-        arr[i] = new_val;
-        int u = leaf[i] >> 1;
-        while (u) {
-            int lu = left(u), ru = right(u);
-            int min_i = (arr[tree[lu]] <= arr[tree[ru]]) ? tree[lu] : tree[ru];
-            if (min_i == tree[u]) break; // optimization: no changes, interrupt updates
-            // update and move to next parent
-            tree[u] = min_i;
-            u >>= 1;
+    ll query(int a, int b, int u, int i, int j) {
+        if (j < a or b < i) return t::neutro;
+        if (a <= i and j <= b) return st[u];
+        int m = (i+j)/2, l = u*2+1, r = u*2+2;
+        ll x = query(a, b, l, i, m);
+        ll y = query(a, b, r, m+1, j);
+        return t::merge_op(x, y);
+    }
+
+    void update(int a, ll value, int u, int i, int j) {
+        if (j < a or a < i) return;
+        if (i == j) st[a] += value;
+        else {
+            int m = (i+j)/2, l = u*2+1, r = u*2+2;
+            update(a, value, l, i, m);
+            update(a, value, r, m+1, j);
+            st[u] = t::merge_op(st[l], st[r]);
         }
     }
 
-    // query the leftmost index of the minimun in range [i,j],
-    // considering that we are at node u which is in charge of range [a, b]
-    int query(int u, int a, int b, int i, int j) {
-        // case 1: no overlap -> return some neutral / invalid value
-        if (j < a or b < i) return -1;
-        // case 2: full overlap -> return cached answer
-        if (i <= a and b <= j) return tree[u];
-
-        // case 3: partial overlap -> need recursion and merge of answers
-        int lu = left(u), ru = right(u), m = (a+b)/2;
-        int min_i = query(lu, a, m, i, j);
-        int min_j = query(ru, m+1, b, i, j);
-        if (min_i == -1) return min_j;
-        if (min_j == -1) return min_i;
-        return (arr[min_i] <= arr[min_j]) ? min_i : min_j;
+public:
+    ST(vector<ll>& v) {
+        arr = &v;
+        n = v.size();
+        st.resize(n*4+5);
+        build(0, 0, n-1);
     }
 
-    // overloading for easier use
-    int query(int i, int j) { return query(1, 0, n - 1, i, j); }
-
-    SegmentTreeRMQ(const vi& _arr) {
-        arr = _arr; // copy content for local usage
-        n = arr.size();
-        leaf.resize(n);
-        tree.resize(4 * n + 5); // reserve enough space for the worst case
-        build(1, 0, n - 1); // recursive build from root node (root == 1)
+    ll query(int a, int b) {
+        return query(a, b, 0, 0, n-1);
     }
 
+    void update(int a, ll value) {
+        update(a, value, 0, 0, n-1);
+    }
 };
-  
+
+struct RSQ { // range sum query
+    static ll const neutro = 0;
+    static ll merge_op(ll x, ll y) { return x + y; }
+};
+
+struct RMinQ { // range minimun query
+    static ll const neutro = LLONG_MAX;
+    static ll merge_op(ll x, ll y) { return min(x, y); }
+};
+
+struct RMaxQ { // range maximum query
+    static ll const neutro = LLONG_MIN;
+    static ll merge_op(ll x, ll y) { return max(x, y); }
+};
+
 // usage
 int main() {
-    vi arr = { 18, 17, 13, 19, 15, 11, 20 };
-    SegmentTreeRMQ st(arr);
-    st.query(1, 3);
-    st.update(5, 100);
+    vi A = { 18, 17, 13, 19, 15, 11, 20 };
+    ST<RSQ> stl(A);
+    stl.update(2, 100);
+    stl.query(1, 3);
     return 0;
 }
