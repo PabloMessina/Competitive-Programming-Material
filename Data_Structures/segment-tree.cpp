@@ -151,7 +151,7 @@ struct RMaxQ { // range maximum query
 
 // usage
 int main() {
-    vi A = { 18, 17, 13, 19, 15, 11, 20 };
+    vector<int> A = { 18, 17, 13, 19, 15, 11, 20 };
     ST<RSQ> stl(A);
     stl.update(2, 100);
     stl.query(1, 3);

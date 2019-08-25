@@ -1,12 +1,12 @@
 struct BIT2D { // BIT = binary indexed tree (a.k.a. Fenwick Tree)
     vector<int> bit;
     int R, C;
-    BIT2D(int _R, int _C) : R(_R), C(_C) {
-        bit.assign((R+1)*(C+1), 0);
+    BIT2D(int _R, int _C) : R(_R+1), C(_C+1) {
+        bit.assign(R*C, 0);
     }
     void add(int r, int c, int value) {
-        for (int i = r; i <= R; i += (i&-i))
-            for (int j = c; j <= C; j += (j&-j))
+        for (int i = r; i < R; i += (i&-i))
+            for (int j = c; j < C; j += (j&-j))
                 bit[i * C + j] += value;
     }
     // sum[(1, 1), (r, c)]

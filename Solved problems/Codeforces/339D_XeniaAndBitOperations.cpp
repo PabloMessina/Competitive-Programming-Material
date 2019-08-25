@@ -1,77 +1,60 @@
-// tags: binary tree / segment tree, bitwise operations
+// tags: segment tree, bitwise operations
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-typedef vector<int> vi;
-typedef vector<vi> vvi;
-typedef long long int ll;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
-typedef pair<double, int> pdi;
-typedef pair<ll, int> lli;
 // -------------------------------
-
-enum { OR, XOR };
-struct ST {
-    vector<unsigned int> arr;
-    vector<unsigned int> tree;
-    vector<int> op;
-    vector<int> leaf;
-    int n;
-
-    ST(int n) {
-        this->n = n;
-        arr.resize(n);
-        leaf.resize(n);
-        tree.resize(4*n+5);
-        op.resize(4*n+5);        
+template<class node> struct ST {
+    vector<node> t; int n;
+    ST(vector<node> &arr) {
+        n = arr.size();
+        t.resize(n*2);
+        copy(arr.begin(), arr.end(), t.begin() + n);
+        for (int i = n-1; i > 0; --i)
+            t[i] = node(t[i<<1], t[i<<1|1]);
     }
-
-    inline int left(int u) { return u << 1; }
-    inline int right(int u) { return (u << 1) + 1; }
-
-    void build(int u, int i, int j) {
-        if (i == j) {
-            tree[u] = arr[i];
-            op[u] = XOR;
-            leaf[i] = u;            
-        } else {
-            int lu = left(u), ru = right(u), m = (i+j)/2;
-            build(lu, i, m);
-            build(ru, m+1, j);
-            int type = 1 - op[lu];
-            tree[u] = (type == OR) ? (tree[lu] | tree[ru]) : (tree[lu] ^ tree[ru]);
-            op[u] = type;
+    void set_point(int p, const node &value) {
+        for (t[p += n] = value; p > 1; p >>= 1)
+            t[p>>1] = node(t[p], t[p^1]);
+    }
+    node query(int l, int r) {
+        node ansl, ansr;
+        for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
+            if (l&1) ansl = node(ansl, t[l++]);
+            if (r&1) ansr = node(t[--r], ansr);
         }
+        return node(ansl, ansr);
     }
-
-    void update(int i, unsigned int newval) {
-        int u = leaf[i];
-        arr[i] = newval;
-        tree[u] = newval;
-        u >>= 1;
-        while (u) {
-            int lu = left(u), ru = right(u);
-            tree[u] = (op[u] == OR) ? (tree[lu] | tree[ru]) : (tree[lu] ^ tree[ru]);
-            u >>= 1;            
+};
+enum { OR, XOR };
+struct Node {
+    int x, kind;
+    Node() { kind = -1; }
+    Node(int x) : x(x), kind(OR) {}
+    Node(const Node& l, const Node& r) {
+        if (l.kind == -1) { x = r.x, kind = r.kind; return; }
+        if (r.kind == -1) { x = l.x, kind = l.kind; return; }
+        if (l.kind == OR) {
+            x = l.x | r.x;
+            kind = XOR;
+        } else {
+            x = l.x ^ r.x;
+            kind = OR;
         }
     }
 };
-
 int main() {
-    int n, m;
-    scanf("%d%d", &n, &m);
-    n = 1 << n;    
-    ST st(n);
-    rep(i,0,n-1) scanf("%u", &st.arr[i]);
-    st.build(1,0,n-1);
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int n, m; cin >> n >> m;
+    vector<Node> arr;
+    n = 1 << n;
+    rep(i,1,n) { int x; cin >> x; arr.emplace_back(x); }
+    ST<Node> st(arr);
     while (m--) {
-        int p; unsigned int b; scanf("%d %u", &p, &b); --p;
-        st.update(p, b);
-        printf("%u\n", st.tree[1]);
+        int p, b; cin >> p >> b; --p;
+        st.set_point(p, Node(b));
+        cout << st.query(0, n).x << '\n';
     }
     return 0;
 }
