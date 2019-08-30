@@ -1,9 +1,8 @@
 #include <bits/stdc++.h>
 using namespace std;
-typedef vector<int> vi;
 
 struct UnionFind {
-    vi p, rank, setSize;
+    vector<int> p, rank, setSize;
     int numSets;
     UnionFind(int n) {
         numSets = n; setSize.assign(n, 1); rank.assign(n, 0); p.resize(n);
