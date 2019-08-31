@@ -17,10 +17,10 @@ template<class t> class SegTreeLazy {
     }
 
     void propagate(int u, int i, int j, ll x) {
-        st[u] += t::range_op(i, j, x);
+        st[u] = t::range_op(st[u], i, j, x);
         if (i != j) {
-            lazy[u*2+1] += x;
-            lazy[u*2+2] += x;
+            lazy[u*2+1] = t::prop_left_op(lazy[u*2+1], x);
+            lazy[u*2+2] = t::prop_right_op(lazy[u*2+2], x);
         }
         lazy[u] = 0;
     }
@@ -55,6 +55,14 @@ public:
         build(0, 0, n-1);
     }
 
+    SegTreeLazy(int64_t n) {
+      arr = new vector<ll>(4 * n);
+      this->n = n;
+      st.resize(n*4+5);
+      lazy.assign(n*4+5, 0);
+      build(0, 0, n-1);
+    }
+
     ll query(int a, int b) {
         return query(a, b, 0, 0, n-1);
     }
@@ -67,24 +75,30 @@ public:
 struct RSQ { // range sum query
     static ll const neutro = 0;
     static ll merge_op(ll x, ll y) { return x + y; }
-    static ll range_op(int i, int j, ll x) { return (j - i + 1) * x; }
+    static ll range_op(ll st_u, int i, int j, ll x) { return st_u + (j - i + 1) * x; }
+    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
+    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
 };
 
-struct RMinQ { // range minimun query
+struct RMinQ { // range minimum query
     static ll const neutro = LLONG_MAX;
     static ll merge_op(ll x, ll y) { return min(x, y); }
-    static ll range_op(int a, int b, ll x) { return x; }
+    static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
+    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
+    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
 };
 
 struct RMaxQ { // range maximum query
     static ll const neutro = LLONG_MIN;
     static ll merge_op(ll x, ll y) { return max(x, y); }
-    static ll range_op(int a, int b, ll x) { return x; }
+    static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
+    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
+    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
 };
 
 // usage
 int main() {
-    vi A = { 18, 17, 13, 19, 15, 11, 20 };
+    vector<ll> A = { 18, 17, 13, 19, 15, 11, 20 };
     SegTreeLazy<RSQ> stl(A);
     stl.update(1, 5, 100);
     stl.query(1, 3);
