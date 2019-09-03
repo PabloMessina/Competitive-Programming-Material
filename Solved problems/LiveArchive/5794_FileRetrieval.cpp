@@ -22,10 +22,7 @@ struct SuffixArray {
     }
     void compute_sa(vector<int>& s, int maxv) {
         n = s.size();
-        rep(i,0,n-1) {
-            sa[i] = i; rank[i] = s[i];
-            assert(s[i] >= 1 and s[i] <= maxv);
-        }
+        rep(i,0,n-1) sa[i] = i, rank[i] = s[i];
         for (int h=1; h < n; h <<= 1) {
             counting_sort(maxv, h);
             counting_sort(maxv, 0);
@@ -41,13 +38,10 @@ struct SuffixArray {
         }
     }
     void compute_lcp(vector<int>& s) {
-        assert (s.size() == n);
         lcp.assign(n, 0);
         int k = 0;
-        rep(i,0,n-2) assert (rank[sa[i]] + 1 == rank[sa[i+1]]);
         rep(i,0,n-1) {
             int r = rank[i]-1;
-            assert (0 <= r and r < n);
             if (r == n-1) { k = 0; continue; }
             int j = sa[r+1];
             while (i+k<n and j+k<n and s[i+k] == s[j+k]) k++;
