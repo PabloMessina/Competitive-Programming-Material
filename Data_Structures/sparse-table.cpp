@@ -20,7 +20,7 @@ struct SparseTable {
         int& ans = memo[e * n + i];
         if (ans != -1) return ans;
         if (e == 0) return ans = (*arr)[i];
-        return ans = dp(i, e-1) + dp(i+(1<<(e-1)), e-1);
+        return ans = min(dp(i, e-1), dp(i+(1<<(e-1)), e-1));
     }
     
     // ---- RMQ = Range Minimun Query ----

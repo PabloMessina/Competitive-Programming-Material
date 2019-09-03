@@ -28,6 +28,8 @@ ll choose(int n, int k) {
 //    a total of 'p' digits go to positive positions (even index) and 
 //    a total of 'n' digits go to negative positions (odd index) and
 //    ((sum of positive digits) - (sum of negative digits)) % 11 == s
+// with this dp, the solution to the original problem (allowing leading 0s) is:
+//    dp(0, 0, len/2, len - len/2)
 ll memo[10][11][52][52];
 ll dp(int i, int s, int p, int n) {
     // base case 1: i out of range, if s == 0 return 1, else 0
