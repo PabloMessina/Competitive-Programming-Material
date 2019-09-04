@@ -151,6 +151,8 @@ int main() {
         // This can be done in O(N) with stacks:
         //  https://stackoverflow.com/questions/4311694/maximize-the-rectangular-area-under-histogram
         
+        //  ** good practice problem for this: https://www.spoj.com/problems/HISTOGRA/
+        
         // 1) fill L array (left)
         _stack.clear();
         _stack.emplace_back(F, -1);
