@@ -33,7 +33,7 @@ struct SuffixArray {
                     get_rank(sa[i]+h) != get_rank(sa[i-1]+h)) r++;
                 rank_tmp[sa[i]] = r;
             }
-            swap(rank, rank_tmp);
+            rank.swap(rank_tmp);
             maxv = r;
         }
     }
@@ -83,7 +83,7 @@ struct SparseTable {
 
 const int MAXLEN = 60 + 10000 * 60;
 int F;
-vector<int> S;
+vector<int> S; // stores concatenation of all strings
 vector<ll> masks, masks_tmp;
 int L[MAXLEN], R[MAXLEN];
 vector<int> suffix_len;
@@ -92,40 +92,66 @@ vector<pair<int,int>> _stack;
 int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
+    // reserve memory for worst case
     S.reserve(MAXLEN);
     masks.reserve(MAXLEN);
     masks_tmp.reserve(MAXLEN);
     suffix_len.reserve(MAXLEN);
     _stack.reserve(MAXLEN);
+    // for each test case
     while (cin >> F and F) {
+        // -- reset some vectors
         S.clear();
         masks_tmp.clear();
         suffix_len.clear();
-        rep(i,1,F) {
+        // -- read input
+        rep(i,1,F) { // for each file
             string f; cin >> f;
-            ll mask = 1LL << (i-1);
+            ll mask = 1LL << (i-1); // file mask
             int j = 0;
-            for (char c : f) {
-                S.push_back(F+1 + c-'a');
-                masks_tmp.push_back(mask);
-                suffix_len.push_back(f.size() - j++);
+            for (char c : f) { // for each char in file
+                S.push_back(F+1 + c-'a'); // append char as int (shifted by F)
+                masks_tmp.push_back(mask); // append string mask
+                suffix_len.push_back(f.size() - j++); // append suffix length
             }
-            S.push_back(i);
-            masks_tmp.push_back(mask);
-            suffix_len.push_back(0);
+            S.push_back(i); // append extra "separator" char (unique for each string)
+            masks_tmp.push_back(mask); // append mask
+            suffix_len.push_back(0); // append suffix length
         }
+        // build suffix array from S (all files concatenated)
         SuffixArray sa(S);
         int n = S.size();
+        // rewrite masks in suffix array order
         masks.resize(n);
         rep(i,0,n-1) masks[i] = masks_tmp[sa.sa[i]];
+        // build sparse table on top of masks
         SparseTable st(masks);
+        // uset to keep track of disctinct subsets
         uset<ll> sets;
+        
+        // *** Note: below we start from F because the first F suffixes
+        // in the suffix array are the F "end of string" values we used
+        // as separators (when we concatenated everything), so we ignore them
+
+        // --- CASE 1: queries that match only a single suffix
+        //  i-th suffix's length must be greater than LCP[i-1] and LCP[i]
         rep(i,F,n-1) {
             int slen = suffix_len[sa.sa[i]];
             if (i > F and sa.lcp[i-1] == slen) continue;
             if (sa.lcp[i] == slen) continue;
             sets.insert(masks[i]);
         }
+
+        // ---- CASE 2: queries that match 2 or more suffixes.
+        // we can think of the LCP array as heights of columns in a histogram,
+        // then the range of columns matched by a query is equivalent to the range
+        // of the largest rectangle that both contains and has the same height as the
+        // shortest column in that range. Thus, for each column we need to find the maximum
+        // range (left, right) a rectangle can be expanded horizontally from that column.
+        // This can be done in O(N) with stacks:
+        //  https://stackoverflow.com/questions/4311694/maximize-the-rectangular-area-under-histogram
+        
+        // 1) fill L array (left)
         _stack.clear();
         _stack.emplace_back(F, -1);
         rep(i,F,n-1) {
@@ -133,6 +159,7 @@ int main() {
             L[i] = _stack.back().first;
             _stack.emplace_back(i+1, sa.lcp[i]);
         }
+        // 2) fill R array (right)
         _stack.clear();
         _stack.emplace_back(n, -1);
         invrep(i, n-1, F) {
@@ -140,12 +167,14 @@ int main() {
             R[i] = _stack.back().first;
             _stack.emplace_back(i, sa.lcp[i]);
         }
+        // 3) find subsets in [L, R] ranges using sparse table
         rep(i,F,n-1) {
             if (sa.lcp[i] > 0) {
                 ll mask = st.query(L[i], R[i]);
                 sets.insert(mask);
             }
         }
+        // finally: answer the number of distinct subsets found
         cout << sets.size() << '\n';
     }
     return 0;
