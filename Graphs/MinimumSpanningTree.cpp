@@ -1,4 +1,5 @@
 #include <bits/stdc++.h>
+#define rep(i,a,b) for (int i=a; i<=b; ++i)
 using namespace std;
 typedef pair<int,int> ii;
 
@@ -15,9 +16,7 @@ struct Edge {
 namespace Kruskal {
     struct UnionFind {
         vector<int> p, rank;
-        int numSets;
         UnionFind(int n) {
-            numSets = n;
             rank.assign(n,0);
             p.resize(n);
             rep(i,0,n-1) p[i] = i;
@@ -26,18 +25,12 @@ namespace Kruskal {
         bool isSameSet(int i, int j) { return findSet(i) == findSet(j); }
         void unionSet(int i, int j) {
             if (!isSameSet(i, j)) {
-                numSets--;
                 int x = findSet(i), y = findSet(j);
-                if (rank[x] > rank[y]) {
-                    p[y] = x;
-                } else {
-                    p[x] = y;
-                    if (rank[x] == rank[y]) rank[y]++;
-                }
+                if (rank[x] > rank[y]) { p[y] = x; }
+                else { p[x] = y; if (rank[x] == rank[y]) rank[y]++; }
             }
         }
     };
-
     int find_mst(int n_nodes, vector<Edge>& edges, vector<vector<ii>>& mst) {
         sort(edges.begin(), edges.end());
         UnionFind uf(n_nodes);
@@ -70,7 +63,7 @@ struct Edge {
     }
 };
 namespace Prim {
-    bool visited[MAXN]
+    bool visited[MAXN];
     int find_mst(vector<vector<ii>>& g, vector<vector<ii>>& mst) {
         int n_nodes = g.size();
         memset(visited, false, sizeof(bool) * n_nodes);

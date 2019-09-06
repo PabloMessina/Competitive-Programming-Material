@@ -129,7 +129,7 @@ namespace LCA2 {
     int root; // root of the tree
 
     // get highest exponent e such that 2^e <= x
-    inline int log2(int x) { return sizeof(x) * 8 - __builtin_clz(x) - 1; }
+    inline int log2(int x) { return 31 - __builtin_clz(x); }
 
     void dfs(int u, int depth) {
         H[u] = idx; // index of first u's ocurrence
