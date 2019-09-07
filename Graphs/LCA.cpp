@@ -20,8 +20,8 @@ using namespace std;
 // construction: O(|V| log |V|)
 // query: O(log|V|)
 // ** advantages:
-//   - it's possible to append new leaf nodes to the tree
 //   - the lca query can be modified to compute querys over the path between 2 nodes
+//   - it's possible to append new leaf nodes to the tree
 
 struct LCA {
     vector<int> A; // ancestors
