@@ -1,3 +1,4 @@
+// tags: max flow
 #include <algorithm>
 #include <bitset>
 #include <cstdio>
