@@ -8,6 +8,9 @@
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 using namespace std;
 
+// - the input to the suffix array must be a vector of ints
+// - all values in the vector must be >= 1 (because 0 is used
+//   as a special value internally)
 struct SuffixArray {
     int n;
     vector<int> counts, rank, rank_tmp, sa, sa_tmp;

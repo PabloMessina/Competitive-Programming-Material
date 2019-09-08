@@ -1,3 +1,4 @@
+// tags: suffix array, LCP, strings
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
