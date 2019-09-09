@@ -24,12 +24,9 @@ using namespace std;
 //   - it's possible to append new leaf nodes to the tree
 
 struct LCA {
-    vector<int> A; // ancestors
-    vector<int> D; // depths
+    vector<int> A, D; // ancestors, depths
     vector<vector<int>> *g; // pointer to graph
-    int n; // num of nodes
-    int maxe; // max exponent
-
+    int n, maxe; // num nodes, max exponent
     int& anc(int u, int e) { return A[e * n + u]; }    
     int inline log2(int x) { return 31 - __builtin_clz(x); }
 

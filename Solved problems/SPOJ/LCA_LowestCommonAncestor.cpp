@@ -6,8 +6,7 @@ using namespace std;
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 // -------------------------------
 struct LCA {
-    vector<int> A;
-    vector<int> D;
+    vector<int> A, D;
     vector<vector<int>> *g;
     int n, maxe;
     int& anc(int u, int e) { return A[e * n + u]; }    
