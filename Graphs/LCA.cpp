@@ -44,7 +44,7 @@ struct LCA {
         }
     }
 
-    LCA(vector<vector<int>>& _g, int root) : {
+    LCA(vector<vector<int>>& _g, int root) {
         g = &_g;
         n = _g.size();
         maxe = log2(n);
@@ -64,7 +64,7 @@ struct LCA {
     // move node u "steps" levels up towards the root
     // i.e. find the steps-th ancestor of u
     int raise(int u, int steps) {
-        for (int i = 0; steps; i++, steps>>=1) if (steps&1) u = A[u][i];
+        for (int e = 0; steps; e++, steps>>=1) if (steps&1) u = anc(u,e);
         return u;
     }
 
@@ -74,7 +74,7 @@ struct LCA {
         if (u == v) return u; // same node, we are done
         // raise u and v to their highest ancestors below the LCA
         invrep (e, maxe, 0) {
-            // greedily takes the biggest 2^e jump possible as long as 
+            // greedily take the biggest 2^e jump possible as long as 
             // u and v still remain BELOW the LCA
             if (anc(u,e) != anc(v,e)) {
                 u = anc(u,e), v = anc(v,e);
@@ -101,7 +101,7 @@ struct LCA {
             anc(u,e) = p;
         }
     }
-}
+};
 
 // ------------------------------------------
 // METHOD 2: SPARSE TABLE - EULER TOUR + RMQ
@@ -200,4 +200,4 @@ int main() {
         printf("LCA(%d,%d) = %d\n", u, v, lca.lca(u,v));
         printf("dist(%d,%d) = %d\n", u, v, lca.dist(u,v));
     }
-}
+};
