@@ -58,10 +58,10 @@ struct LCA {
         }
     }
 
-    // move node u "steps" levels up towards the root
-    // i.e. find the steps-th ancestor of u
-    int raise(int u, int steps) {
-        for (int e = 0; steps; e++, steps>>=1) if (steps&1) u = anc(u,e);
+    // move node u "k" levels up towards the root
+    // i.e. find the k-th ancestor of u
+    int raise(int u, int k) {
+        for (int e = 0; k; e++, k>>=1) if (k&1) u = anc(u,e);
         return u;
     }
 

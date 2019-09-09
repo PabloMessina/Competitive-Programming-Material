@@ -37,8 +37,8 @@ struct LCA {
         }
     }
 
-    int raise(int u, int steps) {
-        for (int e = 0; steps; e++, steps>>=1) if (steps&1) u = anc(u,e);
+    int raise(int u, int k) {
+        for (int e = 0; k; e++, k>>=1) if (k&1) u = anc(u,e);
         return u;
     }
 
