@@ -1,12 +1,12 @@
+// tags: MST, DFS, graphs, bitwise, implementation
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
-#define rep(i,a,b) for (int i=a; i<=b; ++i)
 using namespace std;
+#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
+typedef long long int ll;
 typedef pair<int,int> ii;
-
-/* ================= */
-/* METHOD 1: KRUSKAL */
-/* ================= */
-
+// -------------------------------
 struct Edge {
     int u, v, cost;
     bool operator<(const Edge& o) const {
@@ -51,44 +51,54 @@ namespace Kruskal {
     }
 }
 
-/* ============== */
-/* METHOD 2: PRIM */
-/* ============== */
+int N, M;
+vector<vector<ii>> mst;
+const int MAXL = 1000000;
+int bits[MAXL];
 
-struct Edge {
-    int u, v, cost;
-    bool operator<(const Edge& o) const {
-        return cost > o.cost; // we use '>' instead of '<' so that
-        // priority_queue<Edge> works as a minheap
+void add_bits(ll val, int offset) {
+    int i, r = 0;
+    for (i = offset; val > 0 or r > 0; val >>=1, i++) {
+        bits[i] += (val & 1) + r;
+        r = bits[i] >> 1;
+        bits[i] &= 1;
     }
-};
-namespace Prim {
-    bool visited[MAXN];
-    int find_mst(vector<vector<ii>>& g, vector<vector<ii>>& mst) {
-        int n_nodes = g.size();
-        memset(visited, false, sizeof(bool) * n_nodes);
-        mst.assign(n_nodes, vector<ii>());
-        priority_queue<Edge> q;
-        int total_cost = 0;
-        visited[0] = true;
-        for (ii& p : g[0]) q.push({0, p.first, p.second});
-        int count = 1;
-        while (!q.empty()) {
-            Edge edge = q.top(); q.pop();
-            if (visited[edge.v]) continue;
-            int u = edge.u;
-            int v = edge.v;
-            int cost = edge.cost;
-            visited[v] = true;
-            total_cost += cost;
-            mst[u].emplace_back(v, cost);
-            mst[v].emplace_back(u, cost);
-            if (++count == N) break;
-            for (ii p : g[v]) {
-                if (visited[p.first]) continue;
-                q.push({v, p.first, p.second});                
-            }            
-        }
-        return total_cost;
+}
+
+ll dfs(int u, int p, int p_cost) {
+    ll size = 1;
+    for (auto& e : mst[u]) {
+        if (e.first == p) continue;
+        int v, cost; tie(v,cost) = e;
+        size += dfs(v, u, cost);
     }
+    if (p != -1) add_bits((N-size) * size, p_cost);
+    return size;
+}
+
+void print_bits() {
+    int i = MAXL-1;
+    while (i >= 0 and bits[i] == 0) --i;
+    if (i < 0) cout << "0\n";    
+    else {
+        invrep(j, i, 0) cout << bits[j];
+        cout << '\n';
+    }
+}
+
+int main() {
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    cin >> N >> M;
+    vector<Edge> edges;
+    edges.reserve(M);
+    while (M--) {
+        int u, v, c; cin >> u >> v >> c;
+        --u, --v;
+        edges.push_back({u,v,c});
+    }    
+    Kruskal::find_mst(N, edges, mst);
+    dfs(0, -1, 0);
+    print_bits();
+    return 0;
 }

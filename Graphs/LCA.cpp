@@ -51,7 +51,7 @@ struct LCA {
         rep(e, 1, maxe) {
             rep (u, 0, n-1) {
                 // u's 2^e th ancestor is
-                // u's 2^(j-1) th ancestor's 2^(e-1) th ancestor
+                // u's 2^(e-1) th ancestor's 2^(e-1) th ancestor
                 int a = anc(u,e-1);
                 anc(u,e) = (a == -1 ? -1 : anc(a,e-1));
             }
