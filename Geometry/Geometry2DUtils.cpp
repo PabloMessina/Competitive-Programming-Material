@@ -8,7 +8,7 @@ const double EPS = 1e-8;
 /* =========================== */
 /* Example of Point Definition */
 /* =========================== */
-struct Point {
+struct Point { // 2D
     double x, y;
     bool operator==(const Point& p) const { return x==p.x && y == p.y; }
     Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }

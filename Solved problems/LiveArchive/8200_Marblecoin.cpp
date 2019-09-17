@@ -22,7 +22,7 @@ namespace SA { // suffix array
         rep(i,1,maxv) counts[i] += counts[i-1];
         invrep(i,n-1,0) sa_tmp[--counts[get_rank(sa[i]+k)]] = sa[i];
         swap(sa, sa_tmp);
-    }    
+    }
     
     void sort_suffix_indexes(vector<int>& word, int maxv, vector<int>& suffix_indexes) {
         n = word.size();

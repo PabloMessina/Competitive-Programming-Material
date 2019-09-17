@@ -12,7 +12,7 @@ double to_radian(double angle) {
 
 struct Point {
     double x,y,z;
-    static Point from_spherical_coords(double r, double u, double v) {
+    static Point from_sphere_coords(double r, double u, double v) {
         return {
             r*cos(u)*cos(v),
             r*cos(u)*sin(v),
@@ -52,7 +52,7 @@ int main() {
     cin.tie(0); cout.tie(0);
     cout << setprecision(6) << fixed;
     int T; cin >> T;
-    Point NP = Point::from_spherical_coords(R,PI/2,0);
+    Point NP = Point::from_sphere_coords(R,PI/2,0);
     while (T--) {
         double u0, v0, u1, v1;
         cin >> u0 >> v0 >> u1 >> v1;
@@ -60,8 +60,8 @@ int main() {
         v0 = to_radian(v0);
         u1 = to_radian(u1);
         v1 = to_radian(v1);
-        Point p0 = Point::from_spherical_coords(R,u0,v0);
-        Point p1 = Point::from_spherical_coords(R,u1,v1);
+        Point p0 = Point::from_sphere_coords(R,u0,v0);
+        Point p1 = Point::from_sphere_coords(R,u1,v1);
 
         double min_dist = min((p0-NP).norm(), (p1-NP).norm());
 
