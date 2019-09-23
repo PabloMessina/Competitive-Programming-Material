@@ -81,8 +81,19 @@ struct LCA {
         return anc(u,0);
     }
 
+    // distance between 'u' and 'v'
     int dist(int u, int v) {
         return D[u] + D[v] - 2 * D[lca(u,v)];
+    }
+    // optimized version (in case you already computed lca(u,v))
+    int dist(int u, int v, int lca_uv) {
+        return D[u] + D[v] - 2 * D[lca_uv];
+    }
+    // get the node located k steps from 'u' walking towards 'v'
+    int kth_node_in_path(int u, int v, int k) {
+        int lca_uv = lca(u,v);
+        if (D[u] - D[lca_uv] >= k) return raise(u, k);
+        return raise(v, dist(u,v,lca_uv) - k);
     }
 
     int add_child(int p, int u) { // optional
