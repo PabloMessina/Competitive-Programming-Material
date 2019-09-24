@@ -1,4 +1,5 @@
 // TODO: optimize this, TLE on test case 60 :(
+// tags: DP, trees, LCA, binary lifting, diameters, binary search
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;

@@ -1,19 +1,11 @@
 // tags: BFS / DFS, diameter of trees, binary search
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
 typedef long long int ll;
 typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
-
 const int MAXN = 40000;
 int N1, N2; // numbers of nodes
 vector<vi> g1, g2; // graphs (in this problem they are always trees)
