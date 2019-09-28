@@ -90,3 +90,15 @@ second=first;           // second now contains 3 ints
 first=map<char,int>();  // and first is now empty
 cout << "Size of first: " << first.size() << '\n';
 cout << "Size of second: " << second.size() << '\n';
+
+//=========================
+// generating ids with map
+//=========================
+int get_id(string& name) {
+    static int id = 0;
+    static map<string,int> name2id;
+    auto it = name2id.find(name);
+    if (it == name2id.end())
+        return name2id[name] = id++;
+    return it->second;
+}

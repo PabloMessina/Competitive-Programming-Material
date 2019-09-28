@@ -7,7 +7,7 @@ typedef long long int ll;
 // -------------------------------
 
 const int MAXN = 5 * 100000;
-const ll MOD = (ll)1e9 + 7;
+const ll MOD = 1000000007;
 
 namespace SA { // suffix array
     int n;
@@ -83,7 +83,8 @@ int main() {
         ll ans = 0;
         while (count--) {
             Item cur = pq.top(); pq.pop();
-            ans = ((ans + cur.val) * 400ll) % MOD;
+            printf("%d ", cur.val);
+            ans = ((ans + cur.val) * 500ll) % MOD;
             if (cur.idx < stacks[cur.si].size) {
                 pq.push(items[stacks[cur.si].offset + cur.idx + 1]);
             }

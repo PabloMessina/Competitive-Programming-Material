@@ -36,33 +36,6 @@ rep(m,1,MAXN) {
 // n! / (k! * (n-k)!) =  n! * (k! * (n-k)!)^-1  (MOD N)
 // we need to find the multiplicative inverse of (k! * (n-k)!) MOD N
 
-
-// --- multiplicative inverse --
-ll gcdext(ll a, ll b, ll& x, ll& y) {
-    ll r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
-    r2 = a, x2 = 1, y2 = 0;
-    r1 = b, x1 = 0, y1 = 1;
-    while (r1) {
-        q = r2 / r1;
-        r0 = r2 % r1;
-        x0 = x2 - q * x1;
-        y0 = y2 - q * y1;
-        r2 = r1, x2 = x1, y2 = y1;
-        r1 = r0, x1 = x0, y1 = y0;        
-    }
-    ll g = r2; x = x2, y = y2;
-    if (g < 0) g = -g, x = -x, y = -y;
-    return g;
-}
-ll inline mod(ll x) { return ((x %= MOD) < 0) ? x+MOD : x; }
-ll inline mul(ll a, ll b) { return (a*b) % MOD; }
-ll mulinv(ll a) {
-    ll x, y;
-    if (gcdext(a, m, x, y) == 1) return mod(x);
-    return -1;
-}
-
-// -- choose_mod(n, k) --
 ll fac[MAXN+1];
 ll choose_memo[MAXN+1][MAXN+1];
 void init() {
@@ -70,7 +43,6 @@ void init() {
     rep(i,1,MAXN) fac[i] = (i * fac[i-1]) % MOD;
     memset(choose_memo, -1, sizeof choose_memo);
 }
-
 ll choose_mod(int n, int k) {
     if (choose_memo[n][k] != -1) return choose_memo[n][k];
     return choose_memo[n][k] = mul(fac[n], mulinv(mul(fac[k], fac[n-k])));

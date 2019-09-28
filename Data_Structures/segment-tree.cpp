@@ -8,11 +8,11 @@ using namespace std;
 /* 
 Se requiere un struct para el nodo (ej: prodsgn).
 Un nodo debe tener tres constructores:
-    Aridad 0: Construye el neutro de la operación
+    Aridad 0: Construye el neutro de la operacion
     Aridad 1: Construye un nodo hoja a partir del input
-    Aridad 2: Construye un nodo según sus dos hijos
+    Aridad 2: Construye un nodo segun sus dos hijos
 
-Construcción del segment tree:
+Construccion del segment tree:
     Hacer un arreglo de nodos (usar ctor de aridad 1).
     ST<miStructNodo> miSegmentTree(arregloDeNodos);
 Update:

@@ -11,13 +11,13 @@ namespace tarjanSCC {
     const int UNVISITED = -1;
     vector<int> _stack;
     int ids[MAXN]; // ids[u] = id assigned to node u
-    int lows[MAXN]; // lows[u] = lowest id reachable by node u
+    int low[MAXN]; // low[u] = lowest id reachable by node u
     bool instack[MAXN]; // instack[u] = if u is currently in stack or not
     int ID = 0; // global variable used to assign ids to unvisited nodes
     vector<vector<int>>* g; // pointer to graph
 
     void dfs(int u) {
-        ids[u] = lows[u] = ID++; // assign ID to new visited node
+        ids[u] = low[u] = ID++; // assign ID to new visited node
         // add to stack
         instack[u] = true;
         _stack.push_back(u);
@@ -25,12 +25,12 @@ namespace tarjanSCC {
         for (int v : (*g)[u]) {
             if (ids[v] == UNVISITED) { // if unvisited -> visit 
                 dfs(v);
-                lows[u] = min(lows[v], lows[u]); // update u's low
+                low[u] = min(low[v], low[u]); // update u's low
             } else if (instack[v]) { // visited AND in stack
-                lows[u] = min(lows[v], lows[u]); // update u's low
+                low[u] = min(low[v], low[u]); // update u's low
             }
         }
-        if (lows[u] == ids[u]) { // u is the root of a SCC
+        if (low[u] == ids[u]) { // u is the root of a SCC
             // ** here you can do whatever you want
             // with the SCC just found
             cout << "SCC found!\n";
@@ -69,7 +69,3 @@ int main() {
     tarjanSCC::run(g);
     return 0;
 }
-
-// -----------------------------------
-// method 2: Kosaraju's SCC algorithm
-// TODO: finish this

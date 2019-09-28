@@ -1,6 +1,6 @@
 \documentclass[10pt,landscape,twocolumn,a4paper,notitlepage]{article}
 \usepackage{hyperref}
-\usepackage[spanish, activeacute]{babel}
+% \usepackage[spanish]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{fancyhdr}
 \usepackage{lastpage}
@@ -63,6 +63,8 @@
 \tableofcontents\newpage
 
 % -------------------
+\section{C++ Template}
+\lstinputlisting{c++_template.cpp}
 
 \section{C++ Cheat Sheet}
 \lstinputlisting{c++_cheat_sheet.cpp}
@@ -70,6 +72,38 @@
 % -------------------
 
 \section{Data Structures}
+  \subsection{C++ STL}
+    \subsubsection{Pairs \& Tuples}
+    \lstinputlisting{"Data_Structures/C++ STL/pairs & tuples.cpp"}
+    \subsubsection{Array}
+    \lstinputlisting{"Data_Structures/C++ STL/array.cpp"}
+    \subsubsection{Vector}
+    \lstinputlisting{"Data_Structures/C++ STL/vector.cpp"}
+    \subsubsection{Queue \& Stack}
+    \lstinputlisting{"Data_Structures/C++ STL/queue & stack.cpp"}
+    \subsubsection{Priority Queue}
+    \lstinputlisting{"Data_Structures/C++ STL/priority_queue.cpp"}
+    \subsubsection{Set \& Multiset}
+    \lstinputlisting{"Data_Structures/C++ STL/set & multiset.cpp"}
+    \subsubsection{Map \& Multimap}
+    \lstinputlisting{"Data_Structures/C++ STL/map & multimap.cpp"}
+    \subsubsection{Unordered Set \& Multiset}
+    \lstinputlisting{"Data_Structures/C++ STL/unordered_set&multiset.cpp"}
+    \subsubsection{Unordered Map \& Multimap}
+    \lstinputlisting{"Data_Structures/C++ STL/unordered_map&multimap.cpp"}
+    \subsubsection{Deque}
+    \lstinputlisting{"Data_Structures/C++ STL/deque.cpp"}
+    \subsubsection{List}
+    \lstinputlisting{"Data_Structures/C++ STL/list.cpp"}
+    \subsubsection{Policy based Data Structures: Ordered Set}
+    \lstinputlisting{"Data_Structures/C++ STL/ordered_set.cpp"}
+    \subsubsection{Bitset}
+    \lstinputlisting{"Data_Structures/C++ STL/bitset.cpp"}
+
+  
+  \subsection{Sparse Tables}
+  \lstinputlisting{Data_Structures/sparse-table.cpp}
+
   \subsection{Fenwick Tree}
   \lstinputlisting{Data_Structures/fenwicktree.cpp}
 
@@ -80,28 +114,33 @@
   \lstinputlisting{Data_Structures/segment-tree.cpp}
 
   \subsection{Segment Tree Lazy}
-  \lstinputlisting{Data_Structures/segment-tree-lazy.cpp}
-
-  \subsection{Wavelet Tree}
-  \lstinputlisting{Data_Structures/WaveletTree.cpp}
+  \lstinputlisting{"Data_Structures/segment-tree-lazy.cpp"}
 
   \subsection{Union-Find}
   \lstinputlisting{Data_Structures/unionfind.cpp}
 
-% -------------------
-\section{General Algorithms}
-  \subsection{Binary Search}
-  \lstinputlisting{Search/BinarySearch.cpp}
-
-  \subsection{Ternary Search}
-  \lstinputlisting{Search/TernarySearch.cpp}
-
-  \subsection{Brute Force}
-    \subsubsection{Generate all combinations}
-    \lstinputlisting{Brute_Force/all_combinations.cpp}
+  % \subsection{Wavelet Tree}
+  % \lstinputlisting{Data_Structures/WaveletTree.cpp}
 
 % -------------------
+\section{Binary Search}
+\lstinputlisting{Search/BinarySearch.cpp}
+
+% -------------------
+\section{Ternary Search}
+\lstinputlisting{Search/TernarySearch.cpp}
+
+%   \subsection{Brute Force}
+%     \subsubsection{Generate all combinations}
+%     \lstinputlisting{Brute_Force/all_combinations.cpp}
+
 \section{Dynamic Programming}
+  \subsection{Longest Increasing Subsequence}
+  \lstinputlisting{Dynamic_Programming/LIS.cpp}
+
+  \subsection{Travelling Salesman Problem}
+  \lstinputlisting{Dynamic_Programming/TSP.cpp}
+
   \subsection{Knapsack}
   \lstinputlisting{Dynamic_Programming/Knapsack.cpp}
 
@@ -116,16 +155,16 @@
   \subsection{DFS}
   \lstinputlisting{Graphs/DFS.cpp}
 
+  \subsection{TopoSort}
+  \lstinputlisting{Graphs/TopoSort.cpp}
+
   \subsection{Dijkstra}
   \lstinputlisting{Graphs/Dijkstra.cpp}
-
-  \subsection{Max Flow : Dinic}
-  \lstinputlisting{Graphs/Dinic.cpp}
-
+  
   \subsection{Minimum Spanning Tree (Kruskal \& Prim)}
   \lstinputlisting{Graphs/MinimumSpanningTree.cpp}
-
-  \subsection{LCA (Lowest Common Ancestor)}
+  
+  \subsection{Lowest Commen Ancestor (LCA)}
   \lstinputlisting{Graphs/LCA.cpp}
 
   \subsection{Diameter of a Tree}
@@ -133,9 +172,15 @@
 
   \subsection{Articulation Points, Cut Edges, Biconnected Components}
   \lstinputlisting{Graphs/articulation-points,cut-edges,biconnected-components.cpp}
+
+  \subsection{Strongly Connected Components}
+  \lstinputlisting{Graphs/SCC.cpp}
+
+  \subsection{Max Flow : Dinic}
+  \lstinputlisting{Graphs/Dinic.cpp}
   
-  \subsection{Centroid Decomposition}
-  \lstinputlisting{Graphs/CentroidDecomposition.cpp}
+%   \subsection{Centroid Decomposition}
+%   \lstinputlisting{Graphs/CentroidDecomposition.cpp}
 
 % % -------------------
 \section{Mathematics}
@@ -143,8 +188,14 @@
   \subsection{Euclidean Algorithm}
   \lstinputlisting{Mathematics/euclidean_algorithm.cpp}
 
-  \subsection{Prime Numbers}
-  \lstinputlisting{Mathematics/prime_numbers.cpp}
+  \subsection{Primality Test}
+  \lstinputlisting{Mathematics/primality_test.cpp}
+
+  \subsection{Prime Factorization}
+  \lstinputlisting{Mathematics/prime_factorization.cpp}
+
+  \subsection{Binary modular exponentiation}
+  \lstinputlisting{Mathematics/binary_modular_exponentiation.cpp}
   
   \subsection{Modular Binomial Coefficient}
   \lstinputlisting{Mathematics/modular_binomial_coefficient.cpp}
@@ -152,20 +203,30 @@
   \subsection{Modular Multinomial Coefficient}
   \lstinputlisting{Mathematics/modular_multinomial_coefficient.cpp}
 
-  \subsection{Modular Fibonacci}
-  \lstinputlisting{Mathematics/modular_fibonacci.cpp}
+  \subsection{Chinese Remainder Theorem (CRT)}
+  \lstinputlisting{Mathematics/chinese_remainder_theorem.cpp}
 
-  \subsection{Binary Modular Exponentiation}
-  \lstinputlisting{Mathematics/binary_modular_exponentiation.cpp}
+  \subsection{Theorems}
+  \subsubsection{Pick's Theorem}
+  $A = I + \frac{P}{2} - 1$
 
-  \subsection{Integer Root Square}
-  \lstinputlisting{Mathematics/integer_root_square.cpp}
+%   \subsection{Modular Fibonacci}
+%   \lstinputlisting{Mathematics/modular_fibonacci.cpp}
 
-  % -------------------
+%   \subsection{Binary Modular Exponentiation}
+%   \lstinputlisting{Mathematics/binary_modular_exponentiation.cpp}
+
+%   \subsection{Integer Root Square}
+%   \lstinputlisting{Mathematics/integer_root_square.cpp}
+
+% -------------------
 \section{Geometry}
 
   \subsection{Geometry 2D Utils}
   \lstinputlisting{Geometry/Geometry2DUtils.cpp}
+
+  \subsection{Geometry 3D Utils}
+  \lstinputlisting{Geometry/Geometry3DUtils.cpp}
 
   \subsection{Trigonometry}
   \lstinputlisting{Geometry/Trigonometry.cpp}
@@ -182,13 +243,16 @@
   \subsection{Green's Theorem}
   \lstinputlisting{Geometry/GreensTheorem.cpp}
 
-% % -------------------
+% -------------------
 \section{Strings}
-  \subsection{Rolling Hashing}
-  \lstinputlisting{Strings/RollingHashing.cpp}
-
   \subsection{Suffix Array}
   \lstinputlisting{Strings/suffix_array.cpp}
+
+  \subsection{Trie}
+  \lstinputlisting{Strings/Trie.cpp}
+
+  \subsection{Rolling Hashing}
+  \lstinputlisting{Strings/RollingHashing.cpp}
 
   \subsection{KMP (Knuth Morris Pratt)}
   \lstinputlisting{Strings/KMP.cpp}
@@ -196,6 +260,4 @@
   \subsection{Shortest Repeating Cycle}
   \lstinputlisting{Strings/shortest_repeating_cycle.cpp}
 
-  \subsection{Trie}
-  \lstinputlisting{Strings/Trie.cpp}
 \end{document}
