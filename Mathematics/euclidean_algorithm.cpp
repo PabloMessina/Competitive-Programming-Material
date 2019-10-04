@@ -1,6 +1,6 @@
 typedef long long int ll;
 
-ll inline mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
+inline ll mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
 
 /* ============================= */
 /* GCD (greatest common divisor) */

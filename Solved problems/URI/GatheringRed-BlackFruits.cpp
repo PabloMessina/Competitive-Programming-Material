@@ -1,5 +1,5 @@
 // tags: geometry, straight line equation hashing, counting,
-// modular inverse, implementation
+// modular inverse, gcd, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;

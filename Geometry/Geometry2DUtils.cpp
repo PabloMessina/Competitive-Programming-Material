@@ -156,16 +156,22 @@ double point_segment_dist(Point& p, Point& a, Point& b) {
 // representation {a,b,c} such that a*x + b*y + c = 0 is the equation
 // of the straight line defined by p1, p2. This representation must be
 // unique for each straight line, no matter which p1 and p2 are sampled.
-struct Point {int x, y; };
-struct Line { int a, b, c; };
-Line getLine(Point p1, Point p2) {
-    int a = p1.y - p2.y;
-    int b = p2.x - p1.x;
-    int c = p1.x * (p2.y - p1.y) - p1.y * (p2.x - p1.x);
-    int sgn = (a < 0 || (a == 0 && b < 0)) ? -1 : 1;
-    int f = __gcd(a, __gcd(b, c)) * sgn;
-    a /= f;
-    b /= f;
-    c /= f;
-    return {a, b, c};
+struct Point { ll x, y; };
+tuple<ll,ll,ll> hash_line(const Point& p1, const Point& p2) {
+    ll a = p1.y - p2.y;
+    ll b = p2.x - p1.x;
+    ll c = p1.x * (p2.y - p1.y) - p1.y * (p2.x - p1.x);
+    ll sgn = (a < 0 or (a == 0 and b < 0)) ? -1 : 1;
+    ll g = __gcd(abs(a), __gcd(abs(b), abs(c))) * sgn;
+    return make_tuple(a/g, b/g, c/g);
+}
+// task: given 2 points p1 and p2 with integer coords, return a pair {a, b}
+// which is unique for all straight lines having the same slope as
+// the straight line that goes through p1 and p2
+pair<ll,ll> hash_slope(const Point& p1, const Point& p2) {
+    ll dx = p2.x - p1.x;
+    ll dy = p2.y - p1.y;
+    ll sgn = (dx < 0 or (dx == 0 and dy < 0)) ? -1 : 1;
+    ll g = __gcd(abs(dx), abs(dy)) * sgn;
+    return {dx/g, dy/g};
 }
