@@ -1,6 +1,6 @@
 // Time Complexity:
 // - general worst case: O (|E| * |V|^2)
-// - unit capacities: O( min( V^(2/3), sqrt(E) ) )
+// - unit capacities: O( min(V^(2/3), sqrt(E)) * E)
 // - Bipartite graph (unit capacities) + source & sink (any capacities): O(E sqrt V)
 
 #include <bits/stdc++.h>

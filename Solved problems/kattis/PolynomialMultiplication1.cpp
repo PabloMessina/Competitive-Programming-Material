@@ -4,7 +4,6 @@ using namespace std;
 // defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 // -------------------------------
-
 int main() {
     int T; cin >> T;
     while (T--) {
@@ -23,12 +22,12 @@ int main() {
             poly3[i + j] += poly1[i] * poly2[j];
         }
         // print output
-        cout << dg3 << endl;
+        cout << dg3 << '\n';
         rep(i,0,dg3) {
             if (i) cout << " ";
             cout << poly3[i];
         }
-        cout << endl;
+        cout << '\n';
     }
     return 0;
 }

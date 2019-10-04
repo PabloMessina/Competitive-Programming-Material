@@ -158,17 +158,12 @@ double point_segment_dist(Point& p, Point& a, Point& b) {
 // unique for each straight line, no matter which p1 and p2 are sampled.
 struct Point {int x, y; };
 struct Line { int a, b, c; };
-int gcd(int a, int b) { // greatest common divisor
-    a = abs(a); b = abs(b);
-    while(b) { int c = a; a = b; b = c % b; }
-    return a;
-}
 Line getLine(Point p1, Point p2) {
     int a = p1.y - p2.y;
     int b = p2.x - p1.x;
     int c = p1.x * (p2.y - p1.y) - p1.y * (p2.x - p1.x);
     int sgn = (a < 0 || (a == 0 && b < 0)) ? -1 : 1;
-    int f = gcd(a, gcd(b, c)) * sgn;
+    int f = __gcd(a, __gcd(b, c)) * sgn;
     a /= f;
     b /= f;
     c /= f;
