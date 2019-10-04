@@ -108,7 +108,7 @@ int main() {
                 for (const Point& pt : j.second) {
                     int f = pt2f[pt];
                     count += pt2f[pt];
-                    tmp = mul(tmp, mulinv(fact[f], MOD));
+                    if (f > 1) tmp = mul(tmp, mulinv(fact[f], MOD));
                 }
                 tmp = mul(tmp, fact[count]);
             }
