@@ -2,9 +2,9 @@
 typedef long long int ll;
 using namespace std;
 
-ll inline mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
-ll inline mul(ll x, ll y, ll m) { return (x * y) % m; }
-ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
+inline ll mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
+inline ll mul(ll x, ll y, ll m) { return (x * y) % m; }
+inline ll add(ll x, ll y, ll m) { return (x + y) % m; }
 
 // extended euclidean algorithm
 // finds g, x, y such that

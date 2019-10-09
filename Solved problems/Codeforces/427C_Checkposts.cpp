@@ -1,68 +1,66 @@
 // tags: SCC, tarjan, graphs
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
 typedef long long int ll;
 using namespace std;
-
-const int MAXN = 100000;
-int N, M;
-ll costs[MAXN];
-vector<int> g[MAXN];
-
+//----------------------
 ll MOD = 1000000007;
 ll min_totcost;
 ll ways;
+ll costs[100000];
 
-const int UNVISITED = -1;
-vector<int> _stack;
-int ids[MAXN];
-int lows[MAXN];
-bool instack[MAXN];
-int ID = 0;
-void dfs(int u) {
-    ids[u] = lows[u] = ID++;
-    instack[u] = true;
-    _stack.push_back(u);
-    for (int v : g[u]) {
-        if (ids[v] == UNVISITED) {
-            dfs(v);
-            lows[u] = min(lows[v], lows[u]);
-        } else if (instack[v]) {
-            lows[u] = min(lows[v], lows[u]);
+struct tarjanSCC {
+    vector<int> _stack, ids, low;
+    vector<bool> instack;
+    vector<vector<int>>* g;
+    int ID;
+    void dfs(int u) {
+        ids[u] = low[u] = ID++;
+        instack[u] = true;
+        _stack.push_back(u);
+        for (int v : (*g)[u]) {
+            if (ids[v] == -1) {
+                dfs(v);
+                low[u] = min(low[v], low[u]);
+            } else if (instack[v]) {
+                low[u] = min(low[v], low[u]);
+            }
+        }
+        if (low[u] == ids[u]) {
+            ll mincost = LLONG_MAX;
+            ll count = 0;
+            while (1) {
+                int x = _stack.back(); _stack.pop_back();
+                instack[x] = false;
+                if (mincost == costs[x]) count++;
+                else if (mincost > costs[x]) mincost = costs[x], count = 1;
+                if (x == u) break;
+            }
+            min_totcost += mincost;
+            ways = (ways * count) % MOD;
         }
     }
-    if (lows[u] == ids[u]) {
-        ll mincost = LLONG_MAX;
-        int i = _stack.size() - 1;
-        while (true)  {
-            mincost = min(mincost, costs[_stack[i]]);
-            instack[_stack[i]] = false;
-            if (_stack[i] == u) break;
-            i--;
-        }
-        int freq = 0;
-        rep(j,i,_stack.size()-1) if (costs[_stack[j]] == mincost) freq++;
-        min_totcost += mincost;
-        ways = (ways * freq) % MOD;
-        _stack.resize(i);
+    tarjanSCC(vector<vector<int>>& _g) {
+        g = &_g;
+        int n = _g.size();
+        _stack.reserve(n);
+        ids.assign(n, -1);
+        low.resize(n);
+        instack.assign(n, 0);
+        ID = 0;
+        rep(u, 0, n-1) if (ids[u] == -1) dfs(u);
     }
-}
-void tarjanSCC() {
-    memset(ids, -1, sizeof(int) * N);
-    memset(instack, 0, sizeof(bool) * N);
-    ID = 0;
-    _stack.reserve(N);
-    rep(u, 0, N-1) {
-        if (ids[u] == UNVISITED) {
-            dfs(u);
-        }
-    }
-}
+};
 
 int main() {
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int N, M;
     cin >> N;
     rep(i,0,N-1) cin >> costs[i];
     cin >> M;
+    vector<vector<int>> g(N);
     rep(i,1,M) {
         int u, v; cin >> u >> v;
         u--, v--;
@@ -70,7 +68,7 @@ int main() {
     }
     min_totcost = 0;
     ways = 1;
-    tarjanSCC();
+    tarjanSCC tscc(g);
     cout << min_totcost << " " << ways << '\n';
     return 0;
 }

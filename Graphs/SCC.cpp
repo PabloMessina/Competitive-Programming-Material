@@ -1,60 +1,49 @@
-// SCC = strongly connected components
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i=a; i<=b; ++i)
 using namespace std;
-
-// ----------------------------------
-// method 1: Tarjan's SCC algorithm
-const int MAXN = 100000;
-
-namespace tarjanSCC {
-    const int UNVISITED = -1;
-    vector<int> _stack;
-    int ids[MAXN]; // ids[u] = id assigned to node u
-    int low[MAXN]; // low[u] = lowest id reachable by node u
-    bool instack[MAXN]; // instack[u] = if u is currently in stack or not
-    int ID = 0; // global variable used to assign ids to unvisited nodes
-    vector<vector<int>>* g; // pointer to graph
-
+// -----------------------------------------
+// implementation of Tarjan's SCC algorithm
+struct tarjanSCC {
+    vector<int> _stack, ids, low;
+    vector<bool> instack;
+    vector<vector<int>>* g;
+    int n, ID;
     void dfs(int u) {
-        ids[u] = low[u] = ID++; // assign ID to new visited node
-        // add to stack
+        ids[u] = low[u] = ID++;
         instack[u] = true;
         _stack.push_back(u);
-        // check neighbor nodes
         for (int v : (*g)[u]) {
-            if (ids[v] == UNVISITED) { // if unvisited -> visit 
+            if (ids[v] == -1) {
                 dfs(v);
-                low[u] = min(low[v], low[u]); // update u's low
-            } else if (instack[v]) { // visited AND in stack
-                low[u] = min(low[v], low[u]); // update u's low
+                low[u] = min(low[v], low[u]);
+            } else if (instack[v]) {
+                low[u] = min(low[v], low[u]);
             }
         }
-        if (low[u] == ids[u]) { // u is the root of a SCC
+        if (low[u] == ids[u]) {
+            // u is the root of a SCC
             // ** here you can do whatever you want
             // with the SCC just found
             cout << "SCC found!\n";
             // remove SCC from top of the stack
-            while (true)  {
+            while (1) {
                 int x = _stack.back(); _stack.pop_back();
                 instack[x] = false;
                 if (x == u) break;
             }
         }
     }
-
-    void run(vector<vector<int>>& _g) {
-        _stack.reserve(MAXN); // reserve enough space to avoid memory reallocations
-        int n = _g.size(); // number of nodes
-        g = &_g; // pointer to graph
-        // reset variables
-        memset(ids, -1, sizeof(int) * n);
-        memset(instack, 0, sizeof(bool) * n);
+    tarjanSCC(vector<vector<int>>& _g) {
+        g = &_g;
+        n = _g.size();
+        _stack.reserve(n);
+        ids.assign(n, -1);
+        low.resize(n);
+        instack.assign(n, 0);
         ID = 0;
-        // run dfs's
-        rep(u, 0, n-1) if (ids[u] == UNVISITED) dfs(u);
+        rep(u, 0, n-1) if (ids[u] == -1) dfs(u);
     }
-}
+};
 
 // example of usage
 int main() {
@@ -66,6 +55,6 @@ int main() {
         g[u].push_back(v);
     }
     // find SCCs
-    tarjanSCC::run(g);
+    tarjanSCC tscc(g);
     return 0;
 }

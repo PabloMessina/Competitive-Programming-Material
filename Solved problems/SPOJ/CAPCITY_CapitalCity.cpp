@@ -1,72 +1,73 @@
-// tags: SCC, tarjan, graphs
+// tags: SCC, tarjan, dfs, graphs
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-
-const int MAXN = 100000;
-
-namespace tarjanSCC {
-    const int UNVISITED = -1;
-    vector<int> _stack;
-    int ids[MAXN];
-    int lows[MAXN];
-    bool instack[MAXN];
-    int ID = 0;
-    vector<vector<int>>* g;
-
+// -------------------------------
+struct tarjanSCC {
+    vector<int> _stack, ids, low;
+    vector<bool> instack, vis;
+    vector<vector<int>> *g, *rg;
+    int n, ID;
+    int dfs_rg(int u) {
+        vis[u] = true;
+        int count = 1;
+        for (int v : (*rg)[u]) if (!vis[v]) count += dfs_rg(v);
+        return count;
+    }
     bool dfs(int u) {
-        ids[u] = lows[u] = ID++;
+        ids[u] = low[u] = ID++;
         instack[u] = true;
         _stack.push_back(u);
         for (int v : (*g)[u]) {
-            if (ids[v] == UNVISITED) {
+            if (ids[v] == -1) {
                 if (dfs(v)) return true;
-                lows[u] = min(lows[v], lows[u]);
+                low[u] = min(low[v], low[u]);
             } else if (instack[v]) {
-                lows[u] = min(lows[v], lows[u]);
+                low[u] = min(low[v], low[u]);
             }
         }
-        if (lows[u] == ids[u]) {
-            vector<int> scc;
-            scc.reserve(MAXN);
-            while (true)  {
-                int x = _stack.back(); _stack.pop_back();
-                instack[x] = false;
-                scc.push_back(x);
-                if (x == u) break;
+        if (low[u] == ids[u]) {
+            vis.assign(n, 0);
+            if (dfs_rg(u) == n) {
+                int i = _stack.size() - 1;
+                while (_stack[i] != u) --i;
+                sort(_stack.begin() + i, _stack.end());
+                cout << (_stack.size() - i) << '\n';
+                rep(j,i,_stack.size()-1) {
+                    if (j > i) cout << ' ';
+                    cout << _stack[j]+1;
+                }
+                cout << '\n';
+            } else {
+                cout << "0\n\n";
             }
-            sort(scc.begin(), scc.end());
-            cout << scc.size() << '\n';
-            bool f = true;
-            for (int x : scc) {
-                if (f) { f = false; cout << x+1;}
-                else cout << ' ' << x+1;
-            }
-            cout << '\n';
             return true;
         }
         return false;
     }
-
-    void run(vector<vector<int>>& _g) {
-        _stack.reserve(MAXN);
-        int n = _g.size();
+    tarjanSCC(vector<vector<int>>& _g, vector<vector<int>>& _rg) {
         g = &_g;
-        memset(ids, -1, sizeof(int) * n);
-        memset(instack, 0, sizeof(bool) * n);
-        ID = 0;
-        rep(u, 0, n-1) if (ids[u] == UNVISITED && dfs(u)) break;
+        rg = &_rg;
+        n = _g.size();
+        _stack.reserve(n);
+        ids.assign(n, -1);
+        low.resize(n);
+        instack.assign(n, 0);
+        ID = 0; dfs(0);
     }
-}
+};
 
 int main() {
-    int n, m;
-    cin >> n >> m;
-    vector<vector<int>> g(n);
-    while (m--) {
-        int a, b; cin >> a >> b; a--, b--;
-        g[a].push_back(b);
-    }
-    tarjanSCC::run(g);
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int N, M; cin >> N >> M;
+    vector<vector<int>> g(N), rg(N);
+    while (M--) {
+        int u, v; cin >> u >> v; --u, --v;
+        g[u].push_back(v);
+        rg[v].push_back(u);
+    }    
+    tarjanSCC tscc(g, rg);
     return 0;
 }

@@ -2,7 +2,8 @@
 // Suffix Array Construction : Prefix Doubling + Radix Sort
 // ========================================================
 // Complexity: O(N*log(N))
-// reference: https://www.cs.helsinki.fi/u/tpkarkka/opetus/10s/spa/lecture11.pdf
+// references: https://www.cs.helsinki.fi/u/tpkarkka/opetus/10s/spa/lecture11.pdf
+// https://youtu.be/_TUeAdu-U_k
 #include <bits/stdc++.h>
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
@@ -23,8 +24,7 @@ struct SuffixArray {
         invrep(i,n-1,0) sa_tmp[--counts[get_rank(sa[i]+k)]] = sa[i];
         sa.swap(sa_tmp);
     }
-    void compute_sa(vector<int>& s, int maxv) {
-        n = s.size();
+    void compute_sa(vector<int>& s, int maxv) {        
         rep(i,0,n-1) sa[i] = i, rank[i] = s[i];
         for (int h=1; h < n; h <<= 1) {
             counting_sort(maxv, h);

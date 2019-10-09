@@ -34,11 +34,11 @@ int count_matches(string& pattern, string& target) {
     return matches;
 }
 
-int main() {
+int main() { // usage
     string target, pattern;
     while (true) {
         cin >> target >> pattern;
-        cout << count_matches(pattern, target) << " matches" << endl;
+        cout << count_matches(pattern, target) << " matches\n";
     }
     return 0;
 }
