@@ -16,7 +16,7 @@ struct SuffixArray {
     int n;
     vector<int> counts, rank, rank_tmp, sa, sa_tmp;
     vector<int> lcp; // optional: only if lcp is needed
-    int inline get_rank(int i) { return i < n ? rank[i]: 0; }
+    inline int get_rank(int i) { return i < n ? rank[i]: 0; }
     void counting_sort(int maxv, int k) {
         counts.assign(maxv+1, 0);
         rep(i,0,n-1) counts[get_rank(i+k)]++;
