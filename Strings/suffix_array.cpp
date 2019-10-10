@@ -56,6 +56,7 @@ struct SuffixArray {
     }
     SuffixArray(vector<int>& s) {
         n = s.size();
+        if (n == 1) s[0] = 1; // prevent bugs
         rank.resize(n); rank_tmp.resize(n);
         sa.resize(n); sa_tmp.resize(n);
         int maxv = *max_element(s.begin(), s.end());
