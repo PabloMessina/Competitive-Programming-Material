@@ -23,7 +23,7 @@ struct RH_single { // rolling hashing
     
     vector<ull> h;
     int len;
-    RH(string& s) {
+    RH_single(string& s) {
         len = s.size();
         h.resize(len);
         h[0] = s[0] - 'a';
@@ -36,7 +36,7 @@ struct RH_single { // rolling hashing
     }
     ull hash() { return h[len-1]; }
 };
-ull RH::pow[MAXLEN]; // necessary for the code to compile
+ull RH_single::pow[MAXLEN]; // necessary for the code to compile
 
 // -------------------------------------------------
 // rolling hashing using 2 primes (for extra safety)
@@ -57,7 +57,7 @@ struct RH_double { // rolling hashing
     
     vector<ull> h[2];
     int len;
-    RH(string& s) {
+    RH_double(string& s) {
         len = s.size();
         rep(a,0,1) {
             h[a].resize(len);
@@ -76,8 +76,8 @@ struct RH_double { // rolling hashing
     ull hash() { return hash(0, len-1); }
 };
 // these lines are necessary for the code to compile
-const ull RH::P[2] = {(int)1e9+7, (int)1e9+9};
-ull RH::pow[2][MAXLEN];
+const ull RH_double::P[2] = {(int)1e9+7, (int)1e9+9};
+ull RH_double::pow[2][MAXLEN];
 
 
 // ----- usage & testing
