@@ -80,9 +80,9 @@ int main() {
             ull h1 = RH_single(s1).hash(0, s1.size()-1);
             ull h2 = RH_single(s2).hash(0, s2.size()-1);            
             if (s1 == s2 ? h1 == h2 : h1 != h2) {
-                cout << "test passed!" << endl;
+                cout << "test passed!\n";
             } else {
-                cout << "test failed :(" << endl;
+                cout << "test failed :(\n";
             }
         }
     }

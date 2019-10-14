@@ -83,8 +83,7 @@ int main() {
         ll ans = 0;
         while (count--) {
             Item cur = pq.top(); pq.pop();
-            printf("%d ", cur.val);
-            ans = ((ans + cur.val) * 500ll) % MOD;
+            ans = ((ans + cur.val) * 365ll) % MOD;
             if (cur.idx < stacks[cur.si].size) {
                 pq.push(items[stacks[cur.si].offset + cur.idx + 1]);
             }
