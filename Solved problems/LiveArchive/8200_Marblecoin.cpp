@@ -1,4 +1,5 @@
 // tags: greedy, suffix array, counting sort, radix sort, strings
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
