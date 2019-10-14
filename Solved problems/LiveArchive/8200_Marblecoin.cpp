@@ -5,28 +5,19 @@ using namespace std;
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 typedef long long int ll;
 // -------------------------------
-
-const int MAXN = 5 * 100000;
-const ll MOD = 1000000007;
-
-namespace SA { // suffix array
+struct SuffixArray {
     int n;
-    int rank[MAXN], rank_tmp[MAXN];
-    int sa[MAXN], sa_tmp[MAXN];
-    int inline get_rank(int i) { return i < n ? rank[i]: 0; }
-    
+    vector<int> counts, rank, rank_tmp, sa, sa_tmp;
+    inline int get_rank(int i) { return i < n ? rank[i]: 0; }
     void counting_sort(int maxv, int k) {
-        static int counts[MAXN];
-        memset(counts, 0, sizeof(int) * (maxv+1));
+        counts.assign(maxv+1, 0);
         rep(i,0,n-1) counts[get_rank(i+k)]++;
         rep(i,1,maxv) counts[i] += counts[i-1];
         invrep(i,n-1,0) sa_tmp[--counts[get_rank(sa[i]+k)]] = sa[i];
-        swap(sa, sa_tmp);
+        sa.swap(sa_tmp);
     }
-    
-    void sort_suffix_indexes(vector<int>& word, int maxv, vector<int>& suffix_indexes) {
-        n = word.size();
-        rep(i,0,n-1) { sa[i] = i; rank[i] = word[i]; }
+    void compute_sa(vector<int>& s, int maxv) {        
+        rep(i,0,n-1) sa[i] = i, rank[i] = s[i];
         for (int h=1; h < n; h <<= 1) {
             counting_sort(maxv, h);
             counting_sort(maxv, 0);
@@ -37,18 +28,25 @@ namespace SA { // suffix array
                     get_rank(sa[i]+h) != get_rank(sa[i-1]+h)) r++;
                 rank_tmp[sa[i]] = r;
             }
-            swap(rank, rank_tmp);
+            rank.swap(rank_tmp);
             maxv = r;
         }
-        suffix_indexes.resize(n);
-        rep(i,0,n-1) suffix_indexes[i] = sa[i];
     }
-}
+    SuffixArray(vector<int>& s) {
+        n = s.size();
+        if (n == 1) s[0] = 1;
+        rank.resize(n); rank_tmp.resize(n);
+        sa.resize(n); sa_tmp.resize(n);
+        int maxv = *max_element(s.begin(), s.end());
+        compute_sa(s, maxv);
+    }
+};
 
+const int MAXN = 5 * 100000;
+const ll MOD = 1000000007;
 struct Stack { int offset, size; } stacks[MAXN];
 vector<int> word;
 vector<int> suffix_indexes;
-
 struct Item {
     int val, si, idx, rank;
     bool operator<(const Item& o) const { return rank > o.rank; }
@@ -58,7 +56,6 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);    
     word.reserve(MAXN);
-    suffix_indexes.reserve(MAXN);
     int N;
     while (cin >> N) {
         word.clear();
@@ -76,8 +73,8 @@ int main() {
             offset += k + 1;
             count += k;
         }
-        SA::sort_suffix_indexes(word, 301, suffix_indexes);
-        rep(i,0,offset-1) items[suffix_indexes[i]].rank = i;
+        SuffixArray sa(word);
+        rep(i,0,offset-1) items[sa.sa[i]].rank = i;
         priority_queue<Item> pq;
         rep(i,0,N-1) pq.push(items[stacks[i].offset]);        
         ll ans = 0;
