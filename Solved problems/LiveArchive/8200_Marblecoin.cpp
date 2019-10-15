@@ -17,29 +17,28 @@ struct SuffixArray {
         invrep(i,n-1,0) sa_tmp[--counts[get_rank(sa[i]+k)]] = sa[i];
         sa.swap(sa_tmp);
     }
-    void compute_sa(vector<int>& s, int maxv) {        
-        rep(i,0,n-1) sa[i] = i, rank[i] = s[i];
-        for (int h=1; h < n; h <<= 1) {
-            counting_sort(maxv, h);
-            counting_sort(maxv, 0);
-            int r = 1;
-            rank_tmp[sa[0]] = r;
+    void compute_sa(vector<int>& s) {
+        rep(i,0,n-1) sa[i] = i;
+        sort(sa.begin(), sa.end(), [&s](int i, int j) { return s[i] < s[j]; });
+        int r = rank[sa[0]] = 1;
+        rep(i,1,n-1) rank[sa[i]] = (s[sa[i]] != s[sa[i-1]]) ? ++r : r;
+        for (int h=1; h < n and r < n; h <<= 1) {
+            counting_sort(r, h);
+            counting_sort(r, 0);
+            r = rank_tmp[sa[0]] = 1;
             rep(i,1,n-1) {
                 if (rank[sa[i]] != rank[sa[i-1]] or
-                    get_rank(sa[i]+h) != get_rank(sa[i-1]+h)) r++;
+                    get_rank(sa[i]+h) != get_rank(sa[i-1]+h)) ++r;
                 rank_tmp[sa[i]] = r;
             }
             rank.swap(rank_tmp);
-            maxv = r;
         }
     }
     SuffixArray(vector<int>& s) {
         n = s.size();
-        if (n == 1) s[0] = 1;
         rank.resize(n); rank_tmp.resize(n);
         sa.resize(n); sa_tmp.resize(n);
-        int maxv = *max_element(s.begin(), s.end());
-        compute_sa(s, maxv);
+        compute_sa(s);
     }
 };
 
@@ -55,7 +54,7 @@ struct Item {
 
 int main() {
     ios::sync_with_stdio(false);
-    cin.tie(0);    
+    cin.tie(0); cout.tie(0);
     word.reserve(MAXN);
     int N;
     while (cin >> N) {

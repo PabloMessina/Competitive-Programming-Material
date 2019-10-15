@@ -29,7 +29,7 @@ struct SuffixArray {
         sort(sa.begin(), sa.end(), [&s](int i, int j) { return s[i] < s[j]; });
         int r = rank[sa[0]] = 1;
         rep(i,1,n-1) rank[sa[i]] = (s[sa[i]] != s[sa[i-1]]) ? ++r : r;
-        for (int h=1; h < n; h <<= 1) {
+        for (int h=1; h < n and r < n; h <<= 1) {
             counting_sort(r, h);
             counting_sort(r, 0);
             r = rank_tmp[sa[0]] = 1;
