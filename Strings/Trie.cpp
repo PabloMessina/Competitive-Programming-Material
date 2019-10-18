@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int MAX_NODES = 1000;
+const int MAX_NODES = 1000; 
 struct Trie {
     int g[MAX_NODES][26];
     int count[MAX_NODES];
