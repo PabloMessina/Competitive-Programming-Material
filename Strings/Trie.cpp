@@ -1,3 +1,5 @@
+#include <bits/stdc++.h>
+using namespace std;
 const int MAX_NODES = 1000;
 struct Trie {
     int g[MAX_NODES][26];
@@ -6,7 +8,6 @@ struct Trie {
     void reset() {
         ID = 1;
         memset(g[0], -1, sizeof g[0]);
-        memset()
     }
     void update(string& s) {
         int u = 0;
@@ -23,3 +24,11 @@ struct Trie {
     }
     int size() { return ID; }
 };
+
+int main() {
+    Trie trie;
+    trie.reset();
+    string s; cin >> s;
+    trie.update(s);
+    return 0;
+}
