@@ -3,20 +3,20 @@ using namespace std;
 struct Trie {
     vector<vector<int>> g;
     vector<int> count;
-    int alph_size;
-    Trie(int alph_size, int maxdepth = 10000)
-            : alph_size(alph_size) {
+    int vocab;
+    Trie(int vocab, int maxdepth = 10000)
+            : vocab(vocab) {
         g.reserve(maxdepth);
-        g.emplace_back(alph_size, -1);
+        g.emplace_back(vocab, -1);
         count.reserve(maxdepth);
         count.push_back(0);
     }
     int move_to(int u, int c) {
-        assert (0 <= c and c < alph_size);
+        assert (0 <= c and c < vocab);
         int& v = g[u][c];
         if (v == -1) {
             v = g.size();
-            g.emplace_back(alph_size, -1);
+            g.emplace_back(vocab, -1);
             count.push_back(0);
         }
         count[v]++;
