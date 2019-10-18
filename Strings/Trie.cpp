@@ -1,34 +1,43 @@
 #include <bits/stdc++.h>
 using namespace std;
-const int MAX_NODES = 1000; 
 struct Trie {
-    int g[MAX_NODES][26];
-    int count[MAX_NODES];
-    int ID;
-    void reset() {
-        ID = 1;
-        memset(g[0], -1, sizeof g[0]);
+    vector<vector<int>> g;
+    vector<int> count;
+    int alph_size;
+    Trie(int alph_size, int maxdepth = 10000)
+            : alph_size(alph_size) {
+        g.reserve(maxdepth);
+        g.emplace_back(alph_size, -1);
+        count.reserve(maxdepth);
+        count.push_back(0);
     }
-    void update(string& s) {
-        int u = 0;
-        for (char c : s) {
-            int& v = g[u][c-'a'];
-            if (v == -1) {
-                v = ID++;
-                memset(g[v], -1, sizeof g[v]);
-                count[v] = 0;
-            }
-            count[v]++;
-            u = v;
+    int move_to(int u, int c) {
+        assert (0 <= c and c < alph_size);
+        int& v = g[u][c];
+        if (v == -1) {
+            v = g.size();
+            g.emplace_back(alph_size, -1);
+            count.push_back(0);
         }
+        count[v]++;
+        return v;
     }
-    int size() { return ID; }
+    void insert(const string& s, char ref = 'a') {  // insert string
+        int u = 0; for (char c : s) u = move_to(u, c - ref);
+    }    
+    void insert(vector<int>& s) { // insert vector<int>
+        int u = 0; for (int c : s) u = move_to(u, c);
+    }
+    int size() { return g.size(); }
 };
 
+// example of usage
 int main() {
-    Trie trie;
-    trie.reset();
-    string s; cin >> s;
-    trie.update(s);
+    Trie trie(26);
+    for (string s : {"hell", "hello", "hellyeah", "helpzzzz", "abcdefg"}) {
+        cout << "inserting " <<  s << '\n';
+        trie.insert(s);
+        cout << "\ttrie size = " << trie.size() << '\n';
+    }
     return 0;
 }
