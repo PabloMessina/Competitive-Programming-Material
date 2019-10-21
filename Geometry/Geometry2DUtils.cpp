@@ -8,22 +8,24 @@ const double EPS = 1e-8;
 /* =========================== */
 /* Example of Point Definition */
 /* =========================== */
-struct Point { // 2D
-    double x, y;
-    bool operator==(const Point& p) const { return x==p.x && y == p.y; }
-    Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }
-    Point operator-(const Point& p) const { return {x-p.x, y-p.y}; }
-    Point operator*(double d) const { return {x*d, y*d}; }
-    double norm2() { return x*x + y*y; }
+template<typename T>
+struct Point<T> { // 2D
+    T x, y;
+    bool operator==(const Point<T>& p) const { return x==p.x && y == p.y; }
+    Point<T> operator+(const Point<T>& p) const { return {x+p.x, y+p.y}; }
+    Point<T> operator-(const Point<T>& p) const { return {x-p.x, y-p.y}; }
+    Point<T> operator*(T d) const { return {x*d, y*d}; }
+    Point<double> cast() { return {(double)x, (double)y}; }
+    T norm2() { return x*x + y*y; }
     double norm() { return sqrt(norm2()); }
-    double dot(const Point& p) { return x*p.x + y*p.y; }
-    double cross(const Point& p) { return x*p.y - y*p.x; }
+    T dot(const Point<T>& p) { return x*p.x + y*p.y; }
+    T cross(const Point<T>& p) { return x*p.y - y*p.x; }
     double angle() {
         double angle = atan2(y, x);
         if (angle < 0) angle += 2 * PI;
         return angle;
     }
-    Point unit() {
+    Point<double> unit() {
         double d = norm();
         return {x/d,y/d};
     }

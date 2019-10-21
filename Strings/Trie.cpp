@@ -4,8 +4,7 @@ struct Trie {
     vector<vector<int>> g;
     vector<int> count;
     int vocab;
-    Trie(int vocab, int maxdepth = 10000)
-            : vocab(vocab) {
+    Trie(int vocab, int maxdepth = 10000) : vocab(vocab) {
         g.reserve(maxdepth);
         g.emplace_back(vocab, -1);
         count.reserve(maxdepth);
