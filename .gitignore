@@ -37,3 +37,6 @@
 .vscode/
 _ignoreme/
 _debug*.cpp
+*.png
+__pycache__
+failed_input

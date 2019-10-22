@@ -29,3 +29,19 @@ struct Point { // 3D
         };
     }
 };
+double angle_between(Point& a, Point& b) {
+    return acos(a.dot(b)/(a.norm() * b.norm()));
+}
+const double EPS = 1e-8;
+bool point_in_arc(Point& a, Point& b, Point& p) {
+    double angle_ab = angle_between(a, b);
+    double angle_ap = angle_between(a, p);
+    if (angle_ap > angle_ab) return false;
+    Point n = a.cross(b);
+    Point c_hat = n.cross(a).unit();
+    double R = a.norm();
+    Point a_hat = a * (1./R);
+    Point a_rotated = (a_hat * cos(angle_ap) + c_hat * sin(angle_ap)) * R;
+    return (p - a_rotated).norm() < EPS;
+}
+

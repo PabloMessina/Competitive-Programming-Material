@@ -1,34 +1,29 @@
+// tags: geometry, convex hull, cross product, binary search adhoc,
+// line intersection, polygon area, green's theorem
 #include <cassert>
 #include <algorithm>
 #include <iostream>
 #include <iomanip>
 #include <cmath>
-#include <string>
 #include <vector>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
 typedef long long int ll;
 // -------------------------------
-const double eps = 1e-8;
+const long double eps = 1e-8L;
+const long double ZERO = 0L;
+const long double ONE = 1L;
 int N, M;
 template<typename T>
 struct Point {
     T x, y;
     Point<T>() {}
     Point<T>(T x, T y) : x(x), y(y) {}
-    Point<T> operator-(const Point<T>& p) const {
-        return Point<T>(x - p.x, y - p.y);
-    }
-    Point<T> operator+(const Point<T>& p) const {
-        return Point<T>(x + p.x, y + p.y);
-    }
-    Point<T> operator*(T c) const {
-        return Point<T>(x * c, y * c);
-    }
-    Point<double> cast() {
-        return Point<double>((double)x, (double)y);
-    }
+    Point<T> operator-(const Point<T>& p) const { return Point<T>(x - p.x, y - p.y); }
+    Point<T> operator+(const Point<T>& p) const { return Point<T>(x + p.x, y + p.y); }
+    Point<T> operator*(T c) const { return Point<T>(x * c, y * c); }
+    T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
+    Point<long double> cast() { return Point<long double>(x, y); }
     T norm2() { return x*x + y*y; }
     bool operator<(const Point<T>& p) const {
         return x < p.x || (x == p.x && y < p.y);
@@ -37,7 +32,7 @@ struct Point {
 struct Triangle { Point<ll> a, b, c; };
 vector<Point<ll> > pts;
 vector<Triangle> ts;
-vector<double> ch_acc_area;
+vector<long double> ch_acc_area;
 
 ll cross(Point<ll>& a, Point<ll>& b, Point<ll>& c) {
     ll dx0 = b.x - a.x, dy0 = b.y - a.y;
@@ -68,6 +63,18 @@ bool point_in_triangle(Point<ll>& a, Point<ll>& b, Point<ll>& c, Point<ll>& x) {
     return cross(a, b, x) >= 0 and cross(b, c, x) >= 0 and cross(c, a, x) >= 0;
 }
 
+bool point_in_convex_polygon(Point<ll>& p, vector<Point<ll> >& poly) {
+    if (cross(poly[0], poly[1], p) < 0) return false;
+    if (cross(poly[0], poly.back(), p) > 0) return false;
+    int l = 2, r = poly.size() - 1;
+    while (l < r) {
+        int m = (l+r) >> 1;
+        if (cross(poly[0], poly[m], p) <= 0) r = m;
+        else l = m+1;
+    }
+    return point_in_triangle(poly[0], poly[l-1], poly[l], p);
+}
+
 pair<int,int> find_crossing_edge(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch, int start, int end) {
     int o_ref = orientation(a, b, ch[start]);
     int n = ch.size();
@@ -85,87 +92,129 @@ ll determinant(Point<ll> a, Point<ll> b) {
 }
 
 bool find_line_line_intersection(Point<ll>& a1, Point<ll>& b1, Point<ll>& a2, Point<ll>& b2,
-        double& t1, double& t2) {
+        long double& t1, long double& t2) {
     Point<ll> d1 = b1 - a1;
     Point<ll> d2 = b2 - a2;
     Point<ll> _d2 = d2 * -1;
     ll detA = determinant(d1, _d2);
     if (detA == 0) return false;
     Point<ll> b = a2 - a1;
-    t1 = (double)determinant(b, _d2)/(double)detA;
-    t2 = (double)determinant(d1, b)/(double)detA;
+    t1 = (long double)determinant(b, _d2)/(long double)detA;
+    t2 = (long double)determinant(d1, b)/(long double)detA;
     return true;
 }
 
 struct Intersection {
     pair<int,int> ch_edge;
-    Point<double> p;
+    Point<long double> p;
     bool exiting;
-    Intersection(pair<int,int> ch_edge, Point<double> p, bool exiting) :
+    Intersection(pair<int,int> ch_edge, Point<long double> p, bool exiting) :
         ch_edge(ch_edge), p(p), exiting(exiting) {}
 };
 
+struct Vcross {
+    int n;
+    Point<ll> v;
+    vector<Point<ll> >* ch;
+    Vcross(int n, vector<Point<ll> >* ch, Point<ll> v) : n(n), ch(ch), v(v) {}
+    ll operator()(int i) const { return v.cross((*ch)[(i+1)%n] - (*ch)[i]); }
+};
+
+int extreme_point_index(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch) {    
+    int n = ch.size();
+    int l = 0, r = n - 1;
+    Point<ll> v = b - a;
+    Vcross vcross(n, &ch, v);
+    ll lc = vcross(l);
+    while (l < r) {
+        int m = (l+r) >> 1;
+        ll mc = vcross(m);
+        if (mc > 0) {
+            if (lc < 0) {
+                if (vcross((l-1+n)%n) >= 0) return l;
+                l = m+1; lc = vcross(l);
+            } else if (lc > 0) {
+                if (v.cross(ch[m] - ch[l]) >= 0) {
+                    l = m+1; lc = vcross(l);
+                } else {
+                    r = m-1;
+                }
+            } else {
+                if (v.cross(ch[m] - ch[l]) >= 0) {
+                    l = m+1; lc = vcross(l);
+                } else {
+                    r = m-1;
+                }
+            }
+        } else if (mc < 0) {
+            if (lc < 0) {
+                if (v.cross(ch[m] - ch[l]) > 0) {
+                    l=l+1, r=m; lc = vcross(l);
+                } else if (vcross((l-1+n)%n) >= 0) {
+                    return l;
+                } else {
+                    l=m+2; lc = vcross(l);
+                }
+            } else if(lc > 0) {
+                l = l+1, r=m; lc = vcross(l);
+            } else {
+                if (v.cross(ch[m] - ch[l]) > 0) {
+                    l = l+1, r=m; lc = vcross(l);
+                } else return l;
+            }
+        } else {
+            if (v.cross(ch[l] - ch[m]) > 0 or v.cross(ch[r] - ch[m]) > 0) {
+                if (v.cross(ch[l] - ch[r]) >= 0) {
+                    r = m-1;
+                } else {
+                    l = m+1; lc = vcross(l);
+                }
+            } else return m;
+        }
+    }
+    return l;
+}
+
 void process_segment_convexhull_intersection(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch,
         vector<Intersection>& intersections) {
-    int o_ref, l, r, n;
-    int i_ref = 0;
-    while ((o_ref = orientation(a, b, ch[i_ref])) == 0) ++i_ref;
-    n = ch.size();
-    l = i_ref;
-    r = i_ref + n - 1;
-    while (l < r) {
-        int m1 = l + (r - l) / 3;
-        int m2 = r - (r - l) / 3;
-        int v1 = abs(orientation(a, b, ch[m1 % n]) - o_ref);
-        int v2 = abs(orientation(a, b, ch[m2 % n]) - o_ref);
-        if (v1 > v2) r = m2-1;
-        else l = m1+1;
-    }
-    int i_max = l % n;
-    int o_max = orientation(a, b, ch[i_max]);
-    if (o_ref == o_max) return;
-    pair<int,int> e1 = find_crossing_edge(a, b, ch, i_ref, i_max);
-    pair<int,int> e2 = find_crossing_edge(a, b, ch, i_max, i_ref);
-    assert (e1 != e2);
-    assert (min(e1.first, e1.second) != min(e2.first, e2.second) or
-            max(e1.first, e1.second) != max(e2.first, e2.second));
-    double r1, s1, r2, s2;
+    int i1 = extreme_point_index(a, b, ch);
+    int i2 = extreme_point_index(b, a, ch);    
+    int o1 = orientation(a, b, ch[i1]);
+    int o2 = orientation(a, b, ch[i2]);
+    if (o1 == o2) return;
+    pair<int,int> e1 = find_crossing_edge(a, b, ch, i1, i2);
+    pair<int,int> e2 = find_crossing_edge(a, b, ch, i2, i1);
+    long double r1, s1, r2, s2;
     assert (find_line_line_intersection(a, b, ch[e1.first], ch[e1.second], r1, s1));
     assert (find_line_line_intersection(a, b, ch[e2.first], ch[e2.second], r2, s2));
-    assert (-eps <= s1 and s1 <= 1.0 + eps);
-    assert (-eps <= s2 and s2 <= 1.0 + eps);
     if (r1 > 1.0 - eps and r2 > 1.0 - eps) return;
     if (r1 < eps and r2 < eps) return;
     if (abs(r1 - r2) < eps) return;
-    if (r1 > r2) {
+    if (r1 > r2) {  
         swap(r1, r2);
         swap(e1, e2);
         swap(s1, s2);
     }
-    assert (r1 < r2);
-    assert (max(r1, 0.) < min(r2, 1.));
-    Point<double> _a = a.cast();
-    Point<double> _ba = (b-a).cast();
-    intersections.push_back(Intersection(e1, _a + _ba * max(r1, 0.), false));
-    intersections.push_back(Intersection(e2, _a + _ba * min(r2, 1.), r2 < 1. + eps));
+    Point<long double> _a = a.cast();
+    Point<long double> _ba = (b-a).cast();
+    intersections.push_back(Intersection(e1, _a + _ba * max(r1, ZERO), false));
+    intersections.push_back(Intersection(e2, _a + _ba * min(r2, ONE), r2 < ONE + eps));
 }
 
-double segment_integral(const Point<double>& a, const Point<double>& b) {
-    return 0.5 * (a.x + b.x) * (b.y - a.y);
+long double segment_integral(const Point<long double>& a, const Point<long double>& b) {
+    return (a.x + b.x) * (b.y - a.y) * 0.5L;
 }
 
 int edge_min_ccw(pair<int,int> e, int n) {
     if (abs(e.first - e.second) == 1) return min(e.first, e.second);
-    assert (min(e.first, e.second) == 0 and max(e.first, e.second) == n-1);
     return n-1;
 }
 int edge_max_ccw(pair<int,int> e, int n) {
     if (abs(e.first - e.second) == 1) return max(e.first, e.second);
-    assert (min(e.first, e.second) == 0 and max(e.first, e.second) == n-1);
     return 0;
 }
 
-double area_intersection(Triangle& t, vector<Point<ll> >& ch) {
+long double area_intersection(Triangle& t, vector<Point<ll> >& ch) {
     if (ch.size() <= 2) return 0;
     ll tmp = cross(t.a, t.b, t.c);
     if (tmp == 0) return 0;
@@ -181,16 +230,15 @@ double area_intersection(Triangle& t, vector<Point<ll> >& ch) {
             point_in_triangle(t.a, t.b, t.c, ch[2])) return ch_acc_area[ch.size()];
         return 0;
     }
-    double area = 0;
+    long double area = 0;
     for (int j = 0, i = n-1; j < n; i = j++) {
         Intersection& a = intersections[i];
         Intersection& b = intersections[j];
         if ((a.p - b.p).norm2() < eps) continue;
         if (a.exiting) {
-            assert (!b.exiting);
             int k1 = edge_min_ccw(a.ch_edge, ch.size());
             int k2 = edge_max_ccw(b.ch_edge, ch.size());
-            if (k1 <= k2) {
+            if (k1 < k2) {
                 area += ch_acc_area[k2] - ch_acc_area[k1];
             } else {
                 area += ch_acc_area[ch.size()] - (ch_acc_area[k1] - ch_acc_area[k2]);
@@ -223,9 +271,8 @@ int main() {
     ch_acc_area.assign(n + 1, 0);
     rep(i,1,n) ch_acc_area[i] = ch_acc_area[i-1] +
         segment_integral(ch[i-1].cast(), ch[i == n ? 0 : i].cast());
-    // cout << setprecision(5) << fixed;
     cout << setprecision(0) << fixed;
     for (vector<Triangle>::iterator it = ts.begin(); it != ts.end(); ++it)
-        cout << area_intersection(*it, ch) << '\n';
+        cout << (double)area_intersection(*it, ch) << '\n';
     return 0;
 }
