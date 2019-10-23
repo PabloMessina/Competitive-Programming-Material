@@ -8,6 +8,7 @@ struct Point {
     Point operator-(const Point& p) const { return {x - p.x, y - p.y}; }
     Point operator+(const Point& p) const { return {x + p.x, y + p.y}; }
     ll cross(const Point& p) const { return x*p.y - y*p.x; }
+    ll dot(const Point& p) const { return x*p.x + y*p.y; }
 };
 ll cross(Point& a, Point& b, Point& c) {
     ll dx0 = b.x - a.x, dy0 = b.y - a.y;
@@ -108,39 +109,30 @@ bool inPolygon_evenodd(Point p, vector<Point>& pts) {
 /* ================================= */
 /* Find extreme point in Convex Hull */
 /* ================================= */
-// reference: https://codeforces.com/blog/entry/48868
-int inline prev_(int i, int n) { return i == 0 ? n-1 : i-1; }
-int inline next_(int i, int n) { return i == n-1 ? 0 : i+1; }
-struct SignComp {
-    vector<Point>* ch; Point d; int n;
-    SignComp(vector<Point> *ch, Point d) : ch(ch), d(d) { n = ch->size(); }
-    int operator()(int i, int j) {
-        ll tmp = d.cross((*ch)[j] - (*ch)[i]);
-        return tmp > 0 ? 1 : tmp == 0 ? 0 : -1;
-    }
-    bool is_extreme(int i, int& io) {
-        return (io = (*this)(i, next_(i,n))) >= 0 and (*this)(i, prev_(i,n)) > 0;
-    }
-};
 // given two points a and b defining a vector a -> b, and given a convex hull with points
 // sorted ccw, find the index in the convex hull of the extreme point.
-//  ** the extreme point is the "rightmost" point in the convex hull with respect to the
-//     vector a -> b (if there are 2 rightmost points, pick the lowest one)
-int extreme_point_index(Point& a, Point& b, vector<Point>& ch) {
-    Point d = b - a;
-    SignComp cmp(&ch, d);
+//  ** the extreme point is the "leftmost" point in the convex hull with respect to the
+//     vector a -> b (if there are 2 leftmost points, pick anyone)
+int extreme_point_index(Point &a, Point &b, vector<Point> &ch) {
     int n = ch.size();
-    int l = 0, r = n - 1, lo, mo;
-    if (cmp.is_extreme(0, lo)) return 0;
-    while (l + 1 < r) {
-        int m = (l+r) >> 1;
-        if (cmp.is_extreme(m, mo)) return m;
-        if (lo != mo ? lo < mo : cmp(m, l) == lo) r = m;
-        else l = m, lo = mo;
+    Point v = b - a;
+    v = Point(-v.y, v.x); // to find the leftmost point
+    if (v.dot(ch[0]) >= v.dot(ch[1]) && v.dot(ch[0]) >= v.dot(ch[n - 1])) {
+        return 0;
     }
-    return cmp.is_extreme(l, lo) ? l : r;
+    int l = 0, r = n;
+    while (true) {
+        int m = (l + r) / 2;
+        if (v.dot(ch[m]) >= v.dot(ch[m + 1]) && v.dot(ch[m]) >= v.dot(ch[m - 1])) {
+            return m;
+        }
+        int d1 = v.dot(ch[l + 1] - ch[l]) > 0;
+        int d2 = v.dot(ch[m + 1] - ch[m]) > 0;
+        int a = v.dot(ch[m]) > v.dot(ch[l]);
+        if (d1) { if (d2 && a) l = m; else r = m; }
+        else { if (!d2 && a) r = m; else l = m; }
+    }
 }
-
 
 /* ========================================= */
 /* Line Segment and Convex Hull Intersection */

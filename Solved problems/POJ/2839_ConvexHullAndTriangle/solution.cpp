@@ -23,6 +23,7 @@ struct Point {
     Point<T> operator+(const Point<T>& p) const { return Point<T>(x + p.x, y + p.y); }
     Point<T> operator*(T c) const { return Point<T>(x * c, y * c); }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
+    T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     Point<long double> cast() { return Point<long double>(x, y); }
     T norm2() { return x*x + y*y; }
     bool operator<(const Point<T>& p) const {
@@ -98,33 +99,25 @@ struct Intersection {
         ch_edge(ch_edge), p(p), exiting(exiting) {}
 };
 
-int inline prev(int i, int n) { return i == 0 ? n-1 : i-1; }
-int inline next(int i, int n) { return i == n-1 ? 0 : i+1; }
-struct SignComp {
-    vector<Point<ll> >* ch; Point<ll> d; int n;
-    SignComp(vector<Point<ll> > *ch, Point<ll> d) : ch(ch), d(d) { n = ch->size(); }
-    int operator()(int i, int j) {
-        ll tmp = d.cross((*ch)[j] - (*ch)[i]);
-        return tmp > 0 ? 1 : tmp == 0 ? 0 : -1;
-    }
-    bool is_extreme(int i, int& io) {
-        return (io = (*this)(i, next(i,n))) >= 0 and (*this)(i, prev(i,n)) > 0;
-    }
-};
-
-int extreme_point_index(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch) {    
-    Point<ll> d = b - a;
-    SignComp cmp(&ch, d);
+int extreme_point_index(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch) {
     int n = ch.size();
-    int l = 0, r = n - 1, lo, mo;
-    if (cmp.is_extreme(0, lo)) return 0;
-    while (l + 1 < r) {
-        int m = (l+r) >> 1;
-        if (cmp.is_extreme(m, mo)) return m;
-        if (lo != mo ? lo < mo : cmp(m, l) == lo) r = m;
-        else l = m, lo = mo;
+    Point<ll> v = b - a;
+    v = Point<ll>(-v.y, v.x); // to find the leftmost point
+    if (v.dot(ch[0]) >= v.dot(ch[1]) && v.dot(ch[0]) >= v.dot(ch[n - 1])) {
+        return 0;
     }
-    return cmp.is_extreme(l, lo) ? l : r;
+    int l = 0, r = n;
+    while (true) {
+        int m = (l + r) / 2;
+        if (v.dot(ch[m]) >= v.dot(ch[m + 1]) && v.dot(ch[m]) >= v.dot(ch[m - 1])) {
+            return m;
+        }
+        int d1 = v.dot(ch[l + 1] - ch[l]) > 0;
+        int d2 = v.dot(ch[m + 1] - ch[m]) > 0;
+        int a = v.dot(ch[m]) > v.dot(ch[l]);
+        if (d1) { if (d2 && a) l = m; else r = m; }
+        else { if (!d2 && a) r = m; else l = m; }
+    }
 }
 
 void process_segment_convexhull_intersection(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch,
