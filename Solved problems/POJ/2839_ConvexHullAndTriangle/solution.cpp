@@ -63,18 +63,6 @@ bool point_in_triangle(Point<ll>& a, Point<ll>& b, Point<ll>& c, Point<ll>& x) {
     return cross(a, b, x) >= 0 and cross(b, c, x) >= 0 and cross(c, a, x) >= 0;
 }
 
-bool point_in_convex_polygon(Point<ll>& p, vector<Point<ll> >& poly) {
-    if (cross(poly[0], poly[1], p) < 0) return false;
-    if (cross(poly[0], poly.back(), p) > 0) return false;
-    int l = 2, r = poly.size() - 1;
-    while (l < r) {
-        int m = (l+r) >> 1;
-        if (cross(poly[0], poly[m], p) <= 0) r = m;
-        else l = m+1;
-    }
-    return point_in_triangle(poly[0], poly[l-1], poly[l], p);
-}
-
 pair<int,int> find_crossing_edge(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch, int start, int end) {
     int o_ref = orientation(a, b, ch[start]);
     int n = ch.size();
@@ -112,67 +100,35 @@ struct Intersection {
         ch_edge(ch_edge), p(p), exiting(exiting) {}
 };
 
-struct Vcross {
-    int n;
-    Point<ll> v;
+int inline prev(int i, int n) { return i == 0 ? n-1 : i-1; }
+int inline next(int i, int n) { return i == n-1 ? 0 : i+1; }
+struct SignComp {
     vector<Point<ll> >* ch;
-    Vcross(int n, vector<Point<ll> >* ch, Point<ll> v) : n(n), ch(ch), v(v) {}
-    ll operator()(int i) const { return v.cross((*ch)[(i+1)%n] - (*ch)[i]); }
+    Point<ll> d;
+    int n;
+    SignComp(vector<Point<ll> > *ch, Point<ll> d) : ch(ch), d(d) { n = ch->size(); }
+    int operator()(int i, int j) {
+        ll tmp = d.cross((*ch)[j] - (*ch)[i]);
+        return tmp > 0 ? 1 : tmp == 0 ? 0 : -1;
+    }
+    bool is_extreme(int i, int& io) {
+        return (io = (*this)(i, next(i,n))) >= 0 and (*this)(i, prev(i,n)) > 0;
+    }
 };
 
 int extreme_point_index(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch) {    
+    Point<ll> d = b - a;
+    SignComp cmp(&ch, d);
     int n = ch.size();
-    int l = 0, r = n - 1;
-    Point<ll> v = b - a;
-    Vcross vcross(n, &ch, v);
-    ll lc = vcross(l);
-    while (l < r) {
+    int l = 0, r = n - 1, lo, mo;
+    if (cmp.is_extreme(0, lo)) return 0;
+    while (l + 1 < r) {
         int m = (l+r) >> 1;
-        ll mc = vcross(m);
-        if (mc > 0) {
-            if (lc < 0) {
-                if (vcross((l-1+n)%n) >= 0) return l;
-                l = m+1; lc = vcross(l);
-            } else if (lc > 0) {
-                if (v.cross(ch[m] - ch[l]) >= 0) {
-                    l = m+1; lc = vcross(l);
-                } else {
-                    r = m-1;
-                }
-            } else {
-                if (v.cross(ch[m] - ch[l]) >= 0) {
-                    l = m+1; lc = vcross(l);
-                } else {
-                    r = m-1;
-                }
-            }
-        } else if (mc < 0) {
-            if (lc < 0) {
-                if (v.cross(ch[m] - ch[l]) > 0) {
-                    l=l+1, r=m; lc = vcross(l);
-                } else if (vcross((l-1+n)%n) >= 0) {
-                    return l;
-                } else {
-                    l=m+2; lc = vcross(l);
-                }
-            } else if(lc > 0) {
-                l = l+1, r=m; lc = vcross(l);
-            } else {
-                if (v.cross(ch[m] - ch[l]) > 0) {
-                    l = l+1, r=m; lc = vcross(l);
-                } else return l;
-            }
-        } else {
-            if (v.cross(ch[l] - ch[m]) > 0 or v.cross(ch[r] - ch[m]) > 0) {
-                if (v.cross(ch[l] - ch[r]) >= 0) {
-                    r = m-1;
-                } else {
-                    l = m+1; lc = vcross(l);
-                }
-            } else return m;
-        }
+        if (cmp.is_extreme(m, mo)) return m;
+        if (lo != mo ? lo < mo : cmp(m, l) == lo) r = m;
+        else l = m, lo = mo;
     }
-    return l;
+    return cmp.is_extreme(l, lo) ? l : r;
 }
 
 void process_segment_convexhull_intersection(Point<ll>& a, Point<ll>& b, vector<Point<ll> >& ch,

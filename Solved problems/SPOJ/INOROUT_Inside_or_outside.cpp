@@ -1,50 +1,43 @@
 // tags: geometry 2D, cross product, point in convex polygon detection
-#include <bits/stdc++.h> // add almost everything in one shot
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef unsigned long long int ull;
 typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
-
-const int MAXN = 1000;
-int N,Q;
 struct Point { ll x, y; };
-Point pts[MAXN];
 
-int orientation(Point& a, Point& b, Point& c) {
+ll cross(Point& a, Point& b, Point& c) {
     ll dx0 = b.x - a.x, dy0 = b.y - a.y;
     ll dx1 = c.x - a.x, dy1 = c.y - a.y;
-    ll cross = dx0 * dy1 - dx1 * dy0;
-    return cross < 0 ? -1 : cross == 0 ? 0 : 1; // sign
+    return dx0 * dy1 - dx1 * dy0;
 }
 
-bool inside(Point& p) {
-    int o_min = 0, o_max = 0;
-    for (int i=0, j=N-1; i < N; j=i++) {
-        int o = orientation(pts[j], pts[i], p);
-        if (o == 1) o_max = 1;
-        else if (o == -1) o_min = -1;
-        if (o_max - o_min == 2) return false;
+bool point_in_triangle(Point& a, Point& b, Point& c, Point& x) {
+    return cross(a, b, x) >= 0 and cross(b, c, x) >= 0 and cross(c, a, x) >= 0;
+}
+bool point_in_convexhull(Point& p, vector<Point>& ch) {
+    if (cross(ch[0], ch[1], p) < 0) return false;
+    if (cross(ch[0], ch.back(), p) > 0) return false;
+    int l = 2, r = ch.size() - 1;
+    while (l < r) {
+        int m = (l+r) >> 1;
+        if (cross(ch[0], ch[m], p) <= 0) r = m;
+        else l = m+1;
     }
-    return true;
+    return point_in_triangle(ch[0], ch[l-1], ch[l], p);
 }
 
 int main() {
-    scanf("%d%d", &N, &Q);
-    rep(i,0,N-1) { ll x,y; scanf("%lld%lld",&x,&y); pts[i] = {x,y}; }
-    while(Q--) {
-        Point p; scanf("%lld%lld", &p.x, &p.y);
-        if (inside(p)) puts("D");
-        else puts("F");
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int N,Q; cin >> N >> Q;
+    vector<Point> ch(N);
+    for (auto& p : ch) cin >> p.x >> p.y;
+    while (Q--) {
+        Point p; cin >> p.x >> p.y;
+        if (point_in_convexhull(p, ch)) cout << "D\n";
+        else cout << "F\n";
     }
     return 0;
 }

@@ -18,8 +18,8 @@ struct Point<T> { // 2D
     Point<double> cast() { return {(double)x, (double)y}; }
     T norm2() { return x*x + y*y; }
     double norm() { return sqrt(norm2()); }
-    T dot(const Point<T>& p) { return x*p.x + y*p.y; }
-    T cross(const Point<T>& p) { return x*p.y - y*p.x; }
+    T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
+    T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
     double angle() {
         double angle = atan2(y, x);
         if (angle < 0) angle += 2 * PI;
@@ -176,4 +176,21 @@ pair<ll,ll> hash_slope(const Point& p1, const Point& p2) {
     ll sgn = (dx < 0 or (dx == 0 and dy < 0)) ? -1 : 1;
     ll g = __gcd(abs(dx), abs(dy)) * sgn;
     return {dx/g, dy/g};
+}
+
+/* ======================== */
+/* Line - Line Intersection */
+/* ======================== */
+ll det(Point a, Point b) { return a.x * b.y - a.y * b.x; }
+bool find_line_line_intersection(Point& a1, Point& b1, Point& a2, Point& b2,
+        double& t1, double& t2) {
+    Point d1 = b1 - a1;
+    Point d2 = b2 - a2;
+    Point _d2 = d2 * -1;
+    ll detA = det(d1, _d2);
+    if (detA == 0) return false;
+    Point b = a2 - a1;
+    t1 = (double)det(b, _d2)/(double)detA;
+    t2 = (double)det(d1, b)/(double)detA;
+    return true;
 }
