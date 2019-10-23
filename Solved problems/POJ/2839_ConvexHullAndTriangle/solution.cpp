@@ -101,9 +101,7 @@ struct Intersection {
 int inline prev(int i, int n) { return i == 0 ? n-1 : i-1; }
 int inline next(int i, int n) { return i == n-1 ? 0 : i+1; }
 struct SignComp {
-    vector<Point<ll> >* ch;
-    Point<ll> d;
-    int n;
+    vector<Point<ll> >* ch; Point<ll> d; int n;
     SignComp(vector<Point<ll> > *ch, Point<ll> d) : ch(ch), d(d) { n = ch->size(); }
     int operator()(int i, int j) {
         ll tmp = d.cross((*ch)[j] - (*ch)[i]);
