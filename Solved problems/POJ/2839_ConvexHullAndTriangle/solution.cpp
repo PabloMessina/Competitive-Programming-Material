@@ -75,20 +75,18 @@ pair<int,int> find_crossing_edge(Point<ll>& a, Point<ll>& b, vector<Point<ll> >&
     return make_pair((l-1+n) % n, l%n);
 }
 
-ll determinant(Point<ll> a, Point<ll> b) {
-    return a.x * b.y - a.y * b.x;
-}
+ll det(Point<ll>& a, Point<ll>& b) { return a.x * b.y - a.y * b.x; }
 
 bool find_line_line_intersection(Point<ll>& a1, Point<ll>& b1, Point<ll>& a2, Point<ll>& b2,
         long double& t1, long double& t2) {
     Point<ll> d1 = b1 - a1;
     Point<ll> d2 = b2 - a2;
     Point<ll> _d2 = d2 * -1;
-    ll detA = determinant(d1, _d2);
+    ll detA = det(d1, _d2);
     if (detA == 0) return false;
     Point<ll> b = a2 - a1;
-    t1 = (long double)determinant(b, _d2)/(long double)detA;
-    t2 = (long double)determinant(d1, b)/(long double)detA;
+    t1 = (long double)det(b, _d2)/(long double)detA;
+    t2 = (long double)det(d1, b)/(long double)detA;
     return true;
 }
 
@@ -146,11 +144,7 @@ void process_segment_convexhull_intersection(Point<ll>& a, Point<ll>& b, vector<
     if (r1 > 1.0 - eps and r2 > 1.0 - eps) return;
     if (r1 < eps and r2 < eps) return;
     if (abs(r1 - r2) < eps) return;
-    if (r1 > r2) {  
-        swap(r1, r2);
-        swap(e1, e2);
-        swap(s1, s2);
-    }
+    if (r1 > r2) swap(r1, r2), swap(e1, e2), swap(s1, s2);
     Point<long double> _a = a.cast();
     Point<long double> _ba = (b-a).cast();
     intersections.push_back(Intersection(e1, _a + _ba * max(r1, ZERO), false));

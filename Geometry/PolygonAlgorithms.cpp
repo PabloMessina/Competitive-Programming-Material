@@ -2,6 +2,7 @@
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 
 // ----- Utils ------
+const double EPS = 1e-8;
 struct Point {
     ll x, y;
     Point operator-(const Point& p) const { return {x - p.x, y - p.y}; }
@@ -104,26 +105,28 @@ bool inPolygon_evenodd(Point p, vector<Point>& pts) {
     return (cn & 1); // odd -> in, even -> out
 }
 
-
-/* ==================================== */
-/* Find extreme point in Convex Polygon */
-/* ==================================== */
-
-int inline prev(int i, int n) { return i == 0 ? n-1 : i-1; }
-int inline next(int i, int n) { return i == n-1 ? 0 : i+1; }
+/* ================================= */
+/* Find extreme point in Convex Hull */
+/* ================================= */
+// reference: https://codeforces.com/blog/entry/48868
+int inline prev_(int i, int n) { return i == 0 ? n-1 : i-1; }
+int inline next_(int i, int n) { return i == n-1 ? 0 : i+1; }
 struct SignComp {
     vector<Point>* ch; Point d; int n;
-    SignComp(vector<Point > *ch, Point d) : ch(ch), d(d) { n = ch->size(); }
+    SignComp(vector<Point> *ch, Point d) : ch(ch), d(d) { n = ch->size(); }
     int operator()(int i, int j) {
         ll tmp = d.cross((*ch)[j] - (*ch)[i]);
         return tmp > 0 ? 1 : tmp == 0 ? 0 : -1;
     }
     bool is_extreme(int i, int& io) {
-        return (io = (*this)(i, next(i,n))) >= 0 and (*this)(i, prev(i,n)) > 0;
+        return (io = (*this)(i, next_(i,n))) >= 0 and (*this)(i, prev_(i,n)) > 0;
     }
 };
-
-int extreme_point_index(Point& a, Point& b, vector<Point>& ch) {    
+// given two points a and b defining a vector a -> b, and given a convex hull with points
+// sorted ccw, find the index in the convex hull of the extreme point.
+//  ** the extreme point is the "rightmost" point in the convex hull with respect to the
+//     vector a -> b (if there are 2 rightmost points, pick the lowest one)
+int extreme_point_index(Point& a, Point& b, vector<Point>& ch) {
     Point d = b - a;
     SignComp cmp(&ch, d);
     int n = ch.size();
@@ -138,6 +141,10 @@ int extreme_point_index(Point& a, Point& b, vector<Point>& ch) {
     return cmp.is_extreme(l, lo) ? l : r;
 }
 
+
+/* ========================================= */
+/* Line Segment and Convex Hull Intersection */
+/* ========================================= */
 pair<int,int> find_crossing_edge(Point& a, Point& b, vector<Point>& ch, int start, int end) {
     int o_ref = orientation(a, b, ch[start]);
     int n = ch.size();
@@ -147,5 +154,32 @@ pair<int,int> find_crossing_edge(Point& a, Point& b, vector<Point>& ch, int star
         if (orientation(a, b, ch[m % n]) != o_ref) r = m;
         else l = m+1;
     }
-    return { ((l-1+n) % n, l%n) };
+    return {(l-1+n) % n, l%n};
+}
+void find_segment_convexhull_intersection(Point& a, Point& b, vector<Point>& ch) {
+    // find rightmost and leftmost points in convex hull wrt vector a -> b
+    int i1 = extreme_point_index(a, b, ch);
+    int i2 = extreme_point_index(b, a, ch);
+    // make sure the extremes are not to the same side
+    int o1 = orientation(a, b, ch[i1]);
+    int o2 = orientation(a, b, ch[i2]);
+    if (o1 == o2) return; // all points are to the right (left) of a -> b (no intersection)
+    // find 2 edges in the convex hull intersected by the straight line <- a - b ->
+    pair<int,int> e1 = find_crossing_edge(a, b, ch, i1, i2); // binsearch from i1 to i2 ccw
+    pair<int,int> e2 = find_crossing_edge(a, b, ch, i2, i1); // binsearch from i2 to i1 ccw
+    // find exact intersection points
+    double r1, s1, r2, s2;
+    assert (find_line_line_intersection(a, b, ch[e1.first], ch[e1.second], r1, s1));
+    assert (find_line_line_intersection(a, b, ch[e2.first], ch[e2.second], r2, s2));
+    // make sure intersections are significant and within line segment range
+    if (r1 > 1.0 - EPS and r2 > 1.0 - EPS) return; // intersections above line segment
+    if (r1 < EPS and r2 < EPS) return; // intersections below line segment
+    if (abs(r1 - r2) < EPS) return; // insignificant intersection in a single point    
+    if (r1 > r2) swap(r1, r2), swap(e1, e2), swap(s1, s2); // make sure r1 < r2    
+    // ** HERE DO WHATEVER YOU WANT WITH INTERSECTIONS FOUND
+    //   1) a + (b-a) * max(r1, 0)  <--- first point of segment a -> b inside convex hull
+    //      if r1 < 0, point a is strictly inside the convex hull
+    //   2) a + (b-a) * min(r2, 1)  <--- last point of segment a -> b inside convex hull
+    //      if r2 > 1, point b is strictly inside the convex hull
+    cout << "(significant) intersection detected!\n";
 }
