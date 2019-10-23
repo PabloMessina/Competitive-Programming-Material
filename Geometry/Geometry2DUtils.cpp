@@ -105,6 +105,27 @@ bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
     return false;
 }
 
+/* ======================== */
+/* Line - Line Intersection */
+/* ======================== */
+ll det(Point& a, Point& b) { return a.x * b.y - a.y * b.x; }
+// return whether straight lines <-a1-b1-> and <-a2-b2-> intersect each other
+// if they intersect, we assign values to t1 and t2 such that
+//    a1 + (b1 - a1) * t1 == a2 + (b2 - a2) * t2
+bool find_line_line_intersection(Point& a1, Point& b1, Point& a2, Point& b2,
+        double& t1, double& t2) {
+    Point d1 = b1 - a1;
+    Point d2 = b2 - a2;
+    Point _d2 = d2 * -1;
+    ll detA = det(d1, _d2);
+    if (detA == 0) return false; // parallel lines
+    Point b = a2 - a1;
+    t1 = (double)det(b, _d2)/(double)detA;
+    t2 = (double)det(d1, b)/(double)detA;
+    return true;
+}
+
+
 /* =================== */
 /* Circle Intersection */
 /* =================== */
@@ -128,9 +149,11 @@ bool do_circles_intersect(Circle& c1, Circle& c2) {
     return true;
 }
 
-/* ===================== */
-/* Point - Line distance */
-/* ===================== */
+/* ==================================== */
+/* Point - Line / Line Segment distance */
+/* ==================================== */
+// reference: https://stackoverflow.com/questions/849211/shortest-distance-between-a-point-and-a-line-segment
+
 // get distance between p and projection of p on line <- a - b ->
 double point_line_dist(Point& p, Point& a, Point& b) {
     Point d = b-a;
@@ -138,9 +161,6 @@ double point_line_dist(Point& p, Point& a, Point& b) {
     return (a + d * t - p).norm();
 }
 
-/* ======================== */
-/* Point - Segment distance */
-/* ======================== */
 // get distance between p and truncated projection of p on segment a -> b
 double point_segment_dist(Point& p, Point& a, Point& b) {
     if (a==b) return (p-a).norm(); // segment is a single point
@@ -176,24 +196,4 @@ pair<ll,ll> hash_slope(const Point& p1, const Point& p2) {
     ll sgn = (dx < 0 or (dx == 0 and dy < 0)) ? -1 : 1;
     ll g = __gcd(abs(dx), abs(dy)) * sgn;
     return {dx/g, dy/g};
-}
-
-/* ======================== */
-/* Line - Line Intersection */
-/* ======================== */
-ll det(Point& a, Point& b) { return a.x * b.y - a.y * b.x; }
-// return whether lines defined by a1 <-> b1 and a2 <-> b2 intersect or not
-// if they intersect, we assign values to t1 and t2, such that
-//    a1 + (b1 - a1) * t1 == a2 + (b2 - a2) * t2
-bool find_line_line_intersection(Point& a1, Point& b1, Point& a2, Point& b2,
-        double& t1, double& t2) {
-    Point d1 = b1 - a1;
-    Point d2 = b2 - a2;
-    Point _d2 = d2 * -1;
-    ll detA = det(d1, _d2);
-    if (detA == 0) return false; // parallel lines
-    Point b = a2 - a1;
-    t1 = (double)det(b, _d2)/(double)detA;
-    t2 = (double)det(d1, b)/(double)detA;
-    return true;
 }

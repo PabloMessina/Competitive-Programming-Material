@@ -1,4 +1,4 @@
-// tags: geometry, convex hull, cross product, binary search adhoc,
+// tags: geometry, convex hull, cross product, dot product, binary search adhoc,
 // line intersection, polygon area, green's theorem
 #include <cassert>
 #include <algorithm>
