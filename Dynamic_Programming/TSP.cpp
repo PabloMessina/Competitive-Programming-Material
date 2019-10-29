@@ -35,8 +35,8 @@ int dp(int mask, int i) {
         if (tmp & 1) ans = min(ans, cost[i][j] + dp(mask2, j));
     }
 
-    // return best answer
-    return ans = tmp;
+    // return answer
+    return ans;
 }
 
 int main() { // usage
