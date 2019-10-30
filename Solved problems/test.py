@@ -4,15 +4,19 @@ import tqdm
 
 try:
     n = int(sys.argv[1])
-    generator = sys.argv[2]
-    canonical_command = sys.argv[3]
-    main_command = sys.argv[4]
+    folder = sys.argv[2]
+    generator = sys.argv[3]
+    canonical = sys.argv[4]
+    main = sys.argv[5]
+    generator_command = "python %s/%s" % (folder, generator)
+    canonical_command = "%s/%s" % (folder, canonical)
+    main_command = "%s/%s" % (folder, main)
 except:
-    print("Usage: python test.py <n> <generator> <canonical> <program being tested>")
+    print("Usage: python test.py <n> <folder> <generator> <canonical> <program being tested>")
     sys.exit(0)
 
 for _ in tqdm.trange(n):
-    test = subprocess.run(generator.split(), stdout=subprocess.PIPE).stdout
+    test = subprocess.run(generator_command.split(), stdout=subprocess.PIPE).stdout
     canonical_answer = subprocess.run(canonical_command.split(), input=test, stdout=subprocess.PIPE)
     main_answer = subprocess.run(main_command.split(), input=test, stdout=subprocess.PIPE)
     if canonical_answer.returncode != 0:
@@ -39,6 +43,6 @@ for _ in tqdm.trange(n):
         print(canonical_answer.stdout)
         print("Main Answer:")
         print(main_answer.stdout)
-        with open("failed_input", "wb") as outfile:
+        with open("%s/failed_input" % folder, "wb") as outfile:
             outfile.write(test)
         sys.exit(0)

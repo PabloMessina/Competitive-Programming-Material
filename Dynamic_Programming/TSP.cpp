@@ -5,6 +5,7 @@
 
 const int MAXN = 14; // maximum number of nodes in the problem statement
 int cost[MAXN][MAXN]; // cost[i][j]: cost to travel from node i to node j
+// make sure cost[i][j] >= 0
 int start_index; // OPTIONAL: if you need to remember the start node
 
 // dp(mask, i): find the minimum cost of visiting all nodes indicated by 'mask'
