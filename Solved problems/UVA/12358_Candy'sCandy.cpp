@@ -42,7 +42,6 @@ int main() {
         vector<int> divs = get_divisors(totC, minC);
         ll count = 0;
         if (divs.size() > 0) {
-            sort(C, C+F);
             for (int d : divs) {
                 int q = d/F;
                 int base = d + q;
