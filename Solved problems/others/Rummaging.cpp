@@ -65,28 +65,26 @@ int main() {
     cin.tie(0); cout.tie(0);    
     RH::init();
     char cmin = *min_element(valid_chars.begin(), valid_chars.end());    
-    int N; cin >> N;    
-    string text; cin >> text;
-    RH rh_text(text, cmin);    
-    int R, M; cin >> R >> M;
-    vector<uset<ull>> query_hashes(R);
+    int N, R, M;
+    string text;
+    cin >> N >> text >> R >> M;
+    RH rh_text(text, cmin);
+    int count = 0;
+    uset<ull> hashes;
     rep(i, 0, R-1) {
         string query; cin >> query;
         RH rh(query, cmin);
-        auto& hashes = query_hashes[i];
         rep(i,0,M-1) {
             for (char c : valid_chars) {
                 ull hash = rh.hash_index_replaced(i, c - cmin);
                 hashes.insert(hash);
             }
         }
-    }
-    int count = 0;
-    rep(i,0,N-M) {
-        ull hash = rh_text.hash(i, i+M-1);
-        for (auto& q_hashes : query_hashes) {
-            if (q_hashes.find(hash) != q_hashes.end()) count++;
+        rep(i,0,N-M) {
+            ull hash = rh_text.hash(i, i+M-1);
+            if (hashes.count(hash)) count++;
         }
+        hashes.clear();
     }
     cout << count << '\n';
     return 0;
