@@ -2,15 +2,14 @@
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef unsigned long long int ull;
-
 const int MAXLEN = 1e6;
 
-// ------------------------------------
-// rolling hashing using a single prime
+// -----------------------------
+// Rolling Hashing: single hash
 
 struct RH_single { // rolling hashing
-    static const ull B = 127; // base
-    static const ull P = 1e9 + 7; // prime
+    static const ull B = 131; // base
+    static const ull P = 1e9 + 21; // prime
     static ull pow[MAXLEN];    
     static ull add(ull x, ull y) { return (x + y) % P; }
     static ull mul(ull x, ull y) { return (x * y) % P; }
@@ -20,11 +19,17 @@ struct RH_single { // rolling hashing
     }    
     vector<ull> h;
     int len;
-    RH_single(string& s) {
+    void init(vector<int>& s) {
+        for (int x : s) assert (x >= 1); // DEBUGGING
         len = s.size();
         h.resize(len);
-        h[0] = s[0] - 'a';
-        rep(i,1,len-1) h[i] = add(mul(h[i-1], B), s[i]-'a');
+        h[0] = s[0];
+        rep(i,1,len-1) h[i] = add(mul(h[i-1], B), s[i]);
+    }
+    RH_single(vector<int>& s) { init(s); } // from vector<int>
+    RH_single(string& s, char ref) { // from string
+        vector<int> tmp; for(char c : s) tmp.push_back(c - ref + 1);
+        init(tmp);
     }
     ull hash(int i, int j) {
         if (i == 0) return h[j];
@@ -34,11 +39,11 @@ struct RH_single { // rolling hashing
 };
 ull RH_single::pow[MAXLEN]; // necessary for the code to compile
 
-// -------------------------------------------------
-// rolling hashing using 2 primes (for extra safety)
+// --------------------------------------------
+// Rolling Hashing: double hash (extra safety)
 
 struct RH_double { // rolling hashing
-    static const ull B = 127; // base    
+    static const ull B = 131; // base
     static const ull P[2]; // primes
     static ull pow[2][MAXLEN];    
     static ull add(ull x, ull y, int a) { return (x + y) % P[a]; }
@@ -50,13 +55,19 @@ struct RH_double { // rolling hashing
     static void init() { init(0); init(1); }    
     vector<ull> h[2];
     int len;
-    RH_double(string& s) {
+    void init(vector<int>& s) {
+        for (int x : s) assert (x >= 1); // DEBUGGING
         len = s.size();
         rep(a,0,1) {
             h[a].resize(len);
-            h[a][0] = s[0] - 'a';
-            rep(i,1,len-1) h[a][i] = add(mul(h[a][i-1], B, a),s[i] - 'a', a);
+            h[a][0] = s[0];
+            rep(i,1,len-1) h[a][i] = add(mul(h[a][i-1], B, a), s[i], a);
         }
+    }
+    RH_double(vector<int>& s) { init(s); } // from vector<int>
+    RH_double(string& s, char ref) { // from string
+        vector<int> tmp; for (char c : s) tmp.push_back(c - ref + 1);
+        init(tmp);
     }
     ull hash(int i, int j, int a) {
         if (i == 0) return h[a][j];
@@ -68,22 +79,22 @@ struct RH_double { // rolling hashing
     ull hash() { return hash(0, len-1); }
 };
 // these lines are necessary for the code to compile
-const ull RH_double::P[2] = {(ull)1e9+7, (ull)1e9+9};
+const ull RH_double::P[2] = {(ull)1e9+21, (ull)1e9+9};
 ull RH_double::pow[2][MAXLEN];
 
 // ----- usage & testing
 int main() {
-    RH_single::init();
+    RH_double::init();
     while (true) {
-        string s1, s2; cin >> s1 >> s2;
-        if (s1.size() == s2.size()) {
-            ull h1 = RH_single(s1).hash(0, s1.size()-1);
-            ull h2 = RH_single(s2).hash(0, s2.size()-1);            
-            if (s1 == s2 ? h1 == h2 : h1 != h2) {
-                cout << "test passed!\n";
-            } else {
-                cout << "test failed :(\n";
-            }
-        }
+        string s; cin >> s;
+        int l1, r1, l2, r2; cin >> l1 >> r1 >> l2 >> r2;
+        char cmin = *min_element(s.begin(), s.end());
+        RH_double rh(s, cmin);
+        ull h1 = rh.hash(l1, r1);   
+        ull h2 = rh.hash(l2, r2);
+        string s1 = s.substr(l1, r1-l1+1);
+        string s2 = s.substr(l2, r2-l2+1);
+        printf("Strings s1=%s and s2=%s are %s\n", s1.c_str(), s2.c_str(),
+            h1 == h2 ? "EQUAL" : "DISTINCT");
     }
 }
