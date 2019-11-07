@@ -22,9 +22,7 @@ int main() {
     cin.tie(0); cout.tie(0);
     cin >> N;
     pts.resize(N);
-    rep(i,0,N-1) {
-        cin >> pts[i].x >> pts[i].y;
-    }
+    rep(i,0,N-1) cin >> pts[i].x >> pts[i].y;
     vector<double> angles;
     angles.reserve(N-1);
     ll n_tri = ((ll)(N-1) * (N-2) * (N-3)) / 6ll;
