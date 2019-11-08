@@ -12,7 +12,7 @@ struct Point {
     Point operator-(const Point& p) const { return { x - p.x, y - p.y }; }
     ll norm2() { return x * x + y * y; }
     ll cross(const Point& p) const { return x * p.y - y * p.x; }
-    Point negative() { return { -x, -y}; }
+    Point negative() { return { -x, -y }; }
     int get_quadrant() const {
         if (x > 0) return y >= 0 ? 0 : 3;
         return y > 0 ? 1 : 2;

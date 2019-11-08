@@ -15,18 +15,19 @@ struct Point<T> { // 2D
     Point<T> operator+(const Point<T>& p) const { return {x+p.x, y+p.y}; }
     Point<T> operator-(const Point<T>& p) const { return {x-p.x, y-p.y}; }
     Point<T> operator*(T d) const { return {x*d, y*d}; }
+    Point<T> negative() { return { -x, -y }; }
     Point<double> cast() { return {(double)x, (double)y}; }
     T norm2() { return x*x + y*y; }
     double norm() { return sqrt(norm2()); }
     T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
-    int get_quadrant() const {
+    int get_quadrant() const { // 0, 1, 2, 3
         if (x > 0) return y >= 0 ? 0 : 3;
         return y > 0 ? 1 : 2;
     }
     double angle() {
-        double angle = atan2(y, x);
-        if (angle < 0) angle += 2 * PI;
+        double angle = atan2(y, x); // [-PI, PI]
+        if (angle < 0) angle += 2 * PI; // [0, 2*PI]
         return angle;
     }
     Point<double> unit() {
