@@ -20,6 +20,10 @@ struct Point<T> { // 2D
     double norm() { return sqrt(norm2()); }
     T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
+    int get_quadrant() const {
+        if (x > 0) return y >= 0 ? 0 : 3;
+        return y > 0 ? 1 : 2;
+    }
     double angle() {
         double angle = atan2(y, x);
         if (angle < 0) angle += 2 * PI;

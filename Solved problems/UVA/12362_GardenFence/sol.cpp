@@ -17,13 +17,13 @@ struct Point {
         if (x > 0) return y >= 0 ? 0 : 3;
         return y > 0 ? 1 : 2;
     }
-    bool operator<(const Point& p) const {
+    bool operator<(const Point& p) const { // smaller quadrant or same quadrant and to the right
         int q = get_quadrant();
         int qp = p.get_quadrant();
         if (q != qp) return q < qp;
         return cross(p) > 0;
     }
-    bool operator==(const Point& p) const {
+    bool operator==(const Point& p) const { // same direction and sense
         return get_quadrant() == p.get_quadrant() and cross(p) == 0;
     }
 };
