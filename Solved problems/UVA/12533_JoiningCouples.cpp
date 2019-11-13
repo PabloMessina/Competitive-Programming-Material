@@ -124,7 +124,6 @@ int main() {
                 stack_idx[v] = _stack.size();
                 _stack.push_back(v);
                 v = nxt[v];
-
                 if (stack_idx[v] != -1) {
                     int csize = _stack.size() - stack_idx[v];
                     rep(i, stack_idx[v], _stack.size()-1) {

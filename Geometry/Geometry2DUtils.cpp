@@ -34,6 +34,12 @@ struct Point<T> { // 2D
         double d = norm();
         return {x/d,y/d};
     }
+    bool operator<(const Point& p) const { // smaller quadrant or same quadrant and to the right
+        int q = get_quadrant();
+        int qp = p.get_quadrant();
+        if (q != qp) return q < qp;
+        return cross(p) > 0;
+    }
 };
 
 /* ========================================================= */
@@ -201,4 +207,16 @@ pair<ll,ll> hash_slope(const Point& p1, const Point& p2) {
     ll sgn = (dx < 0 or (dx == 0 and dy < 0)) ? -1 : 1;
     ll g = __gcd(abs(dx), abs(dy)) * sgn;
     return {dx/g, dy/g};
+}
+
+/* ======================== */
+/* Circumcenter of 3 points */
+/* ======================== */
+// reference: https://codeforces.com/blog/entry/22194
+Point bary(const Point& A, const Point& B, const Point& C, double a, double b, double c) {
+    return (A*a + B*b + C*c) / (a + b + c);
+}
+Point circumcenter(const Point& A, const Point& B, const Point& C) {
+    double a = (B - C).norm2(), b = (C - A).norm2(), c = (A - B).norm2();
+    return bary(A, B, C, a*(b+c-a), b*(c+a-b), c*(a+b-c));
 }
