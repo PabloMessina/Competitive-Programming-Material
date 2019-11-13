@@ -30,31 +30,7 @@ struct Point {
     double dot(const Point& p) { return x * p.x + y * p.y + z * p.z; }
 };
 
-struct Plane {
-    double a, b, c, d; // ax + by + cz = d
-    Point p0, n;
-    void compute_normal() {
-        Point p1, p2;
-        if (abs(a) > eps) {
-            p0 = { d/a, 0, 0 };
-            p1 = { (d-b)/a, 1, 0 };
-            p2 = { (d-c)/a , 0, 1 };
-        } else if (abs(b) > eps) {
-            p0 = { 0, d/b, 0 };
-            p1 = { 1, (d-a)/b, 0 };
-            p2 = { 0, (d-c)/b, 1 };
-        } else {
-            p0 = {0, 0, d/c};
-            p1 = {0, 1, (d-b)/c};
-            p2 = {1, 0, (d-a)/c};
-        }
-        n = (p1-p0).cross(p2-p0).unit();
-    }
-    Plane (double a, double b, double c, double d) : a(a), b(b), c(c), d(d) {
-        compute_normal();
-    }
-    Point project(const Point& p) { return p - n * n.dot(p - p0); }
-};
+Point project(Point& p, Point& n) { return p - n * n.dot(p); }
 
 Point bary(const Point& A, const Point& B, const Point& C, double a, double b, double c) {
     return (A*a + B*b + C*c) / (a + b + c);
@@ -73,10 +49,9 @@ int main() {
     rep(i,0,N) cin >> spheres[i];
     while (M--) {
         double a, b, c; cin >> a >> b >> c;
-        Plane plane(a, b, c, 0);
-        rep(i,0,N) {
-            proj[i] = plane.project(spheres[i]);
-        }
+        Point normal = {a, b, c};
+        normal = normal.unit();
+        rep(i,0,N) proj[i] = project(spheres[i], normal);
         random_shuffle(proj.begin(), proj.end());
         double r = 0;
         Point center = proj[0];
