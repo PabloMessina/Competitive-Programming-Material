@@ -8,6 +8,7 @@ struct Point { // 3D
     Point operator+(const Point& p) const { return {x+p.x, y+p.y, z+p.z}; }
     Point operator-(const Point& p) const { return {x-p.x, y-p.y, z-p.z}; }
     Point operator*(double d) const { return {x*d, y*d, z*d}; }
+    Point operator/(double d) const { return {x/d, y/d, z/d}; }
     double norm2() { return x*x + y*y + z*z; }
     double norm() { return sqrt(norm2()); }
     double dot(const Point& p) { return x*p.x + y*p.y + z*p.z; }
