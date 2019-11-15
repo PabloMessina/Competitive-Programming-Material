@@ -16,12 +16,13 @@ struct Point<T> { // 2D
     Point<T> operator-(const Point<T>& p) const { return {x-p.x, y-p.y}; }
     Point<T> operator*(T d) const { return {x*d, y*d}; }
     Point<T> negative() { return { -x, -y }; }
+    Point<T> rotate90() { return { -y, x }; }
     Point<double> cast() { return {(double)x, (double)y}; }
     T norm2() { return x*x + y*y; }
     double norm() { return sqrt(norm2()); }
     T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
-    int get_quadrant() const { // 0, 1, 2, 3
+    int quadrant() const { // 0, 1, 2, 3
         if (x > 0) return y >= 0 ? 0 : 3;
         return y > 0 ? 1 : 2;
     }
@@ -35,10 +36,13 @@ struct Point<T> { // 2D
         return {x/d,y/d};
     }
     bool operator<(const Point& p) const { // smaller quadrant or same quadrant and to the right
-        int q = get_quadrant();
-        int qp = p.get_quadrant();
+        int q = quadrant();
+        int qp = p.quadrant();
         if (q != qp) return q < qp;
         return cross(p) > 0;
+    }
+    bool operator==(const Point& p) const { // two vectors pointing to the same direction
+        return quadrant() == p.quadrant() and cross(p) == 0;
     }
 };
 
