@@ -16,7 +16,8 @@ struct Point<T> { // 2D
     Point<T> operator-(const Point<T>& p) const { return {x-p.x, y-p.y}; }
     Point<T> operator*(T d) const { return {x*d, y*d}; }
     Point<T> negative() { return { -x, -y }; }
-    Point<T> rotate90() { return { -y, x }; }
+    Point<T> rotate_ccw() { return { -y, x }; }
+    Point<T> rotate_cw() { return { y, -x }; }
     Point<double> cast() { return {(double)x, (double)y}; }
     T norm2() { return x*x + y*y; }
     double norm() { return sqrt(norm2()); }
