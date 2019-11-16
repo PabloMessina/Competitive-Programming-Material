@@ -23,8 +23,8 @@ struct Point<T> { // 2D
     T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
     int quadrant() const { // 0, 1, 2, 3
-        if (x > 0) return y >= 0 ? 0 : 3;
-        return y > 0 ? 1 : 2;
+        if (x >= 0) return y >= 0 ? 0: 3;
+        return y >= 0 ? 1 : 2;
     }
     double angle() {
         double angle = atan2(y, x); // [-PI, PI]
