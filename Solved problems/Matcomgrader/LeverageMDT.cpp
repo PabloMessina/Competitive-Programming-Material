@@ -44,11 +44,9 @@ int main() {
         }
         rep(i,0,N) {
             int d = min(R[i] - L[i], H[i][j]);
-            assert (d > 0);
             ans = max(ans, d * d);
         }
     }
-    assert (ans > 0);
     cout << ans << '\n';
     return 0;
 }

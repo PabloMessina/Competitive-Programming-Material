@@ -1,3 +1,4 @@
+// tags: graphs, BFS, binary search
 #include <cstdio>
 #include <vector>
 #include <cstring>

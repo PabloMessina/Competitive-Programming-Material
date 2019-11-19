@@ -1,3 +1,4 @@
+// tags: implementation
 #include <cstdio>
 #include <cstring>
 #include <vector>

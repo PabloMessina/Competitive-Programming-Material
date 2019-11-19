@@ -6,7 +6,7 @@ using namespace std;
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
-// typedefs;
+// typedefs
 typedef unsigned long long int ull;
 typedef long long int ll;
 typedef vector<int> vi;

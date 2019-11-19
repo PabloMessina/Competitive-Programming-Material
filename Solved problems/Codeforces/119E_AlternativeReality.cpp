@@ -1,4 +1,4 @@
-// tags: geometry, randomized algorithms, dot product, cross product,
+// tags: geometry, randomized algorithms, dot product
 // smallest enclosing circle
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
@@ -16,17 +16,7 @@ struct Point {
     Point operator/(double s) const { return {x / s, y / s, z / s}; }
     double norm2() { return x*x + y*y + z*z; }
     double norm() { return sqrt(norm2()); }
-    Point unit() {
-        double d = norm();
-        return { x / d, y / d, z / d };
-    }
-    Point cross(const Point& p) {
-        return {
-            y*p.z - z*p.y,
-            z*p.x - x*p.z,
-            x*p.y - y*p.x
-        };
-    }
+    Point unit() { return *this / norm(); }
     double dot(const Point& p) { return x * p.x + y * p.y + z * p.z; }
 };
 
