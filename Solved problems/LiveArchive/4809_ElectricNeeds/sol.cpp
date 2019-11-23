@@ -79,6 +79,7 @@ ll get_union_area(ll rad) {
         }
         cont += up.b.y - y;
         area += cont * up.a.x;
+        // down contribution
         cont = 0;
         y = down.b.y;
         sort(down_pairs.begin(), down_pairs.end());
