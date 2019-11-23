@@ -10,7 +10,6 @@ except:
     print("Usage: python test_written_cases.py <program being tested> <inputs folder> <outputs folder>")
     sys.exit(0)
 
-
 input_files = os.listdir(inputs_folder)
 output_files = os.listdir(outputs_folder)
 print("input_files = ", input_files, len(input_files))

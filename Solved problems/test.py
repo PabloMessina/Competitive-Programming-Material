@@ -24,7 +24,7 @@ for _ in tqdm.trange(n):
         print("Canonical program crashed.")
         print("Test:")
         print(test)
-        with open("failed_input", "wb") as outfile:
+        with open("%s/failed_input" % folder, "wb") as outfile:
             outfile.write(test)
         sys.exit(0)
     if main_answer.returncode != 0:
@@ -32,7 +32,7 @@ for _ in tqdm.trange(n):
         print("Main program crashed.")
         print("Test:")
         print(test)
-        with open("failed_input", "wb") as outfile:
+        with open("%s/failed_input" % folder, "wb") as outfile:
             outfile.write(test)
         sys.exit(0)
     if canonical_answer.stdout != main_answer.stdout:
