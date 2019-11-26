@@ -45,8 +45,8 @@ bool possible(double r) {
         double a = acos(r / dist[i]);
         rep(j,0,4) {
             double s = shifts[j];
-            double x = s + angle[i] + a;
-            double y = s + angle[i] + PI/2. - a;
+            double x = angle[i] - (s + PI/2. - a);
+            double y = angle[i] - (s + a);
             add_angle_pair(pairs, x, y);
         }
     }
