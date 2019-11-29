@@ -21,6 +21,6 @@ double angle(double x, double y) {
 // Given triangle with sides a, b and c, returns the angle opposed to side a.
 // a^2 = b^2 + c^2 - 2*b*c*cos(alpha)
 // => alpha = acos((b^2 + c^2 - a^2) /(2*b*c))
-double get_angle(double a, double b, double c) {
+double cos_theorem_angle(double a, double b, double c) {
     return acos((b*b + c*c - a*a)/(2*b*c));
 }
