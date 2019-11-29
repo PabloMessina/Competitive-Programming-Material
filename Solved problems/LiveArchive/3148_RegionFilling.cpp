@@ -1,3 +1,4 @@
+// tags: geometry, point in polygon, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
