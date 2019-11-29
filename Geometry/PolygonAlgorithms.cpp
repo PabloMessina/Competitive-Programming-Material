@@ -11,9 +11,7 @@ struct Point {
     ll dot(const Point& p) const { return x*p.x + y*p.y; }
 };
 ll cross(Point& a, Point& b, Point& c) {
-    ll dx0 = b.x - a.x, dy0 = b.y - a.y;
-    ll dx1 = c.x - a.x, dy1 = c.y - a.y;
-    return dx0 * dy1 - dx1 * dy0;
+    return (b - a).cross(c - a);;
 }
 int orientation(Point& a, Point& b, Point& c) {
     ll tmp = cross(a,b,c);
@@ -70,41 +68,39 @@ bool point_in_convexhull(Point& p, vector<Point>& ch) {
 // ----------------------------------------------
 // 2) General methods: for complex / simple polygons
 
-/* Nonzero Rule (winding number) */
-bool inPolygon_nonzero(Point p, vector<Point>& pts) {
-    int wn = 0; // winding number
-    Point prev = pts.back();
-    rep (i, 0, (int)pts.size() - 1) {
-        Point curr = pts[i];
-        if (prev.y <= p.y) {
-            if (p.y < curr.y && cross(prev, curr, p) > 0)
-                ++ wn; // upward & left
-        } else {
-            if (p.y >= curr.y && cross(prev, curr, p) < 0)
-                -- wn; // downward & right
+/* EvenOdd Rule (ray casting - crossing number) */
+bool inside_evenodd(Point& p, vector<Point>& poly) {
+    int n = poly.size();
+    int count = 0;
+    for (int i = n-1, j = 0; j < n; i=j++) {
+        Point& a = poly[i];
+        Point& b = poly[j];
+        if ((a.y < p.y and p.y <= b.y and (b-a).cross(p-a) > 0)
+            or (b.y < p.y and p.y <= a.y and (b-a).cross(p-a) < 0)) {
+            count++;
         }
-        prev = curr;
     }
-    return wn != 0; // non-zero :)
+    return count & 1; // even/odd
 }
 
-/* EvenOdd Rule (ray casting - crossing number) */
-bool inPolygon_evenodd(Point p, vector<Point>& pts) {
-    int cn = 0; // crossing number
-    Point prev = pts.back();
-    rep (i, 0, (int)pts.size() - 1) {
-        Point curr = pts[i];
-        if (((prev.y <= p.y) && (p.y < curr.y)) // upward crossing
-            || ((prev.y > p.y) && (p.y >= curr.y))) { // downward crossing
-            // check intersect's x-coordinate to the right of p
-            double t = (p.y - prev.y) / (curr.y - prev.y);
-            if (p.x < prev.x + t * (curr.x - prev.x))
-                ++cn;
+/* Nonzero Rule (winding number) */
+bool inside_nonzero(Point& p, vector<Point>& poly) {
+    int n = poly.size();
+    int wn = 0;
+    for (int i = n-1, j = 0; j < n; i=j++) {
+        Point& a = poly[i];
+        Point& b = poly[j];
+        if (a.y <= p.y) {
+            if (p.y < b.y and (b-a).cross(p-a) > 0)
+                ++wn; // upward & left
+        } else {
+            if (p.y >= b.y and (b-a).cross(p-a) < 0)
+                --wn; // downward & right
         }
-        prev = curr;
     }
-    return (cn & 1); // odd -> in, even -> out
+    return wn != 0; // non-zero
 }
+
 
 /* ================================= */
 /* Find extreme point in Convex Hull */
