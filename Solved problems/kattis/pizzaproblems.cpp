@@ -6,6 +6,11 @@ using namespace std;
 // -------------------------------
 const int MAXM = 250;
 int N, M;
+mt19937 rng;
+
+int rand_int(int a, int b) {
+    return uniform_int_distribution<int>(a, b)(rng);
+}
 
 struct Person {
     vector<bool> wishes;
@@ -42,7 +47,8 @@ struct Person {
         return sat_count * 3 > tot_wishes;
     }
     int get_unsatisfied_wish() {
-        return unsat_wishes[rand() % unsat_wishes.size()];
+        // return unsat_wishes[rand() % unsat_wishes.size()];
+        return unsat_wishes[rand_int(0, unsat_wishes.size()-1)];
     }
 };
 
@@ -81,13 +87,17 @@ struct SAT {
     }
     bool ok() { return unsat_people.empty(); }
     int get_unsatisfied_person() {
-        return unsat_people[rand() % unsat_people.size()];
+        // return unsat_people[rand() % unsat_people.size()];
+        return unsat_people[rand_int(0, unsat_people.size()-1)];        
     }
 };
 
 int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
+    
+    rng = mt19937(chrono::steady_clock::now().time_since_epoch().count());
+
     cin >> N;
     vector<Person> people(N);
     vector<Ingredient> ingredients(MAXM);
@@ -106,6 +116,7 @@ int main() {
     SAT sat(N);
     rep(i,0,M) {
         auto& ing = ingredients[i];
+        ing.used = rand_int(0, 1);
         for (int p : ing.people) {
             people[p].notify_change(i, ing.used);
             sat.notify_change(p, people[p].ok());

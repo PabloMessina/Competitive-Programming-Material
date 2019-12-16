@@ -1,4 +1,4 @@
-// tags: geometry, radial sweep line, trigonometry, implementation
+// tags: geometry, radial sweep line, trigonometry
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
