@@ -1,12 +1,13 @@
 #include <bits/stdc++.h>
 using namespace std;
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 
 struct UnionFind {
     vector<int> p, rank, setSize;
     int numSets;
     UnionFind(int n) {
         numSets = n; setSize.assign(n, 1); rank.assign(n, 0); p.resize(n);
-        rep(i,0,n-1) p[i] = i;
+        rep(i,0,n) p[i] = i;
     }
     int findSet(int i) { return (p[i] == i) ? i : (p[i] = findSet(p[i])); }
     bool isSameSet(int i, int j) { return findSet(i) == findSet(j); }
