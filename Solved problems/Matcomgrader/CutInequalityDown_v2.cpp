@@ -48,7 +48,7 @@ int main() {
     cin.tie(0); cout.tie(0);
     cin >> N  >> L >> U;
     rep(i,0,N) cin >> A[i];
-    int Q; cin >> Q;
+    cin >> Q;
     vector<Event> events;
     rep(i,0,Q) {
         int b, e; ll x;

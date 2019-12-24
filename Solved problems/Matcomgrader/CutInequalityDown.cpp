@@ -33,14 +33,14 @@ public:
     }
 };
 
-struct RMinQ {
+struct RangeMin {
     static ll merge(ll x, ll y) { return min(x, y); }
 };
-struct RMaxQ {
+struct RangeMax {
     static ll merge(ll x, ll y) { return max(x, y); }
 };
 
-int next_up(int i, ll x, SparseTable<RMaxQ>& st_max) {
+int next_up(int i, ll x, SparseTable<RangeMax>& st_max) {
     if (i+1 == N) return -1;
     int l = i+1, r = N;
     ll ref = i >= 0 ? accA[i] : 0;
@@ -55,7 +55,7 @@ int next_up(int i, ll x, SparseTable<RMaxQ>& st_max) {
     return l == N ? -1 : l;
 }
 
-int next_down(int i, ll x, SparseTable<RMinQ>& st_min) {
+int next_down(int i, ll x, SparseTable<RangeMin>& st_min) {
     if (i+1 == N) return -1;
     int l = i+1, r = N;
     ll ref = i >= 0 ? accA[i] : 0;
@@ -70,7 +70,7 @@ int next_down(int i, ll x, SparseTable<RMinQ>& st_min) {
     return l == N ? -1 : l;
 }
 
-pair<int,int> next_event(int i, ll x, SparseTable<RMinQ>& st_min, SparseTable<RMaxQ>& st_max) {
+pair<int,int> next_event(int i, ll x, SparseTable<RangeMin>& st_min, SparseTable<RangeMax>& st_max) {
     int j1 = next_up(i, x, st_max);
     int j2 = next_down(i, x, st_min);
     if (j1 == -1) return {j2, DOWN};
@@ -121,8 +121,8 @@ int main() {
         _sum += A[i];
         accA[i] = _sum;
     }
-    SparseTable<RMaxQ> st_max(accA);
-    SparseTable<RMinQ> st_min(accA);
+    SparseTable<RangeMax> st_max(accA);
+    SparseTable<RangeMin> st_min(accA);
     vector<pair<int,int>> next_if_up(N);
     vector<pair<int,int>> next_if_down(N);
     rep(i,0,N) {
