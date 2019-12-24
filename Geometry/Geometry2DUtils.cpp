@@ -8,8 +8,7 @@ const double EPS = 1e-8;
 /* =========================== */
 /* Example of Point Definition */
 /* =========================== */
-template<typename T>
-struct Point<T> { // 2D
+template<typename T> struct Point { // 2D
     T x, y;
     bool operator==(const Point<T>& p) const { return x==p.x && y == p.y; }
     Point<T> operator+(const Point<T>& p) const { return {x+p.x, y+p.y}; }
@@ -42,7 +41,7 @@ struct Point<T> { // 2D
         if (q != qp) return q < qp;
         return cross(p) > 0;
     }
-    bool operator==(const Point& p) const { // two vectors pointing to the same direction
+    bool same_angle(const Point& p) { // two vectors pointing to the same direction
         return quadrant() == p.quadrant() and cross(p) == 0;
     }
 };
@@ -52,10 +51,7 @@ struct Point<T> { // 2D
 /* ========================================================= */
 // cross product (b - a) x (c - a)
 ll cross(Point& a, Point& b, Point& c) {
-    ll dx0 = b.x - a.x, dy0 = b.y - a.y;
-    ll dx1 = c.x - a.x, dy1 = c.y - a.y;
-    return dx0 * dy1 - dx1 * dy0;
-    // return (b - a).cross(c - a); // alternatively, using struct function
+    return (b - a).cross(c - a);
 }
 
 // calculates the cross product (b - a) x (c - a)
@@ -90,7 +86,7 @@ bool is_si_below_sj(int i, int j) { // custom comparator based on cross product
 }
 // this can be used to keep a set of segments ordered by order of intersection
 // by the ray, for example, active segments during a SWEEP LINE
-set<int, bool(*)(int,int)> active_segments(is_si_below_sj); // ordered set
+set<int, decltype(is_si_below_sj)> active_segments(is_si_below_sj); // ordered set
 
 /* ======================= */
 /* Rectangle Intersection */
