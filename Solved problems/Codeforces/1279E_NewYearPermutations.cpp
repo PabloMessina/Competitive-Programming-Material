@@ -1,4 +1,4 @@
-// tags: dp, combinatorics, math, implementation
+// tags: dp, combinatorics, math, lexicographic recovery
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
