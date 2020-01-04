@@ -27,9 +27,7 @@ template<typename T> struct Point { // 2D
         return y >= 0 ? 1 : 2;
     }
     double angle() {
-        double angle = atan2(y, x); // [-PI, PI]
-        if (angle < 0) angle += 2 * PI; // [0, 2*PI]
-        return angle;
+        return atan2(y, x); // [-PI, PI]
     }
     Point<double> unit() {
         double d = norm();
