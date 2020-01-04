@@ -22,7 +22,7 @@ template<typename T> struct Point { // 2D
     double norm() { return sqrt(norm2()); }
     T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
-    int quadrant() const { // 0, 1, 2, 3
+    int quad() const { // 0, 1, 2, 3
         if (x >= 0) return y >= 0 ? 0: 3;
         return y >= 0 ? 1 : 2;
     }
@@ -34,13 +34,11 @@ template<typename T> struct Point { // 2D
         return {x/d,y/d};
     }
     bool operator<(const Point& p) const { // smaller quadrant or same quadrant and to the right
-        int q = quadrant();
-        int qp = p.quadrant();
-        if (q != qp) return q < qp;
-        return cross(p) > 0;
+        int q = quad(), qp = p.quad();
+        return q != qp ? q < qp : cross(p) > 0;
     }
     bool same_angle(const Point& p) { // two vectors pointing to the same direction
-        return quadrant() == p.quadrant() and cross(p) == 0;
+        return quad() == p.quad() and cross(p) == 0;
     }
 };
 

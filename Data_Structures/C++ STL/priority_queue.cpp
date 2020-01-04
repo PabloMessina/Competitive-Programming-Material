@@ -68,7 +68,7 @@ struct Event {
 };
 auto cmp = [](const Event& lhs const Event& rhs) {
     return lhs.time > rhs.time;
-}
+};
 priority_queue<Event, vector<Event>, decltype(cmp)> q(cmp);
 
 // usage example
