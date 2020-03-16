@@ -89,7 +89,7 @@ bool solve(int r, int c) {
 				if (solve(r, c+1)) return true;
 			}
 		}
-	}
+	}	
 	return false; // nothing worked
 }
 

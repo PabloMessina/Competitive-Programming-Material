@@ -12,7 +12,8 @@ int main() {
     int maxlen = 0;
     while (getline(cin, line)) {
         lines.push_back(line);
-        if (maxlen < line.size()) maxlen = line.size();
+        if (maxlen < line.size()) 
+            maxlen = line.size();
     }
     rep(i,0,maxlen+2) cout << '*';
     cout << '\n';
@@ -22,16 +23,14 @@ int main() {
         int s1, s2;
         if (s % 2 == 0) {
             s1 = s2 = s/2;
+        } else if (left) {
+            s1 = s/2;
+            s2 = s - s1;
+            left = false;
         } else {
-            if (left) {
-                s1 = s/2;
-                s2 = s - s1;
-                left = false;
-            } else {
-                s2 = s/2;
-                s1 = s - s2;
-                left = true;
-            }
+            s2 = s/2;
+            s1 = s - s2;
+            left = true;
         }
         cout << '*';
         rep(i,0,s1) cout << ' ';
