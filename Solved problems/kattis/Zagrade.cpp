@@ -1,48 +1,42 @@
-// tags: implementation, bitwise
+// tags: implementation, bitmask, bitwise
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i=a; i<=b; ++i)
-typedef pair<int,int> ii;
-
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+// -------------------------------
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
-    string line; getline(cin,line);
-    vector<ii> brackets;
-    stack<int> indexes;
-    int i = 0;
-    for (char c : line) {
-        if (c == '(') indexes.push(i);
-        else if (c == ')') {
-            brackets.emplace_back(indexes.top(), i);
-            indexes.pop();
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    string line; cin >> line;
+    stack<int> s;
+    vector<pair<int,int>> brackets;
+    rep(i, 0, line.size()) {
+        if (line[i] == '(') s.push(i);
+        else if (line[i] == ')') {
+            brackets.emplace_back(s.top(), i); // C++11
+            s.pop();            
         }
-        i++;
     }
-    int n = line.size();
-    bool skip[n];
-    char buf[n + 1];
+    int n = brackets.size();
+    vector<bool> skip;
     set<string> expressions;
-    int mask = 1 << brackets.size();
-    while (--mask) {
-        memset(skip, 0, sizeof skip);
-        int j = 0;
-        for (auto& p : brackets) {
-            if ((mask >> j) & 1) {
-                skip[p.first] = true;
-                skip[p.second] = true;
+    rep(mask, 1, 1 << n) {
+        skip.assign(line.size(), false);
+        int j = 0;        
+        for (auto& b : brackets) {
+            if (mask & (1 << j)) {
+                skip[b.first] = true;
+                skip[b.second] = true;
             }
-            j++;
+            ++j;
         }
-        j = 0;
-        int m = 0;
-        for (char c : line) {
-            if (!skip[j]) buf[m++] = c;
-            j++;
+        string exp = "";
+        rep(i, 0, line.size()) {
+            if (skip[i]) continue;
+            exp += line[i];
         }
-        buf[m] = '\0';
-        expressions.insert(string(buf));
+        expressions.insert(exp);
     }
-    for (const string& s : expressions) cout << s << '\n';
+    for (auto& exp : expressions) cout << exp << '\n';
     return 0;
 }

@@ -1,49 +1,41 @@
-// tags: implementation, bitmask, std::map
+// tags: implementation, bitmask, bitwise, std::map
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for (int i=a; i<=b; ++i)
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
-
-int T, N;
-map<string,ll> foreign;
-map<string,ll> native;
-const ll bit = 1;
-
-void update_map(map<string,ll>& m, string& key, int index) {
-    auto it = m.find(key);
-    ll val = (it == m.end()) ? 0 : it->second;
-    val |= (bit << index);
-    m[key] = val;
-}
-
+// -------------------------------
 int main() {
-    cin >> T;
-    while (T--) {
-        foreign.clear();
-        native.clear();
-        cin >> N;
-        rep(i,0,N-1) {
-            string token; int m;
-            cin >> token;
-            cin >> m;
-            while (m--) {
-                cin >> token;
-                update_map(foreign, token, i);
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int t; cin >> t;
+    while (t--) {
+        int n; cin >> n;
+        map<string, ll> A, B;
+        string name;
+        rep(i,0,n) {
+            cin >> name;
+            int k;
+            cin >> k;
+            rep(j,0,k) {
+                cin >> name;
+                A[name] |= 1LL << i;
             }
-            cin >> m;
-            while(m--) {
-                cin >> token;
-                update_map(native, token, i);
+            cin >> k;
+            rep(j,0,k) {
+                cin >> name;
+                B[name] |= 1LL << i;
             }
         }
-        for(auto& i : foreign) {
-            for(auto& j : native) {
-                if (i.second == j.second) {
-                    cout << "(" << i.first << ", " << j.first << ")\n";
+        for (auto& a : A) {
+            for (auto& b : B){
+                if (a.second == b.second) {
+                    cout << "(" << a.first << ", " << b.first << ")\n";
                 }
             }
         }
-        if (T) cout << '\n';
+        if (t) cout << '\n';
     }
     return 0;
 }
