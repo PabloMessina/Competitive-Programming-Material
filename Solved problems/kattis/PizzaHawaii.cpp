@@ -2,7 +2,6 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
