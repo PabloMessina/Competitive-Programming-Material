@@ -16,18 +16,20 @@ int main() {
         rep(i,0,n) {
             cin >> name;
             int k;
+            // idioma A
             cin >> k;
             rep(j,0,k) {
                 cin >> name;
                 A[name] |= 1LL << i;
             }
+            // idioma B
             cin >> k;
             rep(j,0,k) {
                 cin >> name;
                 B[name] |= 1LL << i;
             }
         }
-        for (auto& a : A) {
+        for (auto& a : A) { // C++11
             for (auto& b : B){
                 if (a.second == b.second) {
                     cout << "(" << a.first << ", " << b.first << ")\n";
