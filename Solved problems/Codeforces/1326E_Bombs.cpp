@@ -1,6 +1,10 @@
+// tags: segment tree lazy, rmq, two pointers
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
+// -------------------------------
 
 template<class t> class SegTreeLazy {
     vector<ll> *arr, st, lazy; int n;
@@ -19,8 +23,8 @@ template<class t> class SegTreeLazy {
     void propagate(int u, int i, int j, ll x) {
         st[u] = t::range_op(st[u], i, j, x);
         if (i != j) {
-            lazy[u*2+1] = t::prop_left_op(lazy[u*2+1], x);
-            lazy[u*2+2] = t::prop_right_op(lazy[u*2+2], x);
+            lazy[u*2+1] = t::prop_op(lazy[u*2+1], x);
+            lazy[u*2+2] = t::prop_op(lazy[u*2+2], x);
         }
         lazy[u] = 0;
     }
@@ -64,35 +68,36 @@ public:
     }
 };
 
-struct RSQ { // range sum query
-    static ll const neutro = 0;
-    static ll merge_op(ll x, ll y) { return x + y; }
-    static ll range_op(ll st_u, int i, int j, ll x) { return st_u + (j - i + 1) * x; }
-    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
-    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
-};
-
-struct RMinQ { // range minimum query
-    static ll const neutro = LLONG_MAX;
-    static ll merge_op(ll x, ll y) { return min(x, y); }
-    static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
-    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
-    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
-};
-
 struct RMaxQ { // range maximum query
     static ll const neutro = LLONG_MIN;
     static ll merge_op(ll x, ll y) { return max(x, y); }
     static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
-    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
-    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
+    static ll prop_op(ll child, ll x) { return child + x; }
 };
 
-// usage
+
 int main() {
-    vector<ll> A = { 18, 17, 13, 19, 15, 11, 20 };
-    SegTreeLazy<RSQ> stl(A);
-    stl.update(1, 5, 100);
-    stl.query(1, 3);
+    ios::sync_with_stdio(false); 
+    cin.tie(0); cout.tie(0);
+    int n; cin >> n;
+    vector<int> p(n), q(n), p2i(n+1);
+    int j = 0;
+    for (int& x : p) {
+        cin >> x;
+        p2i[x] = j++;
+    }
+    for (int& x : q) cin >> x;
+    vector<ll> a(n, 0);
+    SegTreeLazy<RMaxQ> st(a);
+    int ans = n+1;
+    rep(i,0,n) {
+        while (st.query(0, n-1) <= 0) {
+            ans--;
+            st.update(0, p2i[ans], 1);
+        }
+        if (i) cout << ' ';
+        cout << ans;
+        st.update(0, q[i]-1, -1);
+    }
     return 0;
 }
