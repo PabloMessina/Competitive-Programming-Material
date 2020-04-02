@@ -1,12 +1,12 @@
 // tags: binary search
-#include <bits/stdc++.h> // import everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 int nums[100000];
 int main() {
     int N, Q; cin >> N >> Q;
-    rep(i,0,N-1) cin >> nums[i];
+    rep(i,0,N) cin >> nums[i];
     while(Q--) {
         int x; cin >> x;
         int l=0, r=N;
