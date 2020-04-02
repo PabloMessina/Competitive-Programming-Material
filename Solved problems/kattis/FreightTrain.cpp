@@ -1,7 +1,7 @@
 // tags: binary search
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i=a; i<=b;  ++i)
+#define rep(i,a,b) for(int i=a; i<b;  ++i)
 #define MAXW 10000
 int N, W, L;
 int pos[MAXW];
@@ -27,23 +27,23 @@ bool possible(int K) {
 }
 
 int main() {
-    int T;
-    scanf("%d", &T);
+    int T; cin >> T;
     while (T--) {
-        scanf("%d%d%d", &N, &W, &L);
-        rep (i, 0, W-1) {
-            scanf("%d", &pos[i]);
+        cin >> N >> W >> L;
+        rep (i, 0, W) {
+            cin >> pos[i];
             pos[i]--;
         }
         int kmin = 1, kmax = N;
         while (kmin < kmax) {
             int kmid = (kmin + kmax) / 2;
-            if (possible(kmid))
+            if (possible(kmid)) {
                 kmax = kmid;
-            else
+            } else {
                 kmin = kmid + 1;
+            }
         }
-        printf("%d\n", kmin);
+        cout << kmin << '\n';
     }
     return 0;
 }
