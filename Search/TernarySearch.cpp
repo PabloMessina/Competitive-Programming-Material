@@ -1,4 +1,6 @@
 double cost(double x) { ... }
+
+// find minimum (convex function)
 double min_ternary_search(double l, double r, int times) {
     double c1, c2;
     while (times--) {
@@ -13,6 +15,8 @@ double min_ternary_search(double l, double r, int times) {
     }
     return (c1 + c2) * .5;
 }
+
+// finx maximum (concave function)
 double max_ternary_search(double l, double r, int times) {
     double c1, c2;
     while (times--) {
