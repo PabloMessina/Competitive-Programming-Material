@@ -34,16 +34,16 @@ int main() {
             cin >> pos[i];
             pos[i]--;
         }
-        int kmin = 1, kmax = N;
-        while (kmin < kmax) {
-            int kmid = (kmin + kmax) / 2;
-            if (possible(kmid)) {
-                kmax = kmid;
+        int l = 1, r = N;
+        while (l < r) {
+            int m = (l + r) >> 1;
+            if (possible(m)) {
+                r = m;
             } else {
-                kmin = kmid + 1;
+                l = m + 1;
             }
         }
-        cout << kmin << '\n';
+        cout << l << '\n';
     }
     return 0;
 }
