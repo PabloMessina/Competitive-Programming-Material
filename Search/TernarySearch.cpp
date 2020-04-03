@@ -1,20 +1,29 @@
-int times = 100;
-double left = 0.0;
-double right = 1000.0;
-double ans, m1, m2, v1, v2, third;
-
-while (times--) {
-    third = (right - left) / 3.0;
-    m1 = left + third;
-    m2 = right - third;
-    v1 = eval(m1);
-    v2 = eval(m2);
-    if (v1 < v2)
-        left = m1;
-    else if(v2  < v1)
-        right = m2;
-    else
-        left = m1, right = m2;
+double cost(double x) { ... }
+double min_ternary_search(double l, double r, int times) {
+    double c1, c2;
+    while (times--) {
+        double d = (r - l) / 3.0;
+        double m1 = l + d;
+        double m2 = r - d;
+        c1 = cost(m1);
+        c2 = cost(m2);
+        if (c1 < c2) r = m2;
+        else if (c2  < c1) l = m1;
+        else l = m1, r = m2;
+    }
+    return (c1 + c2) * .5;
 }
-
-ans = (v1 + v2) * 0.5;
+double max_ternary_search(double l, double r, int times) {
+    double c1, c2;
+    while (times--) {
+        double d = (r - l) / 3.0;
+        double m1 = l + d;
+        double m2 = r - d;
+        c1 = cost(m1);
+        c2 = cost(m2);
+        if (c1 < c2) l = m1;
+        else if (c2  < c1) r = m2;
+        else l = m1, r = m2;
+    }
+    return (c1 + c2) * .5;
+}
