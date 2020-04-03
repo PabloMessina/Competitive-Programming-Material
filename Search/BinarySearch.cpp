@@ -85,26 +85,24 @@ bool found = std::binary_search (v.begin(), v.end(), 6, myfunction)
 /* Discrete Ternary Search */
 /* ======================= */
 
-int min_search(int i, int j) {
-    while (i < j) {
-        int m = (i+j)/2;
-        int slope = eval(m+1) - eval(m);
-        if (slope >= 0)
-            j = m;
-        else
-            i = m+1;
+int cost(int i) { ... }
+
+int min_search(int l, int r) { // convex cost function
+    while (l < r) {
+        int m = (i+j) >> 1;
+        int slope = cost(m+1) - cost(m);
+        if (slope >= 0) r = m;
+        else l = m+1;
     }
-    return i;
+    return l;
 }
 
-int max_search(int i, int j) {
-    while (i < j) {
-        int m = (i+j)/2;
-        int slope = eval(m+1) - eval(m);
-        if (slope <= 0)
-            j = m;
-        else
-            i = m+1;
+int max_search(int l, int r) { // concave cost function
+    while (l < r) {
+        int m = (i+j) >> 1;
+        int slope = cost(m+1) - cost(m);
+        if (slope <= 0) r = m;
+        else l = m+1;
     }
-    return i;
+    return l;
 }
