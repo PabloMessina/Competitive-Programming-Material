@@ -19,6 +19,7 @@ int dp(int i, int j, int k) {
     // already solved
     int& ans = memo_lcs[i][j][k];
     if (ans != -1) return ans;
+    
     int tmp;
     iii& nxt = memo_next[i][j][k];
     // option 1
