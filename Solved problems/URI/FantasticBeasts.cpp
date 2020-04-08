@@ -53,7 +53,7 @@ int main() {
     cin.tie(0); cout.tie(0);
     cin >> B >> Z;
     rep(i,0,B-1) {
-        cin >> [i];
+        cin >> cur_zoo[i];
         cur_zoo[i]--;
         rep(j,0,Z-1) {
             cin >> next_zoo[i][j];
