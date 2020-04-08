@@ -74,12 +74,12 @@ int main() {
             return 0;
         }        
         if (t == Z) break;
-        // move every bear one step further
+        // move every beast one step further
         rep(i,0,B-1) {
             cur_zoo[i] = next_zoo[i][cur_zoo[i]];
         }
     }
-    // find cycles for each bear
+    // find cycles for each beast
     memset(cycle_index, -1, sizeof cycle_index);
     memset(zoo_count, 0, sizeof zoo_count);
     rep(i,0,B-1) {
