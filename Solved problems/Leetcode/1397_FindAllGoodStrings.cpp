@@ -82,7 +82,6 @@ public:
         string tmp;
         if (find_predecessor(s1, tmp)) {
             word = tmp;
-            memset(memo, -1, sizeof memo);
             rep(i,0,n) rep(j,0,m) rep(k,0,2) memo[i][j][k] = -1;
             ll x = dp(0,0,true);
             ans = (ans + (MOD - x)) % MOD;
