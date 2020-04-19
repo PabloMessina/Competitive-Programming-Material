@@ -35,7 +35,6 @@ bool solve(int i, int r, int c) {
     visited[r][c] = false;
     return false;
 }
-
 int main() {
     int T; cin >> T;
     while (T--) {
@@ -45,9 +44,10 @@ int main() {
         memset(visited, 0, sizeof visited);
         rep(r,0,R) rep(c,0,C) {
             if (solve(0,r,c)) {
-                path_exists = true; break;
+                path_exists = true; goto output;
             }
         }
+        output:
         if (path_exists) cout << "YES\n";
         else cout << "NO\n";
     }
