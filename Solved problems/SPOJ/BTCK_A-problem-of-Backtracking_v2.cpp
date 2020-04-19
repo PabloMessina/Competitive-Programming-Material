@@ -1,14 +1,12 @@
 // tags: backtracking + pruning, bitwise operations, implementation
-#include <bits/stdc++.h> // import everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef long long int ll;
 // -------------------------------
-
 ll weights[10];
 int permutation[10];
 ll K;
-
 // i = index in the permutation list we are currently at
 // mask = an int whose bits indicate the digits used in the permutation
 //     examples:
@@ -30,10 +28,8 @@ bool solve(int i, int mask, ll accsum) {
 }
 
 int main() {
-    // for faster input/output
     ios::sync_with_stdio(false);
     cin.tie(0);
-    //----------------
     int T; cin >> T;
     while (T--) { // for each test case
         rep(i,0,9) cin >> weights[i]; // read weights

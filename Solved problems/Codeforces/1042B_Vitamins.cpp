@@ -3,13 +3,11 @@
 using namespace std;
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
 // -------------------------------
-
 int N; // number of juices
 int price[1000]; // juices' prices
 int masks[1000]; // juices' bitmasks
 int mincost = INT_MAX; // best solution overall
 const int DONE = 7; // 7 = 111 (3 vitamins)
-
 // convert string 's' to bitmask
 // bit 1 = whether A is present
 // bit 2 = whether B is present
@@ -20,7 +18,6 @@ int string2mask(string& s) {
     for (char c : s) mask |= 1 << (c - 'A');
     return mask;
 }
-
 // i = index of juice we are currently considering (0 <= i <= N-1)
 // mask = an int whose bits indicate the vitamins we already have
 // cost = the total price we already have to pay
@@ -40,7 +37,6 @@ void solve(int i, int mask, int cost) {
     // OPTION 2: don't buy i-th juice
     solve(i+1, mask, cost);
 }
-
 int main() {
     cin >> N; // number of juices
     string tmp;

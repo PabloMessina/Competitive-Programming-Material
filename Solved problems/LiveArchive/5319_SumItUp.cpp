@@ -1,61 +1,54 @@
-// tags: backtracking, pruning, implementation
-#include <bits/stdc++.h> // import everything in one shot
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define umap unordered_map
+#define uset unordered_set
+// typedefs
+typedef unsigned long long int ull;
+typedef long long int ll;
 // -------------------------------
-
-int total, n;
-int values[12];
-int counts[12];
-int tmp_counts[12];
-
-bool solve(int i, int accsum) {
-    if (accsum > total) return false;
-    if (i == n) {
-        if (accsum == total) {
-            bool f = true;
-            rep(j,0,n-1) {
-                int c = tmp_counts[j];
-                while (c--) {
-                    if (f) f = false;
-                    else cout << "+";
-                    cout << values[j];
-                }                
+int N, nums[12], counts[12], counts_aux[12];
+bool solve(int i, int sum) {
+    if (sum == 0) {
+        bool f = true;
+        rep(i, 0, N) {
+            rep(_,0,counts_aux[i]) {
+                if (f) f = false;
+                else cout << '+';
+                cout << nums[i];
             }
-            cout << '\n';
-            return true;
         }
-        return false;
+        cout << '\n';
+        return true;
     }
-    bool success = false;
-    invrep(c, counts[i], 0) {
-        tmp_counts[i] = c;
-        success |= solve(i+1, accsum + c * values[i]);
+    if (i == N) return false;   
+    bool possible = false;
+    invrep(x, counts[i], 0) {
+        if (x * nums[i] > sum) continue;
+        counts_aux[i] = x;
+        possible |= solve(i+1, sum - x * nums[i]);
     }
-    return success;
+    return possible;
 }
-
 int main() {
-    while (true) {
-        cin >> total >> n;
-        if (n == 0) break;
-        map<int,int> num2count;
-        rep(i,1,n) {
-            int x; cin >> x;
-            auto it = num2count.find(x);
-            if (it == num2count.end()) num2count[x] = 1;
-            else it->second++;
-        }
-        n = num2count.size();
-        int i = n-1;
-        for (auto& p : num2count) {
-            values[i] = p.first;
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
+    int sum, n;
+    while (cin >> sum >> n) {
+        map<int,int> freq;
+        rep(i,0,n) { int x; cin >> x; freq[x]++; }
+        N = freq.size();
+        int i = N-1;
+        for (auto& p : freq) {
+            nums[i] = p.first;
             counts[i] = p.second;
-            i--;
+            --i;
         }
-        cout << "Sums of " << total << ":\n";
-        if (!solve(0, 0)) cout << "NONE\n";
+        cout << "Sums of " << sum << ":\n";
+        if (not solve(0, sum)) cout << "NONE\n";
     }
     return 0;
 }
