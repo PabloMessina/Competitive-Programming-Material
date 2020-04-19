@@ -11,7 +11,7 @@ double min_ternary_search(double l, double r, int times) {
         if (f(m1) < f(m2)) r = m2;
         else l = m1;
     }
-    return f((l+r).5);
+    return f((l+r)*.5);
 }
 // finx maximum (concave function)
 double max_ternary_search(double l, double r, int times) {
@@ -22,7 +22,7 @@ double max_ternary_search(double l, double r, int times) {
         if (f(m1) > f(m2)) r = m2;
         else l = m1;
     }
-    return f((l+r).5);
+    return f((l+r)*.5);
 }
 
 /* ========================== */

@@ -1,10 +1,10 @@
 // tags: backtracking, pruning, implementation
-#include <bits/stdc++.h> // import everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 enum TYPE { SINGLE, DOUBLE };
-enum OP { FIRST, SECOND };
+enum OP { FIRST, SECOND }; // arriba del slash o abajo del slash
 struct Cell {
     TYPE type;
     int a = 0, b = 0;
@@ -97,7 +97,7 @@ bool solve(int r, int c, OP op) {
         xmax = 9;
         p = &cell.b;
     }
-    rep(x,xmin,xmax) {
+    rep(x,xmin,xmax+1) {
         int b = 1 << x;
         if (row_masks[r] & b) continue;
         if (col_masks[c] & b) continue;
@@ -131,7 +131,7 @@ int main() {
     ios::sync_with_stdio(false);
     cin.tie(0);
     // ------------
-    read_board();      
+    read_board();
     solve(0,0,FIRST);
     print_board();
     return 0;
