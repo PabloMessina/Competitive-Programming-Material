@@ -27,7 +27,7 @@ void solve(int i, int mask, int cost) {
         return; // we are done
     }
     if (i == N) return; // out of range -> we are done
-    if (cost > mincost) return; // partial solution is worse than best solution -> stop exploring
+    if (cost >= mincost) return; // partial solution is not better than best -> stop exploring
     // ----------------
     // here we have 2 options:
     // OPTION 1: buy i-th juice
