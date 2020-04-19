@@ -1,7 +1,7 @@
 // tags: backtracking, pruning, implementation
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 const int MAGIC_NUM = 260;
 int board[8][8];
@@ -19,8 +19,8 @@ int dc[8] = {1,-1,1,-1,2,2,-2,-2};
 bool valid_jump[15][15] = {0};
 
 void print_board() {
-    rep(r,0,7) {
-        rep(c,0,7) printf("%*d ", 2, board[r][c]);
+    rep(r,0,8) {
+        rep(c,0,8) printf("%*d ", 2, board[r][c]);
         puts("");
     }
 }
@@ -57,7 +57,7 @@ bool valid_update(int i) {
     //     for each row r:  minsum[r] <= MAGIC_NUM <= maxsum[r]
     //     for each col c:  minsum[c] <= MAGIC_NUM <= maxsum[c]
     int idx = i2index[i];
-    rep(j,0,7) { // for each row and column
+    rep(j,0,8) { // for each row and column
         // maxsum verification for row j
         int i = n_unplaced-1 - row_free[j];
         int r_maxsum = row_sum[j] + unplaced_accsum[n_unplaced-1] - (i>=0 ? unplaced_accsum[i] : 0);
@@ -80,7 +80,7 @@ bool solve(int i) {
     if (i == 65) return true; // 65 reached -> we are done
     if (placed[i]) return solve(i+1); // already placed -> move to next value
     int prev_r = i2row[i-1], prev_c = i2col[i-1]; // get row and column of previous value
-    rep(j,0,7) { // for each knight jump possible
+    rep(j,0,8) { // for each knight jump possible
         int r = prev_r + dr[j], c = prev_c + dc[j]; // compute (r,c) of cell we jump to
         if (0 <= r and r < 8 and 0 <= c and c < 8 and board[r][c] == -1) { // if within board and empty
             // if next value already placed but there is no valid knight jump to get there -> skip
@@ -96,11 +96,11 @@ bool solve(int i) {
 
 int main() {
     // precompute valid_jumps
-    rep(i,0,7) valid_jump[7 + dr[i]][7 + dc[i]] = true;
+    rep(i,0,8) valid_jump[7 + dr[i]][7 + dc[i]] = true;
     // initially all rows and columns are 100% free
-    rep(j,0,7) row_free[j] = col_free[j] = 8;
+    rep(j,0,8) row_free[j] = col_free[j] = 8;
     // read board
-    rep(r,0,7) rep(c,0,7) {
+    rep(r,0,8) rep(c,0,8) {
         int i; scanf("%d", &i);
         if (i != -1) make_move(i,r,c);
         else board[r][c] = i;
@@ -111,7 +111,7 @@ int main() {
     //  3) we compute the accumulated sum of their values
     n_unplaced = 0;
     int accsum = 0;
-    rep(i,1,64) if (!placed[i]) {
+    rep(i,1,65) if (!placed[i]) {
         unplaced_accsum[n_unplaced] = (accsum += i);
         i2index[i] = n_unplaced;
         n_unplaced++;
