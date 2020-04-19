@@ -1,7 +1,7 @@
 // tags: backtracking, implementation
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 // -------------------------------
 int fr, fc; // fr = fixed row, fc = fixed column
