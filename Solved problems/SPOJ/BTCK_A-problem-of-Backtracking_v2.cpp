@@ -1,7 +1,7 @@
 // tags: backtracking + pruning, bitwise operations, implementation
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 ll weights[10];
@@ -32,10 +32,10 @@ int main() {
     cin.tie(0);
     int T; cin >> T;
     while (T--) { // for each test case
-        rep(i,0,9) cin >> weights[i]; // read weights
+        rep(i,0,10) cin >> weights[i]; // read weights
         cin >> K; // read K
         if (solve(0,0,0)) { // if backtracking works
-            rep(i,0,9) { // print solution
+            rep(i,0,10) { // print solution
                 if (i) cout << " ";
                 cout << permutation[i];
             }
