@@ -11,13 +11,13 @@ const ll MOD = 998244353LL;
 //   where seq is a sequence [i1, i2, ..., ik] of indices such that
 //      L <= i1 < i2 < ... < ik <= R
 //      and a[i1] + a[i2] + ... + a[ik] == s
-// dp(i, c, b):
+// dp(i, c, flag):
 //   number of ways of forming valid tuples (L, seq, R)
 //   assuming that
 //      1) we are making decisions about indices i, i+1, i+2, ..., n-1
 //      (all previous indices are already fixed)
-//      2) we still have to decide the position of 'L' (if b == 0)
-//          or we already decided it (if b == 1)
+//      2) we still have to decide the position of 'L' (if flag == 0)
+//          or we already decided it (if flag == 1)
 //      3) we still have to choose array elements such that they add up to 'c'
 ///         (if c > 0), or we have to choose the position of R (if c == 0)
 ll memo[3000][3001][2];
