@@ -1,7 +1,7 @@
 // tags: DP
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 int n, m;
 int coins[50];
@@ -15,16 +15,15 @@ ll ways(int k, int i) {
     ll& ans = memo[k][i];
     if (ans != -1) return ans; // already solved
     // general case
-    ll tmp = 0;
-    // option 1: use i-th coin type (if possible)
-    if (coins[i] <= k) tmp += ways(k - coins[i], i);
-    // option 2: don't use i-th coin type
-    tmp += ways(k, i+1);
-    return ans = tmp;
+    // option 1: don't use i-th coin type
+    ans = ways(k, i+1);
+    // option 2: use i-th coin type (if possible)
+    if (coins[i] <= k) ans += ways(k - coins[i], i);
+    return ans;
 }
 int main() {
     cin >> n >> m;
-    rep(i,0,m-1) cin >> coins[i];
+    rep(i,0,m) cin >> coins[i];
     memset(memo, -1, sizeof memo);
     cout << ways(n,0) << '\n';
     return 0;
