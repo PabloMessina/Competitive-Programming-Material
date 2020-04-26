@@ -34,7 +34,7 @@ void precompute_submasks() {
 }
  
 int mask2class[1 << 12];
-void precompute_equivalence_mask_classes() {
+void precompute_mask_equivalence_classes() {
     rep(mask, 0, (1 << N)) {
         int mask_class = mask;
         int tmp = mask;
@@ -96,7 +96,7 @@ int main() {
             cols.resize(N);
             M = N;
         }
-        precompute_equivalence_mask_classes();
+        precompute_mask_equivalence_classes();
         precompute_maxsum();
         memo.assign((1 << N) * M, -1);
         cout << dp(0, (1<<N)-1) << '\n';
