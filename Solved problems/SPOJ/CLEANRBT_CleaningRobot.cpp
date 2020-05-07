@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 int w, h;
 string board[20];
@@ -15,7 +15,7 @@ void bfs(int r, int c, int i) {
     dist[i][r][c] = 0;
     while (!q.empty()) {
         tie(r,c) = q.front(); q.pop();
-        rep(j,0,3) {
+        rep(j,0,4) {
             int rr = r + movr[j];
             int cc = c + movc[j];
             if (0 <= rr and rr < h and 0 <= cc and cc < w and
@@ -47,11 +47,11 @@ int main() {
     while (1) {
         cin >> w >> h;
         if (w == 0) break;
-        rep(r, 0, h-1) cin >> board[r];
+        rep(r, 0, h) cin >> board[r];
         int sr, sc;
         vector<pair<int,int>> dirty_coords;
         memset(dist, -1, sizeof dist);
-        rep(r, 0, h-1) rep(c, 0, w-1) {
+        rep(r, 0, h) rep(c, 0, w) {
             char cell = board[r][c];
             if (cell == 'o') {
                 sr = r, sc = c;
@@ -71,7 +71,7 @@ int main() {
         }
         if (!possible) { cout << "-1\n";  continue; }
         int n = dirty_coords.size();
-        rep(i,0,n-2) rep(j,i+1,n-1) {
+        rep(i,0,n-1) rep(j,i+1,n) {
             int r, c; tie(r, c) = dirty_coords[j];
             cost[i+1][j+1] = cost[j+1][i+1] = dist[i+1][r][c];
         }

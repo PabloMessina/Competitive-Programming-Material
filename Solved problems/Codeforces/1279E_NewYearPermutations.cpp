@@ -1,4 +1,4 @@
-// tags: dp, combinatorics, math, lexicographic recovery
+// tags: dp, combinatorics, math, lexicographic recovery, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
@@ -87,10 +87,10 @@ bool search(int i, ll k) {
 int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
-    int t; cin >> t;
     memset(memo, -1, sizeof memo);
     fact[0] = 1;
     rep(i,1,51) fact[i] = mul(fact[i-1], i);
+    int t; cin >> t;
     while (t--) {
         cin >> n >> k;
         memset(p, -1, sizeof p);
