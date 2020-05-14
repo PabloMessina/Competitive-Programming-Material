@@ -9,7 +9,7 @@ string board[20];
 int dist[11][20][20];
 int movr[4] = {0,1,0,-1};
 int movc[4] = {1,0,-1,0};
-void bfs(int r, int c, int i) {
+void bfs(int r, int c, int i) { // breadth first search
     queue<pair<int,int>> q;
     q.emplace(r, c);
     dist[i][r][c] = 0;

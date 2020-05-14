@@ -116,20 +116,15 @@ bool do_segments_intersect(Point& p1, Point& q1, Point& p2, Point& q2) {
 /* ======================== */
 /* Line - Line Intersection */
 /* ======================== */
-ll det(Point& a, Point& b) { return a.x * b.y - a.y * b.x; }
-// return whether straight lines <-a1-b1-> and <-a2-b2-> intersect each other
+// return whether straight lines <-a-b-> and <-c-d-> intersect each other
 // if they intersect, we assign values to t1 and t2 such that
-//    a1 + (b1 - a1) * t1 == a2 + (b2 - a2) * t2
-bool find_line_line_intersection(Point& a1, Point& b1, Point& a2, Point& b2,
+//    a + (b - a) * t1 == c + (d - c) * t2
+bool intersect_lines(Point& a, Point& b, Point& c, Point& d,
         double& t1, double& t2) {
-    Point d1 = b1 - a1;
-    Point d2 = b2 - a2;
-    Point _d2 = d2 * -1;
-    ll detA = det(d1, _d2);
-    if (detA == 0) return false; // parallel lines
-    Point b = a2 - a1;
-    t1 = (double)det(b, _d2)/(double)detA;
-    t2 = (double)det(d1, b)/(double)detA;
+    double x = (b - a) ^ (c - d);
+    if (x == 0) return false; // parallel
+    t1 = (c - a) ^ (c - d) / x;
+    t2 = (b - a) ^ (c - a) / x;
     return true;
 }
 
