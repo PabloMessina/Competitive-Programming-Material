@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 const int MAXN = 500000;
 int N,M;
@@ -18,14 +18,14 @@ struct Interval {
 };
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
     cin >> N >> M;
-    rep(i,0,N-1) cin >> X[i];
-    rep(i,0,M-1) cin >> L[i];
+    rep(i,0,N) cin >> X[i];
+    rep(i,0,M) cin >> L[i];
     sort(L, L+M);
     priority_queue<Interval> q;
     int i = 0;
-    rep(j,0,N-2) q.emplace(j,j+1);
+    rep(j,0,N-1) q.emplace(j,j+1);
     while (!q.empty() and i < M) {
         auto& x = q.top();
         if (x.len > L[i]) break;
