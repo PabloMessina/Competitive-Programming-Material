@@ -1,23 +1,26 @@
-// tags: greedy
 #include <bits/stdc++.h>
 using namespace std;
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 int main() {
-    ll a,b;
-    string line;
-    while (scanf("%lld%lld\n",&a,&b)==2) {
-        getline(cin,line);
-        int n = line.size();
-        int i = 0, j = n - 1;
-        ll cost = 0;
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
+    ll a, b;
+    while (cin >> a >> b) {
+        b = a - b;
+        string s; cin >> s;
+        int count = 0, n = s.size();
+        for (char c : s) if (c == 'B') count++;
+        int i = count - 1, j = count;
+        ll ans = 0;
         while (true) {
-            while (i < n and line[i] == 'B') i++;
-            while (j >= 0 and line[j] == 'W') j--;
-            if (i >= j) break;
-            cost += min(a, (a-b) * (j-i));
-            i++, j--;
+            while (i >= 0 and s[i] == 'B') --i;
+            while (j < n and s[j] == 'W') ++j;
+            if (i < 0 or j >= n) break;
+            ans += min((j-i) * b, a);
+            --i, ++j;
         }
-        printf("%lld\n", cost);
+        cout << ans << '\n';
     }
     return 0;
 }
