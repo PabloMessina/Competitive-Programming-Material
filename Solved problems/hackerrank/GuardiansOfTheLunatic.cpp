@@ -1,7 +1,7 @@
 // tags: DP, divide & conquer optimization
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i=a;i<=b;++i)
+#define rep(i,a,b) for(int i=a;i<b;++i)
 typedef long long int ll;
 
 #define MAXL 8000
@@ -22,7 +22,7 @@ void dp(int g, int l1, int l2, int k1, int k2) {
     int kmax = min(lm-1, k2);
     ll ans = LLONG_MAX;
     int best_k;
-    rep(k,kmin,kmax) {
+    rep(k,kmin,kmax+1) {
         ll tmp = memo[g-1][k] + cost(k, lm-1);
         if (ans > tmp) ans = tmp, best_k = k;
     }
@@ -35,12 +35,12 @@ int main() {
     scanf("%d%d",&L,&G);
     if (G > L) G = L;
     ll prev = 0;
-    rep(i,0,L-1) {
+    rep(i,0,L) {
         scanf("%lld",&crazy[i]);
         prev = crazy_sum[i] = prev + crazy[i];
     }
-    rep(l,1,L) memo[1][l] = cost(0,l-1);
-    rep(g,2,G) dp(g,g,L,1,L);
+    rep(l,1,L+1) memo[1][l] = cost(0,l-1);
+    rep(g,2,G+1) dp(g,g,L,1,L);
     printf("%lld\n", memo[G][L]);
     return 0;
 }

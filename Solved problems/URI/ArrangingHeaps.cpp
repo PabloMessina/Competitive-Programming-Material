@@ -1,20 +1,11 @@
 // tags: DP, Convex Hull Trick
-// Based on https://wcipeg.com/wiki/Convex_hull_trick
-#include <bits/stdc++.h> // add almost everything in one shot
+// reference: https://wcipeg.com/wiki/Convex_hull_trick
+#include <bits/stdc++.h>
 using namespace std;
-// defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
 typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
-
 const int MAXN = 1000;
 int N,K;
 ll X[MAXN];
@@ -24,16 +15,16 @@ ll DP[MAXN][MAXN];
 // Fraction: numerator / denominator
 struct Fraction {
     ll num, den;
+    bool operator<(const Fraction& o) const {
+        return num * o.den < o.num * den;
+    }
+    bool operator<=(const Fraction& o) const {
+        return num * o.den <= o.num * den;
+    }
+    bool operator==(const Fraction& o) const {
+        return num * o.den == o.num * den;
+    }
 };
-bool operator<(const Fraction& f1, const Fraction& f2) {
-    return f1.num * f2.den < f2.num * f1.den;
-}
-bool operator<=(const Fraction& f1, const Fraction& f2) {
-    return f1.num * f2.den <= f2.num * f1.den;
-}
-bool operator==(const Fraction& f1, const Fraction& f2) {
-    return f1.num * f2.den == f2.num * f1.den;
-}
 
 // Line: slope (m), intercept(b) and domain [x_left, x_right]
 struct Line {
@@ -107,34 +98,34 @@ ll cost(int i, int j) {
 }
 
 int main() {
-    while(scanf("%d%d", &N, &K) == 2) {
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
+    while(cin >> N >> K) {
         ll accw = 0, accxw = 0;
-        rep(i,0,N-1) {
-            ll x, w; scanf("%lld%lld", &x, &w);
+        rep(i,0,N) {
+            ll x, w; cin >> x >> w;
             X[i] = x;
             accw = Wacc[i] = accw + w;
             accxw = XWacc[i] = accxw + x * w;
         }
         // base case of DP: k = 1
-        invrep(i,N-1,0) {
-            DP[1][i] = cost(i, N-1);
-        }
+        rep(i,0,N) DP[i][1] = cost(i, N-1);
         // general cases
-        rep(k,2,K) {
+        rep(k,2,K+1) {
             stack_size = 0; // reset stack
             invrep(i,N-k,0) {
                 // slope and intercept
                 ll m = -X[i];
-                ll b = X[i] * Wacc[i] - XWacc[i] + DP[k-1][i+1];
+                ll b = X[i] * Wacc[i] - XWacc[i] + DP[i+1][k-1];
                 addline(m, b);
                 // find minimum value with binsearch over lower envelope
                 // of lines
-                DP[k][i] = i > 0 ?
+                DP[i][k] = i > 0 ?
                     lower_envelope_eval(Wacc[i-1]) + XWacc[i-1] :
                     lower_envelope_eval(0);
             }
         }
-        printf("%lld\n", DP[K][0]);
+        cout << DP[0][K] << '\n';
     }
     return 0;
 }

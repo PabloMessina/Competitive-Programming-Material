@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i=a;i<=b;++i)
+#define rep(i,a,b) for(int i=a;i<b;++i)
 typedef long long int ll;
 
 #define MAXG 1000
@@ -49,7 +49,7 @@ void fill_row(int g, int l1, int l2, int k1, int k2) {
     int kmax = min(lm-1, k2);
     int best_k = -1;
     ll mincost = LLONG_MAX;
-    rep(k,kmin,kmax) {
+    rep(k,kmin,kmax+1) {
         ll tmp = DP[g-1][k] + group_cost(k, lm-1);    
         if (mincost > tmp) mincost = tmp, best_k = k;    
     }
@@ -60,7 +60,7 @@ void fill_row(int g, int l1, int l2, int k1, int k2) {
 
 void fill_dp() {
     // base: g = 1
-    rep(l,1,L) DP[1][l] = group_cost(0,l-1);
+    rep(l,1,L+1) DP[1][l] = group_cost(0,l-1);
     // other: g >= 2
-    rep(g,2,G) fill_row(g,g,L,0,L);
+    rep(g,2,G+1) fill_row(g,g,L,0,L);
 }
