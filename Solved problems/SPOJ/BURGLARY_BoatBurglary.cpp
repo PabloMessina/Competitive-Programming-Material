@@ -62,9 +62,9 @@ int main() {
                         if (right[m2].first > d - p.first) r2 = m2;
                         else l2 = m2+1;
                     }
-                    assert (l1 <= l2);
+                    assert (l1 <= l2); // paranoico
                     if (l1 < l2) {
-                        assert (p.first + right[l1].first == d);
+                        assert (p.first + right[l1].first == d); // paranoico
                         if (right[l1].second != right[l2-1].second) {
                             cout << "AMBIGIOUS\n"; goto nextcase;
                         }
