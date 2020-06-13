@@ -1,66 +1,48 @@
-// tags: BFS
-#include <bits/stdc++.h> // add almost everything in one shot
+// tags: graphs, BFS
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
-// defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef long long int ll;
-typedef vector<int> vi;
-typedef vector<vi> vvi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
-typedef pair<double, int> pdi;
-typedef pair<ll, int> lli;
 // -------------------------------
-
-uset<int> vis[26];
-vvi g(26);
-
 int main() {
-    int m,n;
-    scanf("%d%d\n", &m, &n);
-    while(m--) {
-        char a, b; scanf("%c %c\n",&a,&b);
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
+    int m, n; cin >> m >> n;
+    vector<vector<int>> g(26);
+    while (m--) {
+        char a, b; cin >> a >> b;
         g[a-'a'].push_back(b-'a');
     }
-
-    queue<int> q;
-    rep(i,0,25) {
-        q.push(i);
-        vis[i].insert(i);
-        while(!q.empty()) {
+    vector<uset<int>> reach(26);
+    rep(s,0,26) {
+        vector<bool> vis(26,false);
+        vis[s] = true;
+        reach[s].insert(s);
+        queue<int> q;
+        q.push(s);
+        while (!q.empty()) {
             int u = q.front(); q.pop();
-            for (int v: g[u]) {
-                if (vis[i].count(v) == 0) {
-                    vis[i].insert(v);
-                    q.push(v);
-                }
+            for (int v : g[u]) {
+                if (vis[v]) continue;
+                vis[v] = true;
+                q.push(v);
+                reach[s].insert(v);
             }
         }
     }
-
-    char buff1[51], buff2[51];
-    loop:
-    while(n--) {
-        scanf("%s %s", buff1, buff2);
-        string w1(buff1);
-        string w2(buff2);
-        if (w1.size() != w2.size()) {
-            puts("no");
+    while (n--) {
+        string a, b; cin >> a >> b;
+        if (a.size() != b.size()) {
+            cout << "no\n";
             continue;
         }
-        int len = w1.size();
-        rep(i,0,len-1) {
-            if (vis[w1[i]-'a'].count(w2[i]-'a') == 0) {
-                puts("no");
-                goto loop;
-            }
+        bool valid = true;
+        rep(i,0,a.size()) if (!reach[a[i]-'a'].count(b[i]-'a')) {
+            valid = false; break;
         }
-        puts("yes");
+        if (valid) cout << "yes\n";
+        else cout << "no\n";
     }
     return 0;
 }
