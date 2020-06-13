@@ -1,11 +1,10 @@
 // tags: toposort, DAGs, graphs, implementation
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 // -------------------------------
-
 const int MAXN = 100000;
 int N;
 vector<vector<int>> g;
@@ -49,7 +48,7 @@ int main() {
     names.resize(N);
     string line; 
     getline(cin, line);
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         getline(cin, line);
         stringstream ss(line);
         string token;
