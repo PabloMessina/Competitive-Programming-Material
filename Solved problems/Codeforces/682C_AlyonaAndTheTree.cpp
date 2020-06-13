@@ -9,16 +9,11 @@ typedef long long int ll;
 // -------------------------------
 vector<vector<pair<int,ll>>> g;
 vector<ll> a;
-vector<bool> erase;
 int n;
-void dfs(int u, int p, ll x) {
-    if (a[u] < x) erase[u] = true;
-    for (auto& e : g[u]) if (e.ff != p) dfs(e.ff, u, max(e.ss, e.ss + x));
-}
-int dfs2(int u, int p) {
-    if (erase[u]) return 0;
+int dfs(int u, int p, ll x) {
+    if (a[u] < x) return 0;
     int ans = 1;
-    for (auto& e : g[u]) if (e.ff != p) ans += dfs2(e.ff, u);
+    for (auto& e : g[u]) if (e.ff != p) ans += dfs(e.ff, u, max(e.ss, e.ss + x));
     return ans;
 }
 int main() {
@@ -27,7 +22,6 @@ int main() {
     cin >> n;
     g.resize(n);
     a.resize(n);
-    erase.assign(n, false);
     rep(i,0,n) cin >> a[i];
     rep(i,1,n) {
         int p; ll c;
@@ -35,7 +29,6 @@ int main() {
         g[i].emplace_back(p, c);
         g[p].emplace_back(i, c);
     }
-    dfs(0, -1, 0);
-    cout << n - dfs2(0, -1) << '\n';
+    cout << n - dfs(0, -1, 0) << '\n';
     return 0;
 }
