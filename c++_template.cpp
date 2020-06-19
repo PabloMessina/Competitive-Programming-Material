@@ -9,6 +9,7 @@ using namespace std;
 #define ff first
 #define ss second
 // typedefs
+typedef pair<int,int> ii
 typedef unsigned long long int ull;
 typedef long long int ll;
 // -------------------------------
