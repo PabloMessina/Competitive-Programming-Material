@@ -1,5 +1,8 @@
 // tags: math, inequalities, graphs, bellman ford, shortest path, negative cycle,
 // implementation, binary search
+// references:
+// https://codeforces.com/blog/entry/58621
+// https://www.cse.huji.ac.il/course/2002/dast/slides/BellmanFord.pdf
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
