@@ -2,7 +2,7 @@
 // prime factorization of factorials
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 
 const int MAXN = 1000000;
@@ -13,13 +13,13 @@ vector<int> primes;
 vector<int> get_primes_up_to(int n) {
     vector<bool> isprime(n+1, true);
     int limit = (int)floor(sqrt(n));
-    rep(x,2,limit) {
+    rep(x,2,limit+1) {
         if (isprime[x]) {
             for (int y=x*x; y<=n; y+=x) isprime[y] = false;
         }
     }
     vector<int> primes;
-    rep(x,2,n) if (isprime[x]) primes.push_back(x);
+    rep(x,2,n+1) if (isprime[x]) primes.push_back(x);
     return primes;
 }
 
@@ -55,7 +55,7 @@ int main() {
         for (char c : line) freq[c-'a']++;
         int n = line.size();		
         factorial_prime_factorization(n, 1);		
-        rep(i,0,25) factorial_prime_factorization(freq[i], -1);		
+        rep(i,0,26) factorial_prime_factorization(freq[i], -1);		
         int n_zeroes = min(exps[2], exps[5]);
         exps[2] -= n_zeroes;
         exps[5] -= n_zeroes;
