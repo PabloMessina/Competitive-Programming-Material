@@ -10,7 +10,7 @@ int freq[26];
 int exps[MAXN];
 vector<int> primes;
 
-vector<int> get_primes_up_to(int n) {
+vector<int> get_primes_up_to(int n) { // criba de eratóstenes, sieve of eratosthenes
     vector<bool> isprime(n+1, true);
     int limit = (int)floor(sqrt(n));
     rep(x,2,limit+1) {
@@ -23,7 +23,7 @@ vector<int> get_primes_up_to(int n) {
     return primes;
 }
 
-void factorial_prime_factorization(int x, int sign) {
+void factorial_prime_factorization(int x, int sign) { // factorización prima de x!
     for (int p : primes) {
         if (p > x) break;
         int e = 0;
