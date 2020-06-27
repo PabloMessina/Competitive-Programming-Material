@@ -15,12 +15,12 @@ pair<int,int> prev_[500][5001];
 int num[500][5001];
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
     int d, s; cin >> d >> s;
     rep(i,0,d) rep(j,0,s+1) num[i][j] = -1;
     int ur, us;
     queue<pair<int,int>> q;
-    rep(k, 1, 10) {
+    rep(k,1,10) {
         ur = k % d;
         us = k;
         if (ur == 0 and us == s) {

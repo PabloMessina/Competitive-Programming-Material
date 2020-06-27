@@ -1,7 +1,7 @@
 // tags: BFS, modular arithmetics, math, graphs
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 const int MAXN = 10000;
 int N;
@@ -19,7 +19,7 @@ int main() {
         vector<bool> banned(10, false);
         while (t--) { int d; cin >> d; banned[d] = true; }
         vector<int> digits;
-        rep(i,0,9) if (!banned[i]) digits.push_back(i);
+        rep(i,0,10) if (!banned[i]) digits.push_back(i);
         vis.assign(N, false);
         queue<int> q;
         int last_u = -1;
