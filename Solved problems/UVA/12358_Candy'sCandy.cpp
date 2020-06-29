@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 const int MAXF = 100000;
@@ -33,7 +33,7 @@ int main() {
     while (cin >> F and F) {
         ll totC = 0;
         int minC = INT_MAX, maxC = 0;
-        rep(i,0,F-1) {
+        rep(i,0,F) {
             cin >> C[i];
             totC += C[i];
             minC = min(minC, C[i]);
@@ -53,7 +53,7 @@ int main() {
                 if (rq != 0) continue;
                 int minq = (C[0] - base) / d;
                 bool valid = true;
-                rep(i,1,F-1) {
+                rep(i,1,F) {
                     int r_i = (C[i] - base) % d;
                     if (r != r_i) { valid = false; break; }
                     minq = min(minq, (C[i] - base) / d);
