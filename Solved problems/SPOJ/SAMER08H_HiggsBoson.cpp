@@ -58,10 +58,10 @@ void update_ans(Fraction& ans, const Fraction& t) {
 }
 
 ll discrete_floor(ll a, ll b) {
-    return a/b - (a < 0 and a % b != 0);
+    return a/b - (a < 0 and a % b != 0); // (a - ((a % b) + b) % b) / b
 }
 ll discrete_ceil(ll a, ll b) {
-    return a/b + (a > 0 and a % b != 0);
+    return a/b + (a > 0 and a % b != 0); // (a + ((a % b) + b) % b) / b (????)
 }
 
 int main() {
