@@ -3,14 +3,9 @@
 typedef long long int ll;
 using namespace std;
 
-ll inline mod(ll x, ll m) { 
-    ll tmp = x % m;
-    if (tmp < 0) tmp += m;
-    return tmp;
-}
-ll inline mult(ll x, ll y, ll m) { return (x * y) % m; }
-ll inline add(ll x, ll y, ll m) { return (x + y) % m; }
-
+inline ll mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
+inline ll mul(ll x, ll y, ll m) { return (x * y) % m; }
+inline ll add(ll x, ll y, ll m) { return (x + y) % m; }
 ll gcdext(ll a, ll b, ll& x, ll& y) {
     ll r2, x2, y2, r1, x1, y1, r0, x0, y0, q;
     r2 = a, x2 = 1, y2 = 0;
@@ -27,7 +22,6 @@ ll gcdext(ll a, ll b, ll& x, ll& y) {
     if (g < 0) g = -g, x = -x, y = -y;
     return g;
 }
-
 pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
     ll g, x, y; g = gcdext(m1, m2, x, y);
     if ((r1 - r2) % g != 0) return {-1, -1};
