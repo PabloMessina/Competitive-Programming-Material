@@ -27,7 +27,7 @@ pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
     if ((r1 - r2) % g != 0) return {-1, -1};
     ll z = m2/g;
     ll lcm = m1 * z;
-    ll sol = add(mod(r1, lcm), m1*mult(mod(x,z),mod((r2-r1)/g,z),z), lcm);
+    ll sol = add(mod(r1, lcm), m1*mul(mod(x,z),mod((r2-r1)/g,z),z), lcm);
     return {sol, lcm};
 }
 
