@@ -74,10 +74,10 @@ int main() {
             rep(u,0,n) {
                 if (ids[u] == -1) dfs(u);
             }
-            for (auto e : dedges) {
+            for (auto& e : dedges) {
                 cout << (e.ff+1) << ' ' << (e.ss+1) << '\n';
             }
-            for (auto e : uedges) {
+            for (auto& e : uedges) {
                 if (tie(ids[e.ff], ranks[e.ff]) < tie(ids[e.ss], ranks[e.ss])) {
                     cout << (e.ff+1) << ' ' << (e.ss+1) << '\n';
                 } else {
