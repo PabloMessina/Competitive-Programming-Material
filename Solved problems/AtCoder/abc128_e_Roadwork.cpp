@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 const int MAXN = 200000;
@@ -14,12 +14,11 @@ struct Event {
     Type type;
     ll score;
     int id;
-    Event(Type _type, int _id, ll t, ll x) : type(_type), id(_id) {
+    Event(Type type, int id, ll t, ll x) : type(type), id(id) {
         score = t - x;
     }
-    bool operator<(const Event& rhs) const {
-        if (score == rhs.score) return type < rhs.type;
-        return score < rhs.score;
+    bool operator<(const Event& o) const {
+        return tie(score, type) < tie(o.score, o.type);
     }
 };
 
@@ -28,21 +27,18 @@ int main() {
     cin.tie(0); cout.tie(0);
     cin >> N >> Q;
     vector<Event> events;
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         ll s, t, x; cin >> s >> t >> x;
         rw_dist[i] = x;
         events.emplace_back(RoadworkStart, i, 2*s-1, 2*x);
         events.emplace_back(RoadworkEnd, i, 2*t-1, 2*x);
     }
-    rep(i,0,Q-1) {
+    rep(i,0,Q) {
         ll d; cin >> d;
         events.emplace_back(Person, i, 2*d, 0);
     }
     sort(events.begin(), events.end());
-    auto cmp = [](int i, int j) {
-        if (rw_dist[i] == rw_dist[j]) return i < j;
-        return rw_dist[i] < rw_dist[j];
-    };
+    auto cmp = [](int i, int j) { return tie(rw_dist[i], i) < tie(rw_dist[j], j) };
     set<int, decltype(cmp)> active_roadworks(cmp);
     for (Event& e : events) {
         if (e.type == RoadworkStart) {
@@ -57,6 +53,6 @@ int main() {
             }
         }
     }
-    rep (i, 0, Q-1) cout << p_dist[i] << '\n';
+    rep(i,0,Q) cout << p_dist[i] << '\n';
     return 0;
 }
