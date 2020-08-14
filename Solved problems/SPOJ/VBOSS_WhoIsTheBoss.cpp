@@ -1,8 +1,8 @@
 // tags: sorting, ordered sets (std::set), top-down DP,
 // graphs, trees
-#include <bits/stdc++.h> // import everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 // -------------------------------
@@ -12,8 +12,7 @@ const int MAXM = 30000;
 struct Employee {
     int ID, salary, height;
     bool operator<(const Employee& o) const {
-        if (height == o.height) return salary < o.salary;
-        return height < o.height;
+        return tie(height, salary) < tie(o.height, o.salary);
     }
 } employees[MAXM];
 int parent[MAXM];
@@ -39,8 +38,8 @@ int main() {
     // read input
     int n; cin >> n;
     while (n--) {
-        int m, q; cin >> m >> q;        
-        rep(i,0,m-1) {
+        int m, q; cin >> m >> q;
+        rep(i,0,m) {
             Employee& e = employees[i];
             cin >> e.ID >> e.salary >> e.height;
             children[i].clear();
@@ -49,9 +48,9 @@ int main() {
         sort(employees, employees + m);
         // map IDs to indexes
         umap<int,int> id2index;
-        rep(i,0,m-1) id2index[employees[i].ID] = i;
+        rep(i,0,m) id2index[employees[i].ID] = i;
         // find immediate boss for each employee
-        set<int, bool(*)(int,int)> active(salary_cmp);
+        set<int, decltype(salary_cmp)> active(salary_cmp);
         active.insert(m-1);
         parent[m-1] = -1;
         invrep(i, m-2, 0) {
