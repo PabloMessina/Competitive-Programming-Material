@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define uset unordered_set
 // -------------------------------
 int N, M, A, B;
@@ -32,7 +32,7 @@ int main() {
             g[u].insert(v);
             g[v].insert(u);
         }
-        rep(u,0,N-1) s.emplace(g[u].size(), u);
+        rep(u,0,N) s.emplace(g[u].size(), u);
         bool dirty;
         do {
             dirty = false;

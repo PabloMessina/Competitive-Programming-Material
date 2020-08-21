@@ -50,7 +50,8 @@ int main() {
         umap<int,int> id2index;
         rep(i,0,m) id2index[employees[i].ID] = i;
         // find immediate boss for each employee
-        set<int, decltype(salary_cmp)> active(salary_cmp);
+        // reference: https://stackoverflow.com/questions/2620862/using-custom-stdset-comparator
+        set<int, decltype(salary_cmp)*> active(salary_cmp);
         active.insert(m-1);
         parent[m-1] = -1;
         invrep(i, m-2, 0) {
