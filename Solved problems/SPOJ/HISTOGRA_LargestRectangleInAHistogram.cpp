@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,a,b) for(int i = a; i >= b; --i)
 typedef long long int ll;
 // -------------------------------
@@ -16,13 +16,13 @@ int main() {
     vector<pair<ll,ll>> s; // we use a vector to simulate a stack
     s.reserve(MAXN+1);
     while ((cin >> N) and N > 0) {
-        rep(i,0,N-1) cin >> H[i];        
+        rep(i,0,N) cin >> H[i];
         ll x;
         // fill L array
         s.clear();        
         s.emplace_back(0, -1);
         x = 1;
-        rep(i,0,N-1) {
+        rep(i,0,N) {
             while (s.back().second >= H[i]) s.pop_back();
             L[i] = s.back().first;
             s.emplace_back(x++, H[i]);
@@ -38,9 +38,7 @@ int main() {
         }
         // find maximum area
         ll ans = 0;
-        rep(i,0,N-1) {
-            ans = max(ans, (R[i] - L[i]) * H[i]);
-        }
+        rep(i,0,N) ans = max(ans, (R[i] - L[i]) * H[i]);
         cout << ans << '\n';
     }
     return 0;

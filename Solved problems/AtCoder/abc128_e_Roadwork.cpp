@@ -9,11 +9,9 @@ const int MAXN = 200000;
 ll rw_dist[MAXN];
 ll p_dist[MAXN];
 int N, Q;
-enum Type { RoadworkStart, RoadworkEnd, Person };
+enum Type { RoadworkStart, Person, RoadworkEnd };
 struct Event {
-    Type type;
-    ll score;
-    int id;
+    Type type; ll score; int id;
     Event(Type type, int id, ll t, ll x) : type(type), id(id) {
         score = t - x;
     }
@@ -24,7 +22,7 @@ struct Event {
 
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
     cin >> N >> Q;
     vector<Event> events;
     rep(i,0,N) {
@@ -38,18 +36,18 @@ int main() {
         events.emplace_back(Person, i, 2*d, 0);
     }
     sort(events.begin(), events.end());
-    auto cmp = [](int i, int j) { return tie(rw_dist[i], i) < tie(rw_dist[j], j) };
-    set<int, decltype(cmp)> active_roadworks(cmp);
+    // sweep line
+    multiset<ll> active_roadworks;
     for (Event& e : events) {
         if (e.type == RoadworkStart) {
-            active_roadworks.insert(e.id);
+            active_roadworks.insert(rw_dist[e.id]);
         } else if (e.type == RoadworkEnd) {
-            active_roadworks.erase(e.id);
+            active_roadworks.erase(rw_dist[e.id]);
         } else { // Person
             if (active_roadworks.empty()) {
                 p_dist[e.id] = -1;
             } else {
-                p_dist[e.id] = rw_dist[*active_roadworks.begin()];
+                p_dist[e.id] = *active_roadworks.begin();
             }
         }
     }
