@@ -10,8 +10,8 @@ vector<uset<int>> g; // graph
 set<pair<int,int>> s; // set
 
 void remove_node(set<pair<int,int>>::iterator it) {
-    s.erase(it);
     int u = it->second;
+    s.erase(it);
     for (int v : g[u]) {
         auto _it = s.find({g[v].size(), v});
         s.erase(_it);
@@ -22,7 +22,7 @@ void remove_node(set<pair<int,int>>::iterator it) {
 
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
     g.reserve(100000);
     while (cin >> N >> M >> A >> B) {
         g.clear(); g.resize(N);
