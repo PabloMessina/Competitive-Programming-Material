@@ -17,7 +17,8 @@ int main() {
         freq[1] = L;
         s.insert({0, L-1, 1});
         while (N--) {
-            int P, X, A, B; cin >> P >> X >> A >> B;
+            int P, X, A, B;
+            cin >> P >> X >> A >> B;
             ll S = freq[P];
             int m1 = (A + S * S) % (ll)L;
             int m2 = (A + (S + B) * (S + B)) % (ll)L;
