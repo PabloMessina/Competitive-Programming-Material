@@ -7,7 +7,7 @@ int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0);
     int N, K; cin >> N >> K;
-    vector<int> values(N), accL(N), accR(N);
+    vector<int> values(N);
     rep(i,0,N) cin >> values[i];
     int ans = 0;    
     rep(l,0,min(N,K)+1) {
