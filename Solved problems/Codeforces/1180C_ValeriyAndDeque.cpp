@@ -12,7 +12,7 @@ int main() {
     cin >> N >> Q;
     int maxv = INT_MIN;
     deque<int> d(N);
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         cin >> d[i];
         maxv = max(maxv, d[i]);
     }
