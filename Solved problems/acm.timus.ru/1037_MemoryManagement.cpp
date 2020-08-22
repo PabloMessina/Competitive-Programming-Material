@@ -17,18 +17,17 @@ int main() {
     vector<bool> isfree(N, true);
     vector<int> free_time(N, -1);
     rep(i,0,N) free_blocks.push(i);
-    string line;
-    int id = 0;
-    while (getline(cin, line)) {
-        stringstream ss(line);
-        int t; char op; ss >> t >> op;
-        if (op == '+') {
-            events.push({t, id, ALLOC, -1});
-        } else {
-            int block; ss >> block; --block;
-            events.push({t, id, ACCESS, block});
+    {
+        int id = 0, t, block; char op;
+        while (cin >> t >> op) {
+            if (op == '+') {
+                events.push({t, id, ALLOC, -1});
+            } else {
+                cin >> block; --block;
+                events.push({t, id, ACCESS, block});
+            }
+            ++id;
         }
-        ++id;
     }
     while (events.size()) {
         Event e = events.top(); events.pop();
