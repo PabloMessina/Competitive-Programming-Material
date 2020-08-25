@@ -4,6 +4,7 @@
 using namespace std;
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
+// source: https://cp-algorithms.com/linear_algebra/linear-system-gauss.html
 const double EPS = 1e-9;
 const int INF = 2;
 int gauss (vector<vector<double>>& a, vector<double>& ans) {
@@ -65,7 +66,7 @@ int main() {
         A[e][e] = 1.;
         A[e][n] = 0.;
         vector<double> ans;
-        assert (gauss(A, ans) == 1);
+        assert (gauss(A, ans) == 1); // TODO: proof
         cout << setprecision(5) << fixed << ans[s] << '\n';
     }
     return 0;
