@@ -1,74 +1,44 @@
-// tags: simulation, implementation, greedy
+// tags: implementation, simulation, greedy
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
-enum Kind { START, FINISH, FREE, ARRIVAL, QUERY };
-struct Event {
-    ll t; Kind kind;
-    Event(ll t, Kind kind) : t(t), kind(kind) {}
-    bool operator<(const Event& o) const {
-        return tie(t, kind) > tie(o.t, o.kind);
-    }
-};
 int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0);
-    ll ts, tf, ta;
-    cin >> ts >> tf >> ta;
-    int n; cin >> n;
-    priority_queue<Event> events;
-    events.emplace(ts, START);
-    events.emplace(tf, FINISH);
-    events.emplace(tf - ta, QUERY);
-    rep(i,0,n) {
-        ll t; cin >> t;
-        events.emplace(t, ARRIVAL);
-        if (t > 0) events.emplace(t-1, QUERY);
-    }
-    int inqueue = 0;
-    bool free = false;
-    ll t_free = ts;
-    ll ans = -1, min_wait = LLONG_MAX;
-    while (!events.empty()) {
-        auto e = events.top(); events.pop();
-        if (e.kind == START) {
-            free = true;
-            if (inqueue > 0 and e.t + ta <= tf) {
-                free = false;
-                events.emplace(e.t + ta, FREE);
-                t_free = e.t + ta;
-                inqueue--;
-            }
-        } else if (e.kind == FINISH) {
-            free = false;
-        } else if (e.kind == FREE) {
-            free = true;
-            if (inqueue > 0 and e.t + ta <= tf) {
-                free = false;
-                events.emplace(e.t + ta, FREE);
-                t_free = e.t + ta;
-                inqueue--;
-            }
-        } else if (e.kind == ARRIVAL) {
-            if (inqueue == 0 and free and e.t + ta <= tf) {
-                free = false;
-                events.emplace(e.t + ta, FREE);
-                t_free = e.t + ta;
+    ll ts, tf, t; int n;
+    cin >> ts >> tf >> t >> n;
+    priority_queue<ll, vector<ll>, greater<ll>> q;
+    ll last_exit = ts;
+    ll min_wait = LLONG_MAX;
+    ll ans = ts;
+    ll prev_x = 0;
+    while (n--) {
+        ll x; cin >> x;
+        while (q.size() and q.top() < x) q.pop();
+        if (prev_x < x) {
+            if (q.empty()) {
+                ll s = max(x-1, ts);
+                ll wait = s - (x-1);
+                if (wait < min_wait and s + t <= tf) {
+                    min_wait = wait;
+                    ans = x-1;
+                }
             } else {
-                inqueue++;
-            }
-        } else {
-            assert (e.kind == QUERY);
-            ll wait = inqueue * ta + max(t_free - e.t, 0ll);
-            if (wait < min_wait and e.t + wait + ta <= tf) {
-                min_wait = wait;
-                ans = e.t;
+                ll wait = (q.top() - x + 1) + (q.size() - 1) * t;
+                if (wait < min_wait and x-1 + wait + t <= tf) {
+                    min_wait = wait;
+                    ans = x-1;
+                }
             }
         }
+        while (q.size() and q.top() <= x) q.pop();
+        last_exit = max(last_exit, x) + t;
+        q.push(last_exit);
+        prev_x = x;
     }
+    if (last_exit + t <= tf) ans = last_exit;
     cout << ans << '\n';
     return 0;
 }
