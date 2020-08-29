@@ -1,74 +1,43 @@
-// tags: implementation, sorting, two pointers
+// tags: implementation, greedy
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned long long int ull;
+#define ff first
+#define ss second
+typedef pair<int,int> ii;
 typedef long long int ll;
 // -------------------------------
-int hard[200000];
-ll times[200000];
-int indexes[200000];
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
     int m; cin >> m;
     while (m--) {
-        int n; ll T, a, b;
-        cin >> n >> T >> a >> b;
-        int tot_easy = 0;
-        int tot_hard = 0;
-        rep(i,0,n) {
-            cin >> hard[i];
-            if (hard[i]) tot_hard++;
-            else tot_easy++;
+        int n; ll T, a, b; cin >> n >> T >> a >> b;
+        vector<ii> P(n);
+        for (auto& p : P) cin >> p.ss;
+        for (auto& p : P) cin >> p.ff;
+        sort(P.begin(), P.end());
+        int nh = 0, ne = 0;
+        for (auto& p : P) { if (p.ss) nh++; else ne++; }
+        if (ne * a + nh * b <= T) {
+            cout << n << '\n'; continue;
         }
-        set<ll> leave_times;
-        rep(i,0,n) {
-            cin >> times[i];
-            leave_times.insert(times[i]);
-            if (times[i] > 0) leave_times.insert(times[i] - 1);
-        }
-        leave_times.insert(T);
-        rep(i,0,n) indexes[i] = i;
-        sort(indexes, indexes+n, [](int i, int j) { return times[i] < times[j]; });
-        int i = 0;
-        ll acct = 0;
-        int hard_count = 0;
-        int easy_count = 0;
+        int i = 0, h = 0, e = 0;
         int ans = 0;
-        for (auto& t : leave_times) {
-            while (i < n and times[indexes[i]] <= t) {
-                int j = indexes[i];
-                if (hard[j]) {
-                    acct += b;
-                    hard_count++;
-                } else {
-                    acct += a;
-                    easy_count++;
-                }
-                ++i;
+        while (i < n) {
+            ll t = P[i].ff - 1;
+            t -= e * a + h * b;
+            if (t >= 0) {
+                int ke = min(t / a, (ll)(ne - e));
+                t -= ke * a;
+                int kh = min(t / b, (ll)(nh - h));
+                ans = max(ans, e + h + ke + kh);
             }
-            if (acct <= t) {
-                int count = hard_count + easy_count;
-                ll r = t - acct;
-                if (r > 0) {
-                    int extra_easy = min(tot_easy - easy_count, (int)(r/a));
-                    r -= extra_easy * a;
-                    count += extra_easy;
-                }
-                if (r > 0) {
-                    int extra_hard = min(tot_hard - hard_count, (int)(r/b));
-                    r -= extra_hard * b;
-                    count += extra_hard;
-                }
-                ans = max(ans, count);
-            }
+            do {
+                if (P[i++].ss) h++; else e++;
+            } while (i < n and P[i].ff == P[i-1].ff);
         }
         cout << ans << '\n';
     }
