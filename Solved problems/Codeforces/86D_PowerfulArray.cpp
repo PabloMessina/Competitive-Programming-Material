@@ -1,38 +1,34 @@
-// tags: MO's algorithm, square root decomposition, sorting queries,
-// efficient implementation
-#pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
-#include <bits/stdc++.h> // import everything in one shot
+// tags: MO's algorithm, square root decomposition, sorting queries
+#pragma GCC optimize("Ofast") 
+#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 typedef long long int ll;
 // -------------------------------
 const int MAXN = 200000;
 const int MAXV = 1000000;
-int N, Q;
-int N_BINS;
+int N, Q, N_BINS;
 int A[MAXN+1];
 ll F[MAXV+1];
 ll answers[MAXN];
-
 struct Query {
     int l, r, i, b;
-    Query(int l, int r, int i) : l(l), r(r), i(i) {
-        b = l / N_BINS;
-    }
+    Query(int l, int r, int i) : l(l), r(r), i(i) { b = l/N_BINS; }
     bool operator<(const Query& q) const {
         if (b != q.b) return b < q.b;
         return (b & 1) ? r < q.r : r > q.r;
     }
 };
-
 int main() {
-    scanf("%d%d", &N, &Q);
+    ios::sync_with_stdio(false); 
+    cin.tie(0);
+    cin >> N >> Q;
     N_BINS = sqrt(N);
-    rep(i,1,N) scanf("%d", A+i);
+    rep(i,1,N+1) cin >> A[i];
     vector<Query> queries; queries.reserve(Q);
-    rep(i,0,Q-1) {
-        int l, r; scanf("%d%d",&l,&r);
+    rep(i,0,Q) {
+        int l, r; cin >> l >> r;
         queries.emplace_back(l,r,i);
     }
     sort(queries.begin(), queries.end());
@@ -45,6 +41,6 @@ int main() {
         while (r > q.r) ans -= (2*F[A[r]]-1)*A[r], F[A[r]]--, r--;
         answers[q.i] = ans;
     }
-    rep(i,0,Q-1) printf("%lld\n", answers[i]);
+    rep(i,0,Q) cout << answers[i] << '\n';
     return 0;
 }

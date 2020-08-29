@@ -129,7 +129,7 @@ public:
         return query(a, b, 0, 0, n-1);
     }
 
-    void update(int a, ll value) {
+    void update(int a, ll value) { // adding value to position a
         update(a, value, 0, 0, n-1);
     }
 };
@@ -152,8 +152,8 @@ struct RMaxQ { // range maximum query
 // usage
 int main() {
     vector<int> A = { 18, 17, 13, 19, 15, 11, 20 };
-    ST<RSQ> stl(A);
-    stl.update(2, 100);
-    stl.query(1, 3);
+    ST<RSQ> st(A);
+    st.update(2, 100);
+    st.query(1, 3);
     return 0;
 }
