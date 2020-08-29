@@ -15,14 +15,14 @@ public:
         int maxlog = 31 - __builtin_clz(n);
         memo.assign(n * (maxlog + 1), -1);
     }
-    int dp(int i, int e) { 
+    int dp(int i, int e) {
         int& ans = memo[e * n + i];
         if (ans != -1) return ans;
         if (e == 0) return ans = (*arr)[i];
         return ans = t::merge(dp(i, e-1), dp(i+(1<<(e-1)), e-1));
     }
     // option 1: complexity O(1)
-    // ** only works if queries can overlap (e.g. max, min, OR)
+    // ** only works if queries can overlap (e.g. max, min, OR, AND)
     int query_O1(int l, int r) {
         int e = 31 - __builtin_clz(r - l + 1);
         return t::merge(dp(l,e), dp(r - (1 << e) + 1, e));
