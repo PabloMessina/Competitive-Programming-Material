@@ -34,11 +34,7 @@ struct LCA {
     void dfs(int u, int p, int depth) {
         anc(u,0) = p;
         D[u] = depth;        
-        for (int v : (*g)[u]) {
-            if (D[v] == -1) {
-                dfs(v, u, depth + 1);
-            }
-        }
+        for (int v : (*g)[u]) if (D[v] == -1) dfs(v, u, depth + 1);
     }
 
     LCA(vector<vector<int>>& _g, int root) {
@@ -73,9 +69,7 @@ struct LCA {
         invrep (e, maxe, 0) {
             // greedily take the biggest 2^e jump possible as long as 
             // u and v still remain BELOW the LCA
-            if (anc(u,e) != anc(v,e)) {
-                u = anc(u,e), v = anc(v,e);
-            }
+            if (anc(u,e) != anc(v,e)) u = anc(u,e), v = anc(v,e);
         }
         // the direct parent of u (or v) is lca(u,v)
         return anc(u,0);

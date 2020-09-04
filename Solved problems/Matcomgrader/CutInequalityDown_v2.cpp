@@ -52,8 +52,7 @@ int main() {
     vector<Event> events;
     rep(i,0,Q) {
         int b, e; ll x;
-        cin >> b >> e >> x;
-        --b, --e;
+        cin >> b >> e >> x; --b, --e;
         X[i] = x;
         events.emplace_back(i, b, BEGIN);
         events.emplace_back(i, e, END);

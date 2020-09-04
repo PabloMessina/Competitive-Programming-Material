@@ -19,8 +19,8 @@ template<class t> class SegTreeLazy {
     void propagate(int u, int i, int j, ll x) {
         st[u] = t::range_op(st[u], i, j, x);
         if (i != j) {
-            lazy[u*2+1] = t::prop_left_op(lazy[u*2+1], x);
-            lazy[u*2+2] = t::prop_right_op(lazy[u*2+2], x);
+            lazy[u*2+1] = t::prop_op(lazy[u*2+1], x);
+            lazy[u*2+2] = t::prop_op(lazy[u*2+2], x);
         }
         lazy[u] = 0;
     }
@@ -68,24 +68,21 @@ struct RSQ { // range sum query
     static ll const neutro = 0;
     static ll merge_op(ll x, ll y) { return x + y; }
     static ll range_op(ll st_u, int i, int j, ll x) { return st_u + (j - i + 1) * x; }
-    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
-    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
+    static ll prop_op(ll child, ll x) { return child + x; }
 };
 
 struct RMinQ { // range minimum query
     static ll const neutro = LLONG_MAX;
     static ll merge_op(ll x, ll y) { return min(x, y); }
     static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
-    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
-    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
+    static ll prop_op(ll child, ll x) { return child + x; }
 };
 
 struct RMaxQ { // range maximum query
     static ll const neutro = LLONG_MIN;
     static ll merge_op(ll x, ll y) { return max(x, y); }
     static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
-    static ll prop_left_op(ll left_child, ll x) { return left_child + x; }
-    static ll prop_right_op(ll right_child, ll x) { return right_child + x; }
+    static ll prop_op(ll child, ll x) { return child + x; }
 };
 
 // usage

@@ -4,6 +4,8 @@
 using namespace std;
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define ff first
+#define ss second
 typedef long long int ll;
 // -------------------------------
 int N;
@@ -93,17 +95,17 @@ struct NextSparseTable {
     }
     pair<int,int>& dp(int p, int i, int e) {
         auto& ans = memo[p][e * n + i];
-        if (ans.second != -1) return ans;
+        if (ans.ss != -1) return ans;
         if (e == 0) return ans = (*arr[p])[i];
         auto& tmp = dp(p, i, e-1);
-        if (tmp.first == -1) return ans = tmp;
-        return ans = dp(tmp.second, tmp.first, e-1);
+        if (tmp.ff == -1) return ans = tmp;
+        return ans = dp(tmp.ss, tmp.ff, e-1);
     }
     pair<int,int> query(int p, int l, int r) {
         pair<int,int> ans = {l, p};
         invrep(e, maxlog, 0) {
-            auto& tmp = dp(ans.second, ans.first, e);
-            if (tmp.first != -1 and tmp.first <= r) ans = tmp;
+            auto& tmp = dp(ans.ss, ans.ff, e);
+            if (tmp.ff != -1 and tmp.ff <= r) ans = tmp;
         }
         return ans;
     }
@@ -115,11 +117,11 @@ int main() {
     cin >> N >> L >> U;
     A.resize(N);
     accA.resize(N);
-    ll _sum = 0;
+    ll sum = 0;
     rep(i,0,N) {
         cin >> A[i];
-        _sum += A[i];
-        accA[i] = _sum;
+        sum += A[i];
+        accA[i] = sum;
     }
     SparseTable<RangeMax> st_max(accA);
     SparseTable<RangeMin> st_min(accA);
@@ -133,13 +135,12 @@ int main() {
 
     int Q; cin >> Q;
     while (Q--) {
-        int b, e; ll x; cin >> b >> e >> x;
-        --b, --e;        
+        int b, e; ll x; cin >> b >> e >> x; --b, --e;
         auto tmp = next_event(b-1, x, st_min, st_max);
-        if (tmp.first != -1 and tmp.first <= e) {
-            tmp = st_next.query(tmp.second, tmp.first, e);
-            b = tmp.first + 1;
-            x = tmp.second == UP ? U : L;
+        if (tmp.ff != -1 and tmp.ff <= e) {
+            tmp = st_next.query(tmp.ss, tmp.ff, e);
+            b = tmp.ff + 1;
+            x = tmp.ss == UP ? U : L;
         }
         ll ans = x + accA[e] - (b > 0 ? accA[b-1] : 0);
         cout << ans << '\n';

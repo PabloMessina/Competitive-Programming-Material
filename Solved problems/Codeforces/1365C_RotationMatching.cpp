@@ -5,7 +5,7 @@ using namespace std;
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 int main() {
     ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    cin.tie(0);
     int n; cin >> n;
     map<int,int> am, bm;
     rep(i,0,n) {

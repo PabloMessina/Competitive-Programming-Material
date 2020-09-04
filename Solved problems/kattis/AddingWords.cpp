@@ -18,10 +18,6 @@ int main() {
             string w;
             int v;
             ss >> w >> v;
-            // auto it = word2val.find(w);
-            // if (it != word2val.end()) {
-            //     val2word.erase(it->second);
-            // }
             if (word2val.count(w)) {
                 val2word.erase(word2val[w]);
             }
