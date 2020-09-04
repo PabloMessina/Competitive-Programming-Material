@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define umap unordered_map
 // -------------------------------
 const int MAXN = 30000;
@@ -39,10 +39,10 @@ int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
     cin >> N;;
-    rep(i,1,N) cin >> A[i];
+    rep(i,1,N+1) cin >> A[i];
     int Q; cin >> Q;
     vector<Query> queries; queries.reserve(Q);
-    rep(i,0,Q-1) {
+    rep(i,0,Q) {
         int l, r; cin >> l >> r;
         queries.emplace_back(l, r, i);
     }
@@ -59,6 +59,6 @@ int main() {
         }
         answers[q.i] = bit.rsq(q.l, q.r);
     }
-    rep(i,0,Q-1) cout << answers[i] << '\n';
+    rep(i,0,Q) cout << answers[i] << '\n';
     return 0;
 }
