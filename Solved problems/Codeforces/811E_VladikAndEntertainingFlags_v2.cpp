@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 const int MAXM = 100000;
 int N, M, Q;
@@ -17,12 +17,12 @@ struct Interval {
 Interval merge(Interval a, Interval b) {
     Interval m;
     m.n_comp = a.n_comp + b.n_comp;
-    rep(j,0,N-1) {       
+    rep(j,0,N) {       
         int new_id = a.right[j];
         int old_id = b.left[j];
         if (mat[j][a.r] == mat[j][b.l] and old_id != new_id) {
             m.n_comp--;
-            rep(k, 0, N-1) {
+            rep(k,0,N) {
                 if (b.left[k] == old_id) b.left[k] = new_id;
                 if (b.right[k] == old_id) b.right[k] = new_id;
                 if (a.left[k] == old_id) a.left[k] = new_id;
@@ -32,7 +32,7 @@ Interval merge(Interval a, Interval b) {
     }
     m.l = a.l;
     m.r = b.r;    
-    rep(j,0,N-1) {
+    rep(j,0,N) {
         m.left[j] = a.left[j];
         m.right[j] = b.right[j];
     }
@@ -53,7 +53,7 @@ struct SparseTable {
                 tmp.n_comp = 0;
                 tmp.l = i;
                 tmp.r = i;
-                rep(j,0,N-1) {
+                rep(j,0,N) {
                     tmp.left[j] = ID;
                     tmp.right[j] = ID;
                     if (j+1 >= N or mat[j][i] != mat[j+1][i]) {
@@ -83,11 +83,10 @@ struct SparseTable {
 };
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M >> Q;
     SparseTable st;
-    rep(i,0,N-1) rep(j,0,M-1) cin >> mat[i][j];
+    rep(i,0,N) rep(j,0,M) cin >> mat[i][j];
     while (Q--) {
         int l, r; cin >> l >> r; --l, --r;
         cout << st.query(l, r) << '\n';
