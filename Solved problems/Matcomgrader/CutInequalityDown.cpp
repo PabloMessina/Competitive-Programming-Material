@@ -13,10 +13,9 @@ ll L, U;
 vector<ll> A, accA;
 enum { UP, DOWN };
 
-template<class t> class SparseTable {
+template<class t> struct SparseTable {
     int n;
-    vector<ll> memo, *arr;    
-public:
+    vector<ll> memo, *arr;
     SparseTable(vector<ll>& _arr) {
         arr = &_arr;
         n = arr->size();
@@ -101,7 +100,7 @@ struct NextSparseTable {
         if (tmp.ff == -1) return ans = tmp;
         return ans = dp(tmp.ss, tmp.ff, e-1);
     }
-    pair<int,int> query(int p, int l, int r) {
+    pair<int,int> query(int p, int l, int r) { // binary lifting
         pair<int,int> ans = {l, p};
         invrep(e, maxlog, 0) {
             auto& tmp = dp(ans.ss, ans.ff, e);
@@ -112,8 +111,7 @@ struct NextSparseTable {
 };
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> L >> U;
     A.resize(N);
     accA.resize(N);
@@ -132,7 +130,6 @@ int main() {
         next_if_down[i] = next_event(i, L, st_min, st_max);
     }
     NextSparseTable st_next(next_if_up, next_if_down);
-
     int Q; cin >> Q;
     while (Q--) {
         int b, e; ll x; cin >> b >> e >> x; --b, --e;

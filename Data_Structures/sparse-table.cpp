@@ -5,10 +5,9 @@ using namespace std;
 //  - filling DP table: O(N log N)
 //  - answering queries: O(1) / O(log N)
 
-template<class t> class SparseTable {
+template<class t> struct SparseTable {
     int n;
-    vector<int> memo, *arr;    
-public:
+    vector<int> memo, *arr;
     SparseTable(vector<int>& _arr) {
         arr = &_arr;
         n = arr->size();
