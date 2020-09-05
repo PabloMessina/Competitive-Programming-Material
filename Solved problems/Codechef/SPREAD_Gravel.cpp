@@ -2,11 +2,9 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
 typedef long long int ll;
 // -------------------------------
-int N, M;
-ll C;
+int N, M; ll C;
 struct BIT {
     vector<ll> bit;
     BIT() { bit.assign(N+1, 0); }
@@ -20,8 +18,7 @@ struct BIT {
     }
 };
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M >> C;
     BIT bit;
     bit.add(1, C);
