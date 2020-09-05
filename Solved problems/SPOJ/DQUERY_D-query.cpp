@@ -10,7 +10,6 @@ const int MAXQ = 200000;
 int N;
 int A[MAXN+1];
 int answers[MAXQ];
-
 struct Query {
     int l, r, i;
     Query(int l, int r, int i) : l(l), r(r), i(i) {}
@@ -18,7 +17,6 @@ struct Query {
         return r < q.r;
     }
 };
-
 struct BIT {
     vector<int> bit;
     BIT(int n) { bit.assign(n+1, 0); }
@@ -34,7 +32,6 @@ struct BIT {
         for (; k < bit.size(); k += (k & -k)) bit[k] += v;
     }
 };
-
 int main() {
     ios::sync_with_stdio(false); cin.tie(0);
     cin >> N;;

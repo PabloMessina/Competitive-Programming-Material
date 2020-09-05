@@ -12,7 +12,6 @@ int A[MAXN+1];
 int answers[MAXQ];
 int freq[1000001];
 int cnt = 0;
-
 struct Query {
     int l, r, i, b;
     Query(int l, int r, int i) : l(l), r(r), i(i), b(l/N_BINS) {}
@@ -21,13 +20,8 @@ struct Query {
         return (b&1) ? r < q.r : r > q.r;
     }
 };
-void add_element(int x) {
-    if (++freq[x] == 1) cnt++;
-}
-void remove_element(int x) {
-    if (--freq[x] == 0) cnt--;
-}
-
+void add_element(int x) { if (++freq[x] == 1) cnt++; }
+void remove_element(int x) { if (--freq[x] == 0) cnt--; }
 int main() {
     ios::sync_with_stdio(false); cin.tie(0);
     cin >> N;
