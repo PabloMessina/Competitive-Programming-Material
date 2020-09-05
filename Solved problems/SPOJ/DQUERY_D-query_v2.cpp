@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 const int MAXN = 30000;
 const int MAXQ = 200000;
@@ -29,14 +29,13 @@ void remove_element(int x) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N;
     N_BINS = sqrt(N);
-    rep(i,1,N) cin >> A[i];
+    rep(i,1,N+1) cin >> A[i];
     int Q; cin >> Q;
     vector<Query> queries; queries.reserve(Q);
-    rep(i,0,Q-1) {
+    rep(i,0,Q) {
         int l, r; cin >> l >> r;
         queries.emplace_back(l, r, i);
     }
@@ -49,6 +48,6 @@ int main() {
         while (l > q.l) add_element(A[--l]);
         answers[q.i] = cnt;
     }
-    rep(i,0,Q-1) cout << answers[i] << '\n';
+    rep(i,0,Q) cout << answers[i] << '\n';
     return 0;
 }

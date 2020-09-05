@@ -38,7 +38,8 @@ template<class t> class SegTreeLazy {
     void update(int a, int b, ll value, int u, int i, int j) {
         if (lazy[u]) propagate(u, i, j, lazy[u]);
         if (a <= i and j <= b) propagate(u, i, j, value);
-        else if (j < a or b < i) return; else {
+        else if (j < a or b < i) return;
+        else {
             int m = (i+j)/2, l = u*2+1, r = u*2+2;
             update(a, b, value, l, i, m);
             update(a, b, value, r, m+1, j);
