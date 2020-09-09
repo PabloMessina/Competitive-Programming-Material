@@ -1,16 +1,12 @@
 #include <bits/stdc++.h>
 using namespace std;
-
 // time complexity:
 //  - filling DP table: O(N log N)
 //  - answering queries: O(1) / O(log N)
-
 template<class t> struct SparseTable {
-    int n;
-    vector<int> memo, *arr;
+    int n; vector<int> memo, *arr;
     SparseTable(vector<int>& _arr) {
-        arr = &_arr;
-        n = arr->size();
+        arr = &_arr; n = arr->size();
         int maxlog = 31 - __builtin_clz(n);
         memo.assign(n * (maxlog + 1), -1);
     }
@@ -21,7 +17,7 @@ template<class t> struct SparseTable {
         return ans = t::merge(dp(i, e-1), dp(i+(1<<(e-1)), e-1));
     }
     // option 1: complexity O(1)
-    // ** only works if queries can overlap (e.g. max, min, OR, AND)
+    // ** only works if queries can overlap (e.g. max, min, or, and)
     int query_O1(int l, int r) {
         int e = 31 - __builtin_clz(r - l + 1);
         return t::merge(dp(l,e), dp(r - (1 << e) + 1, e));
@@ -39,25 +35,23 @@ template<class t> struct SparseTable {
         return ans;
     }
 };
-struct RangeMin {
+struct MIN {
     static const int neutro = INT_MAX;
     static int merge(int x, int y) { return min(x, y); }
 };
-struct RangeMax {
+struct MAX {
     static const int neutro = INT_MIN;
     static int merge(int x, int y) { return max(x, y); }
 };
-struct RangeOR {
+struct OR {
     static const int neutro = 0;
     static int merge(int x, int y) { return x | y; }
 };
-
-
 // example of usage
 int main() {
     vector<int> arr = {1, 3, 4, 3, 1, 6, 7, 4, 8, 9};
-    SparseTable<RangeMin> st_min(arr);
-    SparseTable<RangeMax> st_max(arr);
+    SparseTable<MIN> st_min(arr);
+    SparseTable<MAX> st_max(arr);
     while (true) {
         int l, r; cin >> l >> r; // read query
         cout << st_min.query_O1(l,r) << '\n'; // print min
