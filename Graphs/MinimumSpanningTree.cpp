@@ -1,17 +1,15 @@
 #include <bits/stdc++.h>
-#define rep(i,a,b) for (int i=a; i<=b; ++i)
 using namespace std;
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define ff first
+#define ss second
 typedef pair<int,int> ii;
-
 /* ================= */
 /* METHOD 1: KRUSKAL */
 /* ================= */
-
 struct Edge {
     int u, v, cost;
-    bool operator<(const Edge& o) const {
-        return cost < o.cost;
-    }
+    bool operator<(const Edge& o) const { return cost < o.cost; }
 };
 namespace Kruskal {
     struct UnionFind {
@@ -19,7 +17,7 @@ namespace Kruskal {
         UnionFind(int n) {
             rank.assign(n,0);
             p.resize(n);
-            rep(i,0,n-1) p[i] = i;
+            rep(i,0,n) p[i] = i;
         }
         int findSet(int i) { return (p[i] == i) ? i : (p[i] = findSet(p[i])); }
         bool isSameSet(int i, int j) { return findSet(i) == findSet(j); }
@@ -50,17 +48,12 @@ namespace Kruskal {
         return mstcost;
     }
 }
-
 /* ============== */
 /* METHOD 2: PRIM */
 /* ============== */
-
 struct Edge {
     int u, v, cost;
-    bool operator<(const Edge& o) const {
-        return cost > o.cost; // we use '>' instead of '<' so that
-        // priority_queue<Edge> works as a minheap
-    }
+    bool operator<(const Edge& o) const { return cost > o.cost; } // notice > instead of <
 };
 namespace Prim {
     bool visited[MAXN];
@@ -71,22 +64,20 @@ namespace Prim {
         priority_queue<Edge> q;
         int total_cost = 0;
         visited[0] = true;
-        for (ii& p : g[0]) q.push({0, p.first, p.second});
+        for (ii& p : g[0]) q.push({0, p.ff, p.ss});
         int count = 1;
         while (!q.empty()) {
-            Edge edge = q.top(); q.pop();
-            if (visited[edge.v]) continue;
-            int u = edge.u;
-            int v = edge.v;
-            int cost = edge.cost;
+            Edge e = q.top(); q.pop();
+            int u = e.u, v = e.v, cost = e.cost;
+            if (visited[v]) continue;
             visited[v] = true;
             total_cost += cost;
             mst[u].emplace_back(v, cost);
             mst[v].emplace_back(u, cost);
             if (++count == N) break;
-            for (ii p : g[v]) {
-                if (visited[p.first]) continue;
-                q.push({v, p.first, p.second});                
+            for (ii& p : g[v]) {
+                if (visited[p.ff]) continue;
+                q.push({v, p.ff, p.ss});                
             }            
         }
         return total_cost;

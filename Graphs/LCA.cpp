@@ -3,7 +3,7 @@
 /* ============================ */
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for (int i=a; i<=b; ++i)
+#define rep(i,a,b) for (int i=a; i<b; ++i)
 #define invrep(i,b,a) for (int i=b; i>=a; --i)
 
 // General comments:
@@ -22,21 +22,18 @@ using namespace std;
 // ** advantages:
 //   - the lca query can be modified to compute querys over the path between 2 nodes
 //   - it's possible to append new leaf nodes to the tree
-
 struct LCA {
     vector<int> A, D; // ancestors, depths
     vector<vector<int>> *g; // pointer to graph
     int n, maxe; // num nodes, max exponent
     int& anc(int u, int e) { return A[e * n + u]; }    
     int inline log2(int x) { return 31 - __builtin_clz(x); }
-
     // dfs to record direct parents and depths
     void dfs(int u, int p, int depth) {
         anc(u,0) = p;
         D[u] = depth;        
         for (int v : (*g)[u]) if (D[v] == -1) dfs(v, u, depth + 1);
     }
-
     LCA(vector<vector<int>>& _g, int root) {
         g = &_g;
         n = _g.size();
@@ -44,8 +41,8 @@ struct LCA {
         D.assign(n, -1);
         A.resize(n * (maxe + 1));
         dfs(root, -1, 0);
-        rep(e, 1, maxe) {
-            rep (u, 0, n-1) {
+        rep(e,1,maxe+1) {
+            rep(u,0,n) {
                 // u's 2^e th ancestor is
                 // u's 2^(e-1) th ancestor's 2^(e-1) th ancestor
                 int a = anc(u,e-1);
@@ -53,20 +50,18 @@ struct LCA {
             }
         }
     }
-
     // move node u "k" levels up towards the root
     // i.e. find the k-th ancestor of u
     int raise(int u, int k) {
         for (int e = 0; k; e++, k>>=1) if (k&1) u = anc(u,e);
         return u;
     }
-
     int lca(int u, int v) {        
         if (D[u] < D[v]) swap(u, v); 
         u = raise(u, D[u] - D[v]); // raise lowest to same level
         if (u == v) return u; // same node, we are done
         // raise u and v to their highest ancestors below the LCA
-        invrep (e, maxe, 0) {
+        invrep(e,maxe,0) {
             // greedily take the biggest 2^e jump possible as long as 
             // u and v still remain BELOW the LCA
             if (anc(u,e) != anc(v,e)) u = anc(u,e), v = anc(v,e);
@@ -74,7 +69,6 @@ struct LCA {
         // the direct parent of u (or v) is lca(u,v)
         return anc(u,0);
     }
-
     // distance between 'u' and 'v'
     int dist(int u, int v) {
         return D[u] + D[v] - 2 * D[lca(u,v)];
@@ -89,7 +83,6 @@ struct LCA {
         if (D[u] - D[lca_uv] >= k) return raise(u, k);
         return raise(v, dist(u,v,lca_uv) - k);
     }
-
     int add_child(int p, int u) { // optional
         // add to graph
         (*g)[p].push_back(u);
@@ -97,7 +90,7 @@ struct LCA {
         D[u] = D[p] + 1;
         // update ancestors
         anc(u,0) = p;
-        rep (e, 1, maxe){
+        rep(e,1,maxe){
             p = anc(p,e-1);
             if (p == -1) break;
             anc(u,e) = p;
@@ -111,18 +104,14 @@ struct LCA {
 // construction: O(2|V| log 2|V|) = O(|V| log |V|)
 // query: O(1) (** assuming that __builtin_clz is mapped to an
 //               efficient processor instruction)
-
-
 struct LCA {
     vector<int> E, D, H; // E = euler tour, D = depth, H = first index of node in euler tour
     vector<int> DP // memo for range minimun query
     vector<vector<int>> *g; // pointer to graph
     int idx; // tracks node ocurrences
     int n; // number of nodes
-
     int& rmq(int i, int e) { return DP[e * idx + i]; }
     inline int log2(int x) { return 31 - __builtin_clz(x); }
-
     void dfs(int u, int depth) {
         H[u] = idx; // index of first u's ocurrence
         E[idx] = u; // record node ocurrence
@@ -135,7 +124,6 @@ struct LCA {
             }
         }
     }
-
     LCA(vector<vector<int>>& _g, int root) {
         g = &_g;
         n = _g.size();
@@ -148,9 +136,9 @@ struct LCA {
         int maxe = log2(nn);
         DP.resize(nn * (maxe+1));        
         // build sparse table with bottom-up DP
-        rep(i,0,nn-1) rmq(i,0) = i; // base case
-        rep(e,1,maxe) { // general cases
-            rep(i, 0, nn - (1 << e)) {
+        rep(i,0,nn) rmq(i,0) = i; // base case
+        rep(e,1,maxe+1) { // general cases
+            rep(i,0,nn-(1<<e)+1) {
                 // i ... i + 2 ^ (e-1) - 1
                 int i1 = rmq(i,e-1);
                 // i + 2 ^ (e-1) ... i + 2 ^ e  - 1
@@ -160,7 +148,6 @@ struct LCA {
             }
         }
     }
-
     int lca(int u, int v) {
         // get ocurrence indexes in increasing order
         int l = H[u], r = H[v];
@@ -172,7 +159,6 @@ struct LCA {
         int i2 = rmq(r - ((1 << e) - 1), e);
         return D[i1] < D[i2] ? E[i1] : E[i2];
     }
-
     int dist(int u, int v) {
         // make sure you use H to retrieve the indexes of u and v
         // within the Euler Tour sequence before using D
@@ -185,21 +171,20 @@ struct LCA {
 // -----------------
 int main() {
     // build graph
-    int n, m;
-    scanf("%d%d", &n, &m);
+    int n, m; cin >> n >> m;
     vector<vector<int>> g(n);
     while (m--) {
-        int u, v; scanf("%d%d", &u, &v);
+        int u, v; cin >> u >> v;
         g[u].push_back(v);
         g[v].push_back(u);
     }
     // init LCA
     LCA lca(g,0);
     // answer queries
-    int q; scanf("%d", &q);
+    int q; cin >> q;
     while (q--) {
-        int u, v; scanf("%d%d", &u, &v);
-        printf("LCA(%d,%d) = %d\n", u, v, lca.lca(u,v));
-        printf("dist(%d,%d) = %d\n", u, v, lca.dist(u,v));
+        int u, v; cin >> u >> v;
+        cout << "LCA(" << u << "," << v << ") = " << lca.lca(u,v) << '\n';
+        cout << "dist(" << u << "," << v << ") = " << lca.dist(u,v) << '\n';
     }
 };
