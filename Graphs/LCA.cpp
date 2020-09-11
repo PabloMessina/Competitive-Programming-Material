@@ -31,7 +31,7 @@ struct LCA {
     // dfs to record direct parents and depths
     void dfs(int u, int p, int depth) {
         anc(u,0) = p;
-        D[u] = depth;        
+        D[u] = depth;
         for (int v : (*g)[u]) if (D[v] == -1) dfs(v, u, depth + 1);
     }
     LCA(vector<vector<int>>& _g, int root) {
@@ -56,7 +56,7 @@ struct LCA {
         for (int e = 0; k; e++, k>>=1) if (k&1) u = anc(u,e);
         return u;
     }
-    int lca(int u, int v) {        
+    int lca(int u, int v) {       
         if (D[u] < D[v]) swap(u, v); 
         u = raise(u, D[u] - D[v]); // raise lowest to same level
         if (u == v) return u; // same node, we are done
@@ -70,11 +70,11 @@ struct LCA {
         return anc(u,0);
     }
     // distance between 'u' and 'v'
-    int dist(int u, int v) {
+    int dist(int u, int v) { // O(log(N))
         return D[u] + D[v] - 2 * D[lca(u,v)];
     }
     // optimized version (in case you already computed lca(u,v))
-    int dist(int u, int v, int lca_uv) {
+    int dist(int u, int v, int lca_uv) { // O(1)
         return D[u] + D[v] - 2 * D[lca_uv];
     }
     // get the node located k steps from 'u' walking towards 'v'
