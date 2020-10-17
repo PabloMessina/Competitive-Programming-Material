@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef unsigned long long int ull;
 const int MAXLEN = 1e6;
 
@@ -15,7 +15,7 @@ struct RH_single { // rolling hashing
     static ull mul(ull x, ull y) { return (x * y) % P; }
     static void init() {
         pow[0] = 1;
-        rep(i, 1, MAXLEN-1) pow[i] = mul(B, pow[i-1]);
+        rep(i,1,MAXLEN) pow[i] = mul(B, pow[i-1]);
     }    
     vector<ull> h;
     int len;
@@ -24,7 +24,7 @@ struct RH_single { // rolling hashing
         len = s.size();
         h.resize(len);
         h[0] = s[0];
-        rep(i,1,len-1) h[i] = add(mul(h[i-1], B), s[i]);
+        rep(i,1,len) h[i] = add(mul(h[i-1], B), s[i]);
     }
     RH_single(vector<int>& s) { init(s); } // from vector<int>
     RH_single(string& s, char ref) { // from string
@@ -50,18 +50,18 @@ struct RH_double { // rolling hashing
     static ull mul(ull x, ull y, int a) { return (x * y) % P[a]; }
     static void init(int a) {
         pow[a][0] = 1;
-        rep(i, 1, MAXLEN-1) pow[a][i] =  mul(B, pow[a][i-1], a);
+        rep(i,1,MAXLEN) pow[a][i] =  mul(B, pow[a][i-1], a);
     }
     static void init() { init(0); init(1); }    
     vector<ull> h[2];
     int len;
     void init(vector<int>& s) {
-        for (int x : s) assert (x >= 1); // DEBUGGING
+        // for (int x : s) assert (x >= 1); // DEBUGGING
         len = s.size();
-        rep(a,0,1) {
+        rep(a,0,2) {
             h[a].resize(len);
             h[a][0] = s[0];
-            rep(i,1,len-1) h[a][i] = add(mul(h[a][i-1], B, a), s[i], a);
+            rep(i,1,len) h[a][i] = add(mul(h[a][i-1], B, a), s[i], a);
         }
     }
     RH_double(vector<int>& s) { init(s); } // from vector<int>
@@ -89,9 +89,9 @@ int main() {
         string s; cin >> s;
         int l1, r1, l2, r2; cin >> l1 >> r1 >> l2 >> r2;
         char cmin = *min_element(s.begin(), s.end());
-        RH_double rh(s, cmin);
-        ull h1 = rh.hash(l1, r1);   
-        ull h2 = rh.hash(l2, r2);
+        RH_double rh(s, cmin); // O(s.size())
+        ull h1 = rh.hash(l1, r1); // O(1)
+        ull h2 = rh.hash(l2, r2); // O(1)
         string s1 = s.substr(l1, r1-l1+1);
         string s2 = s.substr(l2, r2-l2+1);
         printf("Strings s1=%s and s2=%s are %s\n", s1.c_str(), s2.c_str(),
