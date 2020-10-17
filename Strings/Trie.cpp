@@ -11,7 +11,7 @@ struct Trie {
         count.push_back(0);
     }
     int move_to(int u, int c) {
-        assert (0 <= c and c < vocab);
+        // assert (0 <= c and c < vocab); // debugging
         int& v = g[u][c];
         if (v == -1) {
             v = g.size();

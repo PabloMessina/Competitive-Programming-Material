@@ -1,21 +1,19 @@
-// tags: max flow, dijkstra, binary search, bitwise, implementation
+// tags: max flow, dijkstra, binary search, bitmask, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 struct Dinic {
     struct edge {
         int to, rev;
         ll f, cap;
-    };
- 
+    }; 
     vector<vector<edge>> g;
     vector<ll> dist;
     vector<int> q, work;
-    int n, sink;
- 
+    int n, sink; 
     bool bfs(int start, int finish) {
         dist.assign(n, -1);
         dist[start] = 0;
@@ -32,8 +30,7 @@ struct Dinic {
             }
         }
         return dist[finish] != -1;
-    }
- 
+    } 
     ll dfs(int u, ll f) {
         if (u == sink)
             return f;
@@ -51,21 +48,18 @@ struct Dinic {
         }
         return 0;
     }
-
     Dinic(int n) {
         this->n = n;
         g.resize(n);
         dist.resize(n);
         q.resize(n);
-    }
- 
+    } 
     void add_edge(int u, int v, ll cap) {
         edge a = {v, (int)g[v].size(), 0, cap};
-        edge b = {u, (int)g[u].size(), 0, 0}; //Poner cap en vez de 0 si la arista es bidireccional
+        edge b = {u, (int)g[u].size(), 0, 0};
         g[u].push_back(a);
         g[v].push_back(b);
-    }
- 
+    } 
     ll max_flow(int source, int dest) {
         sink = dest;
         ll ans = 0;
@@ -112,37 +106,30 @@ bool possible(ll t) {
     static ll X[1 << 10];
     int n = 1 << S;
     fill(X, X+n, 0);
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         int mask = 0;
-        rep(j,0,S-1) {
-            if (mintime[j][i] <= t) mask |= 1 << j;
-        }
+        rep(j,0,S) if (mintime[j][i] <= t) mask |= 1 << j;
         X[mask] += P[i];
     }
     Dinic din(n + S + 2);
     int src = n + S;
     int dst = src + 1;
-    rep(mask,0,n-1) {
+    rep(mask,0,n) {
         din.add_edge(src, mask, X[mask]);
         for (int j = 0, b=mask; b; b >>=1, j++) {
-            if (b & 1) {
-                din.add_edge(mask, n + j, sc[j]);
-            }
+            if (b & 1) din.add_edge(mask, n + j, sc[j]);
         }
     }
-    rep(i, 0, S-1) din.add_edge(n+i, dst, sc[i]);
+    rep(i,0,S) din.add_edge(n+i, dst, sc[i]);
     return din.max_flow(src, dst) == tot_people;
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M >> S;
     P.resize(N);
     tot_people = 0;
-    rep(i,0,N-1) {
-        cin >> P[i]; tot_people += P[i];
-    }
+    rep(i,0,N) { cin >> P[i]; tot_people += P[i]; }
     g.resize(N);
     while (M--) {
         int u, v; ll w;
@@ -151,11 +138,11 @@ int main() {
         g[v].emplace_back(u, w);
     }
     si.resize(S); sc.resize(S);    
-    rep(i,0,S-1) {
-        cin >> si[i] >> sc[i];
-        si[i]--;
-        calc_mintime(si[i], i);
+    rep(i,0,S) {
+        cin >> si[i] >> sc[i]; si[i]--;
+        calc_mintime(si[i], i); // dijkstra
     }
+    // binary search
     ll l = 0, r = (ll)1e15;
     while (l < r) {
         ll m = (l+r) >> 1;
