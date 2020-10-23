@@ -72,7 +72,7 @@ int main() {
         ID = 0;
         x2id.clear();
         Dinic din((N-1)*(N-2)/2 + N-1 + 2);
-        int s = get_id(888888), t = get_id(999999);
+        int s = get_id(-1), t = get_id(-2);
         int tot_pts = 0;
         rep(i,1,N) rep(j,i+1,N) {
             int u = get_id(i * N + j);
