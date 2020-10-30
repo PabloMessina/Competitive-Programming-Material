@@ -22,17 +22,9 @@ template<typename T> struct Point { // 2D
     double norm() { return sqrt(norm2()); }
     T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
     T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
-    int quad() const { // 0, 1, 2, 3
-        if (x >= 0) return y >= 0 ? 0: 3;
-        return y >= 0 ? 1 : 2;
-    }
-    double angle() {
-        return atan2(y, x); // [-PI, PI]
-    }
-    Point<double> unit() {
-        double d = norm();
-        return {x/d,y/d};
-    }
+    int quad() const { return (x >= 0) ? (y >= 0 ? 0: 3) : (y >= 0 ? 1 : 2); } // 0, 1, 2, 3        
+    double angle() { return atan2(y, x); } // [-PI, PI] 
+    Point<double> unit() { double d = norm(); return {x/d,y/d}; }
     bool operator<(const Point& p) const { // smaller quadrant or same quadrant and to the right
         int q = quad(), qp = p.quad();
         return q != qp ? q < qp : cross(p) > 0;
@@ -46,9 +38,7 @@ template<typename T> struct Point { // 2D
 /* Cross Product -> orientation of point with respect to ray */
 /* ========================================================= */
 // cross product (b - a) x (c - a)
-ll cross(Point& a, Point& b, Point& c) {
-    return (b - a).cross(c - a);
-}
+ll cross(Point& a, Point& b, Point& c) { return (b - a).cross(c - a); }
 
 // calculates the cross product (b - a) x (c - a)
 // and returns orientation:
@@ -127,7 +117,6 @@ bool intersect_lines(Point& a, Point& b, Point& c, Point& d,
     t2 = (b - a) ^ (c - a) / x;
     return true;
 }
-
 
 /* =================== */
 /* Circle Intersection */
