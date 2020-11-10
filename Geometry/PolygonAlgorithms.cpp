@@ -43,9 +43,7 @@ double polygon_area(vector<Point>& pol) {
 // 1.1) O(N) method
 bool point_in_convexhull(Point& p, vector<Point>& ch) {
     int n = ch.size();
-    for (int i=n-1, j=0; j<n; i=j++) {
-        if (cross(ch[i], ch[j], p) < 0) return false;
-    }
+    rep(i,0,n) if (cross(ch[i], ch[(i+1)%n], p) < 0) return false;
     return true;
 }
 
@@ -69,14 +67,13 @@ bool point_in_convexhull(Point& p, vector<Point>& ch) {
 // 2) General methods: for complex / simple polygons
 
 /* EvenOdd Rule (ray casting - crossing number) */
-bool inside_evenodd(Point& p, vector<Point>& poly) {
-    int n = poly.size();
+bool inside_evenodd(vector<Point>& pol, Point p) {
+    int n = pol.size();
     int count = 0;
-    for (int i = n-1, j = 0; j < n; i=j++) {
-        Point& a = poly[i];
-        Point& b = poly[j];
-        if ((a.y < p.y and p.y <= b.y and (b-a).cross(p-a) > 0)
-            or (b.y < p.y and p.y <= a.y and (b-a).cross(p-a) < 0)) {
+    rep(i,0,n) {
+        Point &a = pol[i], &b = pol[(i+1)%n];
+        if ((a.y < p.y and p.y <= b.y and (b-a).cross(p-a) >= 0)
+                or (b.y < p.y and p.y <= a.y and (b-a).cross(p-a) < 0)) {
             count++;
         }
     }
@@ -84,23 +81,19 @@ bool inside_evenodd(Point& p, vector<Point>& poly) {
 }
 
 /* Nonzero Rule (winding number) */
-bool inside_nonzero(Point& p, vector<Point>& poly) {
-    int n = poly.size();
+bool inside_nonzero(vector<Point>& pol, Point& p) {
+    int n = pol.size();
     int wn = 0;
-    for (int i = n-1, j = 0; j < n; i=j++) {
-        Point& a = poly[i];
-        Point& b = poly[j];
+    rep(i,0,n) {
+        Point &a = pol[i], &b = pol[(i+1)%n];
         if (a.y <= p.y) {
-            if (p.y < b.y and (b-a).cross(p-a) > 0)
-                ++wn; // upward & left
+            if (p.y < b.y and (b-a).cross(p-a) > 0) ++wn; // upward & left
         } else {
-            if (p.y >= b.y and (b-a).cross(p-a) < 0)
-                --wn; // downward & right
+            if (p.y >= b.y and (b-a).cross(p-a) < 0) --wn; // downward & right
         }
     }
     return wn != 0; // non-zero
 }
-
 
 /* ================================= */
 /* Find extreme point in Convex Hull */

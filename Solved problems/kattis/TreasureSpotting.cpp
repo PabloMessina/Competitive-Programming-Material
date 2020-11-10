@@ -57,8 +57,7 @@ bool do_segments_intersect(Point<ll>& p1, Point<ll>& q1, Point<ll>& p2, Point<ll
 struct Segment { Point<ll> a, b; };
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> W >> P;
     Point<ll> T; cin >> T.x >> T.y;
     vector<Segment> pirates;

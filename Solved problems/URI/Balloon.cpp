@@ -1,27 +1,23 @@
 // tags: geometry, sweep line, cross product, implicit graph, DP, implementation
 // explanation: http://www.icpc-bolivia.edu.bo/Entrenamiento/ICPC/BR_solucoes_regional_2013.pdf
 // official test cases: http://maratona.ime.usp.br/hist/2013/primeira-fase/
-#include <bits/stdc++.h> // add almost everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
-// defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
 #define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef unsigned long long int ull;
-typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
+#define ff ff
+#define ss ss
 // -------------------------------
-
 const int MAXN = 100000;
-int N,Q;
-struct Point { ll x,y; };
+int N, Q;
+struct P {
+    ll x, y;
+    ll operator^(const P& p) const { return x*p.y - y*p.x; }
+};
+ll cross(P& a, P& b, P& c) { return (b-a)^(c-a); }
 struct Segment { 
-    Point p1, p2;
+    P p1, p2;
     bool horizontal() { return p1.y == p2.y; }
 };
 Segment segments[MAXN];
@@ -32,35 +28,9 @@ int bal_parent[MAXN]; // to store balloons' parents in the dependency graph (for
 // Event of the sweep line
 enum Type {SEG_START, BALLOON, SEG_END};
 struct Event {
-    ll x, y; // coordinates
-    Type type; // either SEG_START, BALLOON or SEG_END
-    int index; // index to access additional data
-    // Custom comparator
-    // Notice that we move a vertical sweep line from left to right,
-    // so we sort based on x coordinate. However, in case of ties (same x coordinate)
-    // we break ties by prioritizing SEG_START events (in descending order),
-    // then BALLOON events (order doesn't matter) and finally SEG_END events (in ascending order).
-    // This is necessary because during the sweep line we need to make sure the parent of a ballon/segment
-    // is not added too late or removed prematurely.
-    bool operator<(const Event& rhs) const {
-        if (x == rhs.x) {
-            if (type == rhs.type) {
-                if (type == SEG_START) return y > rhs.y;
-                return y < rhs.y;
-            }
-            return type < rhs.type;
-        }
-        return x < rhs.x;
-    }
+    ll x, y; int type, index;
+    bool operator<(const Event& o) const { return x < o.x; }
 };
-
-// Returns the value of the cross product (b-a) x (c-a)
-// This allows us to know whether c is LEFT, RIGHT or COLLINEAR to the ray (a->b)
-ll cross(Point& a, Point& b, Point& c) {
-    ll dx0 = b.x - a.x, dy0 = b.y - a.y;
-    ll dx1 = c.x - a.x, dy1 = c.y - a.y;
-    return dx0 * dy1 - dx1 * dy0;
-}
 
 // Segment comparator for the active_segments set (ordered set) used to keep track
 // of all segments intersected by the vertical sweep line at the current position.
@@ -76,7 +46,7 @@ bool is_si_below_sj(int i, int j) {
         cross(si.p1, sj.p2, sj.p1) > 0:
         cross(sj.p1, si.p1, si.p2) > 0;
 }
-set<int, bool(*)(int,int)> active_segments(is_si_below_sj);
+set<int, decltype(is_si_below_sj)> active_segments(is_si_below_sj);
 
 // ----------------------------
 // functions to propagate coordinates through the dependency graph (following parent pointers)
@@ -113,39 +83,36 @@ void find_final_position(int ball_i, ll& x, ll& y) {
             y = seg.p1.y;
         } else { // tilted parent
             set_coords(p); // top-down DP
-            x = coords[p].first;
-            y = coords[p].second;
+            x = coords[p].ff;
+            y = coords[p].ss;
         }
     }
 }
 
 int main() {
-    while(scanf("%d%d", &N,&Q) == 2) { // for each test case
+    while(cin >> N >> Q) { // for each test case
         vector<Event> events;
-        rep(i,0,N-1) { // read segments
-            ll x1,y1,x2,y2;
-            scanf("%lld%lld%lld%lld", &x1,&y1,&x2,&y2);
-            if (x1 > x2) { swap(x1,x2); swap(y1,y2); } // make sure p1.x < p2.x
+        rep(i,0,N) { // read segments
+            ll x1,y1,x2,y2; cin >> x1 >> y1 >> x2 >> y2;
+            if (x1 > x2) { swap(x1,x2); swap(y1,y2); } // make sure x1 < x2
             segments[i] = {{x1,y1},{x2,y2}};
             events.push_back({x1, y1, SEG_START, i}); // seg_start event
             events.push_back({x2, y2, SEG_END, i}); // seg_end event
         }
-        rep(i,0,Q-1) { // read balloons
-            ll x; scanf("%lld", &x);
+        rep(i,0,Q) { // read balloons
+            ll x; cin >> x;
             events.push_back({x, 0, BALLOON, i}); // balloon event
             balloon_x[i] = x;
         }
         sort(events.begin(), events.end()); // sort events
         active_segments.clear(); // reset active_segments
-
         for (auto& e : events) { // for each event
             if (e.type == SEG_START) {                
                 auto ret = active_segments.insert(e.index); // add to active_segments
-                // doc: http://www.cplusplus.com/reference/set/set/insert/
                 Segment& s = segments[e.index];
                 if (s.p1.y > s.p2.y) { // if balloons go up through this corner
-                    // we set the parent of this segment                    
-                    auto next_it = next(ret.first); // http://www.cplusplus.com/reference/iterator/next/
+                    // we set the parent of this segment
+                    auto next_it = next(ret.ff); // ++ret.ff
                     if (next_it == active_segments.end()) {
                         seg_parent[e.index] = -1;              
                     } else {
@@ -175,10 +142,10 @@ int main() {
         }
         // answer queries with top-down DP over dependency graph
         memset(done, 0, sizeof(bool) * N);
-        rep(i,0,Q-1) {
+        rep(i,0,Q) {
             ll x, y; find_final_position(i,x,y);
-            if (y == -1) printf("%lld\n",x);
-            else printf("%lld %lld\n",x,y);
+            if (y == -1) cout << x << '\n';
+            else cout << x << ' ' << y << '\n';
         }
     }
     return 0;

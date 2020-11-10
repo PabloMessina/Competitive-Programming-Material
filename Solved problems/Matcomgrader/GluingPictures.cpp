@@ -62,16 +62,13 @@ int upper_bound(string& word, vector<int>& sa, char c, int offset, int l, int r)
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
-    string word, query;
-    cin >> word;
-    vector<int> s; s.reserve(word.size());
-    for (char c : word) s.push_back(c);
+    ios::sync_with_stdio(false); cin.tie(0);
+    string word; cin >> word;
+    vector<int> s; for (char c : word) s.push_back(c);
     SuffixArray sa(s);
     int q; cin >> q;
     while (q--) {
-        cin >> query;
+        string query; cin >> query;
         int count = 0;
         int i = 0;
         bool possible = true;
@@ -81,18 +78,12 @@ int main() {
             while (i < query.size()) {
                 char c = query[i];
                 int l_next = lower_bound(word, sa.sa, c, offset, l, r);
-                int r_next = upper_bound(word, sa.sa, c, offset, l, r);
-                if (l_next == r_next) break;
-                else {
-                    ++offset;
-                    ++i;
-                    l = l_next, r = r_next;
-                }
+                int r_next = upper_bound(word, sa.sa, c, offset, l, r); // [l_next, r_next)
+                if (l_next == r_next) break; // rango vacío
+                ++offset, ++i;
+                l = l_next, r = r_next;
             }
-            if (offset == 0) {
-                possible = false;
-                break;
-            }            
+            if (offset == 0) { possible = false; break; }
             count++;
             if (i == query.size()) break;
         }
