@@ -9,12 +9,10 @@ struct Point {
     Point operator+(const Point& p) const { return {x+p.x, y+p.y}; }
     Point operator-(const Point& p) const { return {x-p.x, y-p.y}; }
     Point operator*(double d) const { return {x*d, y*d}; }
+    Point operator/(double d) const { return {x/d, y/d}; }
     double norm2() { return x*x + y*y; }
     double norm() { return sqrt(norm2()); }
-    Point unit() {
-        double d = norm();
-        return {x/d,y/d};
-    }
+    Point unit() { return (*this)/norm(); }
 };
 double min_dist(Point& a, Point& b, Point& c, Point& d) {
     double l = 0., r = 1.;
@@ -33,8 +31,7 @@ double min_dist(Point& a, Point& b, Point& c, Point& d) {
     return ((a + ab * t) - (c + cd * t)).norm();
 };
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cout.precision(10);
     int n, m;
     vector<Point> A, B;

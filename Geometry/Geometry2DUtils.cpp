@@ -14,23 +14,23 @@ template<typename T> struct Point { // 2D
     Point<T> operator+(const Point<T>& p) const { return {x+p.x, y+p.y}; }
     Point<T> operator-(const Point<T>& p) const { return {x-p.x, y-p.y}; }
     Point<T> operator*(T d) const { return {x*d, y*d}; }
+    T operator^(const Point<T>& p) const { return x*p.y - y*p.x; } // cross product
+    T operator*(const Point<T>& p) const { return x*p.x + y*p.y; } // dot product
     Point<T> negative() { return { -x, -y }; }
     Point<T> rotate_ccw() { return { -y, x }; }
     Point<T> rotate_cw() { return { y, -x }; }
     Point<double> cast() { return {(double)x, (double)y}; }
     T norm2() { return x*x + y*y; }
-    double norm() { return sqrt(norm2()); }
-    T dot(const Point<T>& p) const { return x*p.x + y*p.y; }
-    T cross(const Point<T>& p) const { return x*p.y - y*p.x; }
+    double norm() { return sqrt(norm2()); }    
     int quad() const { return (x >= 0) ? (y >= 0 ? 0: 3) : (y >= 0 ? 1 : 2); } // 0, 1, 2, 3        
     double angle() { return atan2(y, x); } // [-PI, PI] 
     Point<double> unit() { double d = norm(); return {x/d,y/d}; }
     bool operator<(const Point& p) const { // smaller quadrant or same quadrant and to the right
         int q = quad(), qp = p.quad();
-        return q != qp ? q < qp : cross(p) > 0;
+        return q != qp ? q < qp : (*this)^p > 0;
     }
     bool same_angle(const Point& p) { // two vectors pointing to the same direction
-        return quad() == p.quad() and cross(p) == 0;
+        return quad() == p.quad() and (*this)^p == 0;
     }
 };
 
@@ -38,7 +38,7 @@ template<typename T> struct Point { // 2D
 /* Cross Product -> orientation of point with respect to ray */
 /* ========================================================= */
 // cross product (b - a) x (c - a)
-ll cross(Point& a, Point& b, Point& c) { return (b - a).cross(c - a); }
+ll cross(Point& a, Point& b, Point& c) { return (b-a)^(c-a); }
 
 // calculates the cross product (b - a) x (c - a)
 // and returns orientation:
