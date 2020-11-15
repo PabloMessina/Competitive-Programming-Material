@@ -2,20 +2,7 @@
 // quadratic equation
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-// defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef unsigned long long int ull;
-typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
-
 const double PI = acos(-1);
 const double EPS = 1e-8;
 struct Point {
@@ -53,9 +40,9 @@ bool circle_inside_rectangle() {
         p11.y <= C.y - r and C.y + r <= p22.y;
 }
 
-enum EventType { START, END };
+enum { START, END };
 struct AngleEvent {
-    double angle; EventType type;
+    double angle; int type;
     bool operator<(const AngleEvent& o) const { return angle < o.angle; }
 };
 double segment_integral(Point& A, Point& B, vector<AngleEvent>& angle_events) {
@@ -110,8 +97,8 @@ double arc_integral(double a, double b) {
 
 int main() {
     double x1,y1,x2,y2;
-    while (scanf("%lf%lf%lf",&C.x, &C.y,&r)==3) { // read input for each case
-        scanf("%lf%lf%lf%lf", &x1, &y1, &x2, &y2);
+    while (cin >> C.x >> C.y >> r) { // read input for each case
+        cin >> x1 >> y1 >> x2 >> y2;
         r2 = r * r;
         // rectangle's 4 corners
         if (x1 > x2) swap(x1, x2);
@@ -122,11 +109,11 @@ int main() {
         p12 = {x1, y2};
         // ---- special cases
         if (rectangle_inside_circle()) {
-            printf("%lf\n", (x2 - x1) * (y2 - y1)); // area of rectangle
+            cout << (x2 - x1) * (y2 - y1) << '\n'; // area of rectangle
             continue;
         }
         if (circle_inside_rectangle()) {
-            printf("%lf\n", PI * r2); // area of circle
+            cout << PI * r2 << '\n'; // area of circle
             continue;
         }
         // ---- general case
@@ -140,7 +127,7 @@ int main() {
         area += segment_integral(p22, p12, events);
         area += segment_integral(p12, p11, events);
         // 2) compute line integrals over arcs of the circle that lie inside the rectangle
-        int n = events.size();        
+        int n = events.size();
         if (n > 0) {
             sort(events.begin(), events.end()); // sort angle events
             if (events[0].type == END) { // ugly case: the first event is END
@@ -155,7 +142,7 @@ int main() {
                 }
             }
         }
-        printf("%.20lf\n", area);
+        cout << setprecision(20) << fixed << area << '\n';
     }
     return 0;
 }

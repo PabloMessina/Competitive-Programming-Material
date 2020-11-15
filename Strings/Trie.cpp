@@ -22,10 +22,10 @@ struct Trie {
         return v;
     }
     void insert(const string& s, char ref = 'a') {  // insert string
-        int u = 0; for (char c : s) u = move_to(u, c - ref);
+        int u = 0; count[0]++; for (char c : s) u = move_to(u, c - ref);
     }    
     void insert(vector<int>& s) { // insert vector<int>
-        int u = 0; for (int c : s) u = move_to(u, c);
+        int u = 0; count[0]++; for (int c : s) u = move_to(u, c);
     }
     int size() { return g.size(); }
 };
