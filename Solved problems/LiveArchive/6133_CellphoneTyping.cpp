@@ -15,7 +15,6 @@ struct Trie {
         count.push_back(0);
     }
     int move_to(int u, int c) {
-        // assert (0 <= c and c < vocab); // debugging
         int& v = g[u][c];
         if (v == -1) {
             v = g.size();
@@ -25,12 +24,9 @@ struct Trie {
         count[v]++;
         return v;
     }
-    void insert(const string& s, char ref = 'a') {  // insert string
-        int u = 0; for (char c : s) u = move_to(u, c - ref);
+    void insert(const string& s, char ref = 'a') {
+        int u = 0; count[0]++; for (char c : s) u = move_to(u, c - ref);
     }    
-    void insert(vector<int>& s) { // insert vector<int>
-        int u = 0; for (int c : s) u = move_to(u, c);
-    }
     int size() { return g.size(); }
 };
 int main() {
@@ -45,10 +41,10 @@ int main() {
 		}
 		double ans = 0;
 		for (string& w : words) {
-			int u = 0;
+			int u = 0; ans++;
 			for (char c : w) {
 				int v = t.move_to(u, c-'a');
-				if (t.count[u] != t.count[v]) ans++;
+				if (u > 0 and t.count[u] != t.count[v]) ans++;
 				u = v;
 			}
 		}
