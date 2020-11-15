@@ -72,7 +72,7 @@ int search(int u, int i, int n, int tot_words) {
 // Return the minimum total number of letters necessary to
 // write the suffixes of all the words that pass through
 // node u, assuming that we have to choose n words as streets
-// (and m = freqs[u] - n as avenues) and assuming that all letters
+// and m = trie.count[u] - n as avenues and assuming that all letters
 // until node u (inclusive) have already been properly counted.
 // We assume that all the words expand at least 1 letter through any
 // child branch, but if n == 1 (m == 1), we substract that
