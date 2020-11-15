@@ -8,16 +8,12 @@ typedef long long int ll;
 // ----------------------------------------------
 struct Point {
     ll x, y;
+    ll operator^(const Point<ll>& p) const { return x*p.y - y*p.x; }
     bool operator<(const Point& p) const {
         return x < p.x || (x == p.x && y < p.y);
     }
 };
-
-ll cross(Point& a, Point& b, Point& c) {
-    ll dx0 = b.x - a.x, dy0 = b.y - a.y;
-    ll dx1 = c.x - a.x, dy1 = c.y - a.y;
-    return dx0 * dy1 - dx1 * dy0;
-}
+ll turn(Point& a, Point& b, Point& c) { return (b-a)^(c-a); }
 
 vector<Point> upper_hull(vector<Point>& P) {
     // sort points lexicographically
@@ -26,7 +22,7 @@ vector<Point> upper_hull(vector<Point>& P) {
     // build upper hull
     vector<Point> uh(n);
     invrep (i, n-1, 0) {
-        while (k >= 2 && cross(uh[k-2], uh[k-1], P[i]) <= 0) k--;
+        while (k >= 2 && turn(uh[k-2], uh[k-1], P[i]) <= 0) k--;
         uh[k++] = P[i];
     }
     uh.resize(k);
@@ -40,7 +36,7 @@ vector<Point> lower_hull(vector<Point>& P) {
     // collect lower hull
     vector<Point> lh(n);
     rep (i, 0, n-1) {
-        while (k >= 2 && cross(lh[k-2], lh[k-1], P[i]) <= 0) k--;
+        while (k >= 2 && turn(lh[k-2], lh[k-1], P[i]) <= 0) k--;
         lh[k++] = P[i];
     }
     lh.resize(k);
@@ -55,12 +51,12 @@ vector<Point> convex_hull(vector<Point>& P) {
     sort(P.begin(), P.end());
     // build lower hull
     for (int i = 0; i < n; ++i) {
-        while (k >= 2 && cross(H[k-2], H[k-1], P[i]) <= 0) k--;
+        while (k >= 2 && turn(H[k-2], H[k-1], P[i]) <= 0) k--;
         H[k++] = P[i];
     }
     // build upper hull
     for (int i = n-2, t = k+1; i >= 0; i--) {
-        while (k >= t && cross(H[k-2], H[k-1], P[i]) <= 0) k--;
+        while (k >= t && turn(H[k-2], H[k-1], P[i]) <= 0) k--;
         H[k++] = P[i];
     }
     // remove extra space

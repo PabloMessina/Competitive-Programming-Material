@@ -1,96 +1,58 @@
-// Tags: string, trie
-#include <cstdio>
-#include <cstring>
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
 using namespace std;
-
-class TrieNode {
-public:
-
-	TrieNode** children;
-	int visited_count;
-	bool has_children;
-	bool finishes_word;
-	char c;
-
-	TrieNode(char _c) {
-		children = new TrieNode*[26];
-		has_children = false;
-		finishes_word = false;
-		for (int i = 0; i < 26; ++i) {
-			children[i] = NULL;
-		}
-		visited_count = 0;
-		c = _c;
-	}
-
-	~TrieNode() {
-		delete[] children;
-	}
-
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+// -------------------------------
+struct Trie {
+    vector<vector<int>> g;
+    vector<int> count;
+    int vocab;
+    Trie(int vocab, int maxdepth = 10000) : vocab(vocab) {
+        g.reserve(maxdepth);
+        g.emplace_back(vocab, -1);
+        count.reserve(maxdepth);
+        count.push_back(0);
+    }
+    int move_to(int u, int c) {
+        // assert (0 <= c and c < vocab); // debugging
+        int& v = g[u][c];
+        if (v == -1) {
+            v = g.size();
+            g.emplace_back(vocab, -1);
+            count.push_back(0);
+        }
+        count[v]++;
+        return v;
+    }
+    void insert(const string& s, char ref = 'a') {  // insert string
+        int u = 0; for (char c : s) u = move_to(u, c - ref);
+    }    
+    void insert(vector<int>& s) { // insert vector<int>
+        int u = 0; for (int c : s) u = move_to(u, c);
+    }
+    int size() { return g.size(); }
 };
-
-int GlobalStrokesCount;
-char buff[90];
-
-void dfs(TrieNode* node, int visited_count, int strokes_count) {
-
-	if (node->visited_count != visited_count) {
-		strokes_count++;
-	}
-	if (node->finishes_word) {
-		GlobalStrokesCount += strokes_count;
-	}
-	if (node->has_children) {
-		for (int i = 0; i < 26; ++i) {
-			if (node->children[i] == NULL)
-				continue;
-			dfs(node->children[i], node->visited_count, strokes_count);
-		}
-	}
-}
-
 int main() {
-
-//	setvbuf(stdout, NULL, _IONBF, 0);
-
-	int n;
-
-	while (scanf("%d", &n) == 1) {
-
-		TrieNode* root = new TrieNode('?');
-
-		for (int i = 0; i < n; ++i) {
-			scanf("%s", buff);
-			int length = strlen(buff);
-
-			TrieNode* node = root;
-
-			for (int j = 0; j < length; ++j) {
-				int c = buff[j] - 'a';
-				if (node->children[c] == NULL) {
-					node->children[c] = new TrieNode(buff[j]);
-					node->has_children = true;
-				}
-				node = node->children[c];
-				node->visited_count++;
+    ios::sync_with_stdio(false); cin.tie(0);
+	int N;
+	while (cin >> N) {
+		Trie t(26, 80);
+		vector<string> words;
+		rep(i,0,N) {
+			string w; cin >> w; t.insert(w);
+			words.push_back(w);
+		}
+		double ans = 0;
+		for (string& w : words) {
+			int u = 0;
+			for (char c : w) {
+				int v = t.move_to(u, c-'a');
+				if (t.count[u] != t.count[v]) ans++;
+				u = v;
 			}
-			node->finishes_word = true;
 		}
-
-		GlobalStrokesCount = 0;
-
-		for (int i = 0; i < 26; ++i) {
-			if (root->children[i] == NULL)
-				continue;
-			dfs(root->children[i], -1, 0);
-		}
-
-		float avg = (float) GlobalStrokesCount / (float) n;
-		printf("%.2f\n", avg);
-
-		delete root;
-
+		ans /= words.size();
+		cout << setprecision(2) << fixed << ans << '\n';
 	}
-
-	return 0;
+    return 0;
 }

@@ -11,8 +11,8 @@ double hi[76][76][76];
 
 double prob(int x, int y, int z) { return (lo[x][y][z] + hi[x][y][z]) / 2.0; }
 
-bool halt(int x, int y, int z) {
-    // halt
+bool hold(int x, int y, int z) {
+    // hold
     double op1 = 1.0 - prob(y,x+z,0);
     // continue
     double op2 = 1.0 - prob(y,x,0);
@@ -35,7 +35,7 @@ int main() {
                     if (y == 75) lo[x][y][z] = 0.;
                     else if (x + z > 75) lo[x][y][z] = 1.0 - hi[y][x][0];
                     else {
-                        // halt
+                        // hold
                         double op1 = 1.0 - hi[y][x+z][0];
                         // continue
                         double op2 = 1.0 - hi[y][x][0];
@@ -53,7 +53,7 @@ int main() {
                     if (y == 75) hi[x][y][z] = 0.;
                     else if (x + z > 75) hi[x][y][z] = 1.0 - lo[y][x][0];
                     else {
-                        // halt
+                        // hold
                         double op1 = 1.0 - lo[y][x+z][0];
                         // continue
                         double op2 = 1.0 - lo[y][x][0];
@@ -69,7 +69,7 @@ int main() {
     int Q; cin >> Q;
     while (Q--) {
         int x, y, z; cin >> x >> y >> z;
-        if (halt(x,y,z)) cout << "H\n";
+        if (hold(x,y,z)) cout << "H\n";
         else cout << "C\n";
     }
     return 0;
