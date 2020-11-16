@@ -10,8 +10,7 @@
 using namespace std;
 
 struct SA {
-    int n;
-    vector<int> counts, rank, rank_, sa, sa_, lcp; // lcp is optional
+    int n; vector<int> counts, rank, rank_, sa, sa_, lcp; // lcp is optional
     inline int gr(int i) { return i < n ? rank[i]: 0; }
     void csort(int maxv, int k) {
         counts.assign(maxv+1, 0);
