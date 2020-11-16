@@ -38,9 +38,7 @@ struct RH_double { // rolling hashing
         if (i == 0) return h[a][j];
         return add(h[a][j], P[a] - mul(h[a][i-1], pow[a][j-i+1], a), a);
     }
-    ull hash(int i, int j) {
-        return hash(i,j,0) << 32 | hash(i,j,1);
-    }
+    ull hash(int i, int j) { return hash(i,j,0) << 32 | hash(i,j,1); }
     ull hash() { return hash(0, len-1); }
 };
 // these lines are necessary for the code to compile

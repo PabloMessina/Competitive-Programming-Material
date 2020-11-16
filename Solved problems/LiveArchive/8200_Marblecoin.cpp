@@ -1,44 +1,41 @@
 // tags: greedy, suffix array, counting sort, radix sort, strings
 #pragma GCC optimize("Ofast")
-#include <bits/stdc++.h> // import everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 typedef long long int ll;
 // -------------------------------
-struct SuffixArray {
+struct SA {
     int n;
-    vector<int> counts, rank, rank_tmp, sa, sa_tmp;
-    inline int get_rank(int i) { return i < n ? rank[i]: 0; }
-    void counting_sort(int maxv, int k) {
+    vector<int> counts, rank, rank_, sa, sa_;
+    inline int gr(int i) { return i < n ? rank[i]: 0; }
+    void csort(int maxv, int k) {
         counts.assign(maxv+1, 0);
-        rep(i,0,n-1) counts[get_rank(i+k)]++;
-        rep(i,1,maxv) counts[i] += counts[i-1];
-        invrep(i,n-1,0) sa_tmp[--counts[get_rank(sa[i]+k)]] = sa[i];
-        sa.swap(sa_tmp);
+        rep(i,0,n) counts[gr(i+k)]++;
+        rep(i,1,maxv+1) counts[i] += counts[i-1];
+        invrep(i,n-1,0) sa_[--counts[gr(sa[i]+k)]] = sa[i];
+        sa.swap(sa_);
     }
-    void compute_sa(vector<int>& s) {
-        rep(i,0,n-1) sa[i] = i;
+    void get_sa(vector<int>& s) {
+        rep(i,0,n) sa[i] = i;
         sort(sa.begin(), sa.end(), [&s](int i, int j) { return s[i] < s[j]; });
         int r = rank[sa[0]] = 1;
-        rep(i,1,n-1) rank[sa[i]] = (s[sa[i]] != s[sa[i-1]]) ? ++r : r;
+        rep(i,1,n) rank[sa[i]] = (s[sa[i]] != s[sa[i-1]]) ? ++r : r;
         for (int h=1; h < n and r < n; h <<= 1) {
-            counting_sort(r, h);
-            counting_sort(r, 0);
-            r = rank_tmp[sa[0]] = 1;
-            rep(i,1,n-1) {
+            csort(r, h); csort(r, 0); r = rank_[sa[0]] = 1;
+            rep(i,1,n) {
                 if (rank[sa[i]] != rank[sa[i-1]] or
-                    get_rank(sa[i]+h) != get_rank(sa[i-1]+h)) ++r;
-                rank_tmp[sa[i]] = r;
-            }
-            rank.swap(rank_tmp);
+                    gr(sa[i]+h) != gr(sa[i-1]+h)) ++r;
+                rank_[sa[i]] = r;
+            } rank.swap(rank_);
         }
     }
-    SuffixArray(vector<int>& s) {
+    SA(vector<int>& s) {
         n = s.size();
-        rank.resize(n); rank_tmp.resize(n);
-        sa.resize(n); sa_tmp.resize(n);
-        compute_sa(s);
+        rank.resize(n); rank_.resize(n);
+        sa.resize(n); sa_.resize(n);
+        get_sa(s);
     }
 };
 
@@ -53,18 +50,17 @@ struct Item {
 } items[MAXN];
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     word.reserve(MAXN);
     int N;
     while (cin >> N) {
         word.clear();
         int offset = 0;
         int count = 0;
-        rep(i,0,N-1) {
+        rep(i,0,N) {
             int k; cin >> k;
             stacks[i] = { offset, k };
-            rep(j,0,k-1) {
+            rep(j,0,k) {
                 int val; cin >> val;
                 word.push_back(val);
                 items[offset + j] = { val, i, j, 0 };
@@ -73,10 +69,10 @@ int main() {
             offset += k + 1;
             count += k;
         }
-        SuffixArray sa(word);
-        rep(i,0,offset-1) items[sa.sa[i]].rank = i;
+        SA sa(word);
+        rep(i,0,offset) items[sa.sa[i]].rank = i;
         priority_queue<Item> pq;
-        rep(i,0,N-1) pq.push(items[stacks[i].offset]);        
+        rep(i,0,N) pq.push(items[stacks[i].offset]);
         ll ans = 0;
         while (count--) {
             Item cur = pq.top(); pq.pop();
