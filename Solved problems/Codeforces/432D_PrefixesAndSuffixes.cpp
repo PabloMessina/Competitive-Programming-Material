@@ -1,3 +1,4 @@
+// tags: suffix array, sparse table, stack, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
