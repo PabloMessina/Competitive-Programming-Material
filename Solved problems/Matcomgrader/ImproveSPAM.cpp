@@ -14,9 +14,7 @@ ll dp(int u) {
     if (ans != -1) return ans;
     if (u >= L) return ans = 1;
     ans = 0;
-    for (int v : g[u]) {
-        ans = (ans + dp(v)) % MOD;
-    }
+    for (int v : g[u]) ans = (ans + dp(v)) % MOD;
     return ans;
 }
 
@@ -30,8 +28,7 @@ void dfs(int u) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> L;
     g.resize(N);
     rep(i,0,L) {

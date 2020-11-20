@@ -36,8 +36,7 @@ struct SA {
     // LCP construction in O(N) using Kasai's algorithm
     // reference: https://codeforces.com/blog/entry/12796?#comment-175287
     void get_lcp(vector<int>& s) { // lcp is optional
-        lcp.assign(n, 0);
-        int k = 0;
+        lcp.assign(n, 0); int k = 0;
         rep(i,0,n) {
             int r = rank[i]-1;
             if (r == n-1) { k = 0; continue; }
