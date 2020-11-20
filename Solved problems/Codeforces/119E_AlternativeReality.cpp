@@ -31,8 +31,7 @@ Point circumcenter(const Point& A, const Point& B, const Point& C) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M;
     cout << setprecision(10) << fixed;
     vector<Point> spheres(N), proj(N);

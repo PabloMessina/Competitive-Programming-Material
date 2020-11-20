@@ -1,4 +1,4 @@
-// tags: strings, trie, DP, recursive distribution
+// tags: strings, trie, DP, implementation
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i=a; i<b; i++)
@@ -25,8 +25,7 @@ struct Trie {
         return v;
     }
     void insert(const string& s, char ref = 'a') {  // insert string
-        int u = 0; count[0]++; for (char c : s) u = move_to(u, c - ref);
-        
+        int u = 0; count[0]++; for (char c : s) u = move_to(u, c - ref);        
     }    
     void insert(vector<int>& s) { // insert vector<int>
         int u = 0; count[0]++; for (int c : s) u = move_to(u, c);
@@ -59,7 +58,7 @@ int search(int u, int i, int n, int tot_words) {
     // from i-th child node
     int min_k = max(0, n - (tot_words - trie.count[v]));
     int max_k = min(trie.count[v], n);
-    int ans = INT_MAX;    
+    int ans = INT_MAX;
     rep(k, min_k, max_k+1) {
         // choose optimally k words as street from node v
         // + split optimally the rest of the words to the right
