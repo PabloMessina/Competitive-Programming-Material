@@ -1,7 +1,7 @@
 // tags: DP, combinatorics, math, modular binomial coefficient
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 
@@ -57,7 +57,7 @@ ll dp(int i, int s, int p, int n) {
     int mink = max(f[i] - n, 0);
     int maxk = min(f[i], p);
     ll tmp = 0;
-    rep(k,mink,maxk) {
+    rep(k,mink,maxk+1) {
         int ss = (11 + ((s - i * (2 * k - f[i])) % 11)) % 11;
         tmp = add(tmp, mul(mul(choose(p, k), choose(n, f[i] - k)),
             dp(i+1, ss, p - k, n - f[i] + k)));
@@ -67,8 +67,7 @@ ll dp(int i, int s, int p, int n) {
 
 int main() {
     // faster input/output
-    ios::sync_with_stdio(false);
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     // fill choose_memo with -1
     memset(choose_memo, -1, sizeof choose_memo);
     // read input
