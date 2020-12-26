@@ -43,8 +43,7 @@ bool possible(vector<pair<ll,ll>>& segs, int n, int r) {
     return not bellmanford(g, s);
 }
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int N; cin >> N;
     vector<pair<ll,ll>> segs;
     set<ll> xset;

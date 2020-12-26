@@ -9,8 +9,7 @@ int N, M;
 string board[1000];
 int H[1000][1000], L[1000], R[1000];
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M;
     rep(i,0,N) cin >> board[i];
     rep(i,0,N) {
@@ -24,6 +23,7 @@ int main() {
     stack_.reserve(1000);
     int ans = 0;
     rep(j,0,M) {
+        // largest square in histogram
         stack_.clear();
         stack_.emplace_back(0, 0);
         rep(i,0,N) {

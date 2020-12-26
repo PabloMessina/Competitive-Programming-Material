@@ -3,17 +3,18 @@
 
 // ----- Utils ------
 const double EPS = 1e-8;
-struct Point {
-    ll x, y;
-    Point operator-(const Point& p) const { return {x - p.x, y - p.y}; }
-    Point operator+(const Point& p) const { return {x + p.x, y + p.y}; }
-    ll cross(const Point& p) const { return x*p.y - y*p.x; }
-    ll dot(const Point& p) const { return x*p.x + y*p.y; }
+typedef double T;
+struct P {
+    T x, y;
+    P() {}
+    P(T x, T y) : x(x), y(y) {}
+    P operator-(const P& p) const { return {x - p.x, y - p.y}; }
+    P operator+(const P& p) const { return {x + p.x, y + p.y}; }
+    T operator^(const P& p) const { return x*p.y - y*p.x; }
+    T operator*(const P& p) const { return x*p.x + y*p.y; }
 };
-ll cross(Point& a, Point& b, Point& c) {
-    return (b - a).cross(c - a);;
-}
-int orientation(Point& a, Point& b, Point& c) {
+ll cross(P& a, P& b, P& c) { return (b-a)^(c-a); }
+int turn(P& a, P& b, P& c) {
     ll tmp = cross(a,b,c);
     return tmp < 0 ? -1 : tmp == 0 ? 0 : 1; // sign
 }
@@ -24,10 +25,11 @@ int orientation(Point& a, Point& b, Point& c) {
 //based on Green's Theorem:
 //http://math.blogoverflow.com/2014/06/04/greens-theorem-and-area-of-polygons/
 // ** points must be sorted ccw or cw
-double polygon_area(vector<Point>& pol) {
-    int n = pol.size()
+double polygon_area(vector<P>& pol) {
+    int n = pol.size();
     double area = 0;
-    for (int i = n-1, j = 0; j < n; i = j++) {
+    rep(i,0,n) {
+        int j = (i+1) % n;
         area += (pol[i].x + pol[j].x) * (pol[j].y - pol[i].y);
     }
     return area * 0.5; // use abs(area * 0.5) if points are cw
@@ -41,17 +43,17 @@ double polygon_area(vector<Point>& pol) {
 // 1) Convex Polygons
 
 // 1.1) O(N) method
-bool point_in_convexhull(Point& p, vector<Point>& ch) {
+bool point_in_convexhull(P& p, vector<P>& ch) {
     int n = ch.size();
     rep(i,0,n) if (cross(ch[i], ch[(i+1)%n], p) < 0) return false;
     return true;
 }
 
 // 1.2) O(log N) method
-bool point_in_triangle(Point& a, Point& b, Point& c, Point& x) {
+bool point_in_triangle(P& a, P& b, P& c, P& x) {
     return cross(a, b, x) >= 0 and cross(b, c, x) >= 0 and cross(c, a, x) >= 0;
 }
-bool point_in_convexhull(Point& p, vector<Point>& ch) {
+bool point_in_convexhull(P& p, vector<P>& ch) {
     if (cross(ch[0], ch[1], p) < 0) return false;
     if (cross(ch[0], ch.back(), p) > 0) return false;
     int l = 2, r = ch.size() - 1;
@@ -67,11 +69,11 @@ bool point_in_convexhull(Point& p, vector<Point>& ch) {
 // 2) General methods: for complex / simple polygons
 
 /* EvenOdd Rule (ray casting - crossing number) */
-bool inside_evenodd(vector<Point>& pol, Point p) {
+bool inside_evenodd(vector<P>& pol, P& p) {
     int n = pol.size();
     int count = 0;
     rep(i,0,n) {
-        Point &a = pol[i], &b = pol[(i+1)%n];
+        P &a = pol[i], &b = pol[(i+1)%n];
         if ((a.y < p.y and p.y <= b.y and (b-a).cross(p-a) >= 0)
                 or (b.y < p.y and p.y <= a.y and (b-a).cross(p-a) < 0)) {
             count++;
@@ -81,11 +83,11 @@ bool inside_evenodd(vector<Point>& pol, Point p) {
 }
 
 /* Nonzero Rule (winding number) */
-bool inside_nonzero(vector<Point>& pol, Point& p) {
+bool inside_nonzero(vector<P>& pol, P& p) {
     int n = pol.size();
     int wn = 0;
     rep(i,0,n) {
-        Point &a = pol[i], &b = pol[(i+1)%n];
+        P &a = pol[i], &b = pol[(i+1)%n];
         if (a.y <= p.y) {
             if (p.y < b.y and (b-a).cross(p-a) > 0) ++wn; // upward & left
         } else {
@@ -102,10 +104,10 @@ bool inside_nonzero(vector<Point>& pol, Point& p) {
 // sorted ccw, find the index in the convex hull of the extreme point.
 //  ** the extreme point is the "leftmost" point in the convex hull with respect to the
 //     vector a -> b (if there are 2 leftmost points, pick anyone)
-int extreme_point_index(Point &a, Point &b, vector<Point> &ch) {
+int extreme_point_index(P &a, P &b, vector<P> &ch) {
     int n = ch.size();
-    Point v = b - a;
-    v = Point(-v.y, v.x); // to find the leftmost point
+    P v = b - a;
+    v = P(-v.y, v.x); // to find the leftmost point
     if (v.dot(ch[0]) >= v.dot(ch[1]) && v.dot(ch[0]) >= v.dot(ch[n - 1])) {
         return 0;
     }
@@ -126,24 +128,24 @@ int extreme_point_index(Point &a, Point &b, vector<Point> &ch) {
 /* ========================================= */
 /* Line Segment and Convex Hull Intersection */
 /* ========================================= */
-pair<int,int> find_crossing_edge(Point& a, Point& b, vector<Point>& ch, int start, int end) {
-    int o_ref = orientation(a, b, ch[start]);
+pair<int,int> find_crossing_edge(P& a, P& b, vector<P>& ch, int start, int end) {
+    int o_ref = turn(a, b, ch[start]);
     int n = ch.size();
     int l = start, r = start + ((end - start + n) % n);
     while (l < r) {
         int m = (l+r) >> 1;
-        if (orientation(a, b, ch[m % n]) != o_ref) r = m;
+        if (turn(a, b, ch[m % n]) != o_ref) r = m;
         else l = m+1;
     }
     return {(l-1+n) % n, l%n};
 }
-void find_segment_convexhull_intersection(Point& a, Point& b, vector<Point>& ch) {
+void find_segment_convexhull_intersection(P& a, P& b, vector<P>& ch) {
     // find rightmost and leftmost points in convex hull wrt vector a -> b
     int i1 = extreme_point_index(a, b, ch);
     int i2 = extreme_point_index(b, a, ch);
     // make sure the extremes are not to the same side
-    int o1 = orientation(a, b, ch[i1]);
-    int o2 = orientation(a, b, ch[i2]);
+    int o1 = turn(a, b, ch[i1]);
+    int o2 = turn(a, b, ch[i2]);
     if (o1 == o2) return; // all points are to the right (left) of a -> b (no intersection)
     // find 2 edges in the convex hull intersected by the straight line <- a - b ->
     pair<int,int> e1 = find_crossing_edge(a, b, ch, i1, i2); // binsearch from i1 to i2 ccw

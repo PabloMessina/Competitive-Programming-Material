@@ -40,15 +40,8 @@ void bfs(int s) {
 int memo[MAXB+1];
 
 int dp(int p) {
-    // first item
     memset(memo, 0, sizeof(memo[0]) * (B+1));
-    if (gain[0][p] > 0) {
-        rep(b,weight[0],B+1) {
-            memo[b] = gain[0][p];
-        }
-    }
-    // other items
-    rep(i,1,CN) {
+    rep(i,0,CN) {
         if (gain[i][p] > 0) {
             invrep(b, B, weight[i]) {
                 memo[b] = max(memo[b], gain[i][p] + memo[b - weight[i]]);
