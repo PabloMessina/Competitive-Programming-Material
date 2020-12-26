@@ -1,22 +1,11 @@
 // tags: area of union of regions, polygon area, cross product,
 // union of intervals, segment intersection detection, geometry,
 // straight line equation
-#include <bits/stdc++.h> // add almost everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
-// defines
 #define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-#define umap unordered_map
-#define uset unordered_set
-// typedefs
-typedef unsigned int uint;
-typedef unsigned long long int ull;
 typedef long long int ll;
-typedef vector<int> vi;
-typedef pair<int,int> ii;
-typedef tuple<int,int,int> iii;
 // -------------------------------
-
 const int MAXN = 1000;
 int N;
 struct Point { ll x, y; };
@@ -140,12 +129,12 @@ double compute_contribution_to_area(Segment& side, vector<Range>& hidden_ranges)
 }
 
 int main() {
-    while(scanf("%d", &N)) {
+    while(cin >> N) {
         if (N == -1) break;
         // ---- read input -----
         int j = 0;
         while(N--) {
-            ll i,d,h; scanf("%lld%lld%lld",&i,&d,&h);
+            ll i,d,h; cin >> i >> d >> h;
             // duplicate i,d,h so that the middle m = (i+d)/2 is integer too
             i*=2; d*=2; h*=2;
             ll m = (i+d)/2;
@@ -156,11 +145,11 @@ int main() {
         N = j;
         // ---- compute area -----
         double area = 0;
-        rep(i,0,N-1) { // for each segment
+        rep(i,0,N) { // for each segment
             Segment& si = sides[i];
             vector<Range> hidden_ranges;
             bool fully_hidden = false;
-            rep(j,0,N-1) { // for each other segment
+            rep(j,0,N) { // for each other segment
                 if (i == j) continue;
                 Segment& sj = sides[j];
                 fully_hidden = check_if_fully_hidden_or_append_range(si, sj, hidden_ranges);
@@ -170,7 +159,7 @@ int main() {
         }
         // we divide by 8 to undo the duplication of x and y (2 * 2 = 4)
         // and because we didn't divide by 2 when calculating area under segments
-        printf("%.2lf\n", area / 8);
+        cout << setprecision(2) << fixed << (area/8) << '\n';
     }
     return 0;
 }

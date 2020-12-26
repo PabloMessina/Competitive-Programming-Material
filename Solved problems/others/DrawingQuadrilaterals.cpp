@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 const double PI = acos(-1);
@@ -10,26 +10,21 @@ int N;
 struct Point {
     int x, y;
     Point operator-(const Point& p) const { return { x - p.x, y - p.y }; }
-    double angle() { 
-        double angle = atan2(y, x);
-        if (angle < 0) angle += 2*PI;
-        return angle;
-    }
+    double angle() { return atan2(y, x); }
 };
 vector<Point> pts;
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N;
     pts.resize(N);
-    rep(i,0,N-1) cin >> pts[i].x >> pts[i].y;
+    rep(i,0,N) cin >> pts[i].x >> pts[i].y;
     vector<double> angles;
     angles.reserve(N-1);
     ll n_tri = ((ll)(N-1) * (N-2) * (N-3)) / 6ll;
     ll n_quad = ((ll)N * (N-1) * (N-2) * (N-3)) / 24ll;
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         angles.clear();
-        rep(j,0,N-1) {
+        rep(j,0,N) {
             if (i == j) continue;
             angles.push_back((pts[j] - pts[i]).angle());
         }
@@ -37,7 +32,7 @@ int main() {
         int m = angles.size();
         int k = 0;
         ll count = 0;
-        rep(j,0,m-1) {
+        rep(j,0,m) {
             while (1) {
                 double delta = angles[(k+1) % m] - angles[j];
                 if (delta < 0) delta += 2*PI;

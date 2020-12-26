@@ -8,8 +8,7 @@ int xs[25], ys[25]; // coordinates
 int dist2[25][25]; // distance squared
 
 int inline calc_dist2(int x1, int y1, int x2, int y2) {
-    int dx = x1 - x2;
-    int dy = y1 - y2;
+    int dx = x1-x2, dy = y1-y2;
     return dx*dx + dy*dy;
 }
 
@@ -53,8 +52,7 @@ int dp(int mask) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     // read input
     cin >> xs[0] >> ys[0];    
     cin >> N; 
@@ -79,5 +77,6 @@ int main() {
         }
         cout << " 0";
     }
+    cout << '\n';
     return 0;
 }

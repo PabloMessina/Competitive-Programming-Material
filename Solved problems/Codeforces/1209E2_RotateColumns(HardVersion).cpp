@@ -38,7 +38,7 @@ void precompute_mask_equivalence_classes() {
     rep(mask, 0, (1 << N)) {
         int mask_class = mask;
         int tmp = mask;
-        rep(i,2,N+1) {
+        rep(i,1,N) {
             tmp = (tmp >> 1) | ((tmp & 1) << (N-1));
             mask_class = min(mask_class, tmp);
         }
@@ -75,8 +75,7 @@ int dp(int i, int mask) {
 }
  
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cols.reserve(2000);
     memo.reserve((1 << 12) * 12);
     precompute_submasks();
