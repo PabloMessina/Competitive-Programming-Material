@@ -2,9 +2,9 @@
 // over a range [i,j), i.e., from i to j-1
 // If no such index exists, j is returned
 function binsearch(array, i, j) {
-    assert(i < j) // since the range is [i,j), then j must be > i
+    // assert(i < j) // since the range is [i,j), then j must be > i
     while (i < j) {
-        m = (i+j) >> 1; // m = (i+j) / 2;
+        m = (i+j) / 2;
         if (predicate(array[m]))
             j = m 
         else

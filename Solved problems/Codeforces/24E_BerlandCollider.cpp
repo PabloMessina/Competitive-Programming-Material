@@ -17,7 +17,7 @@ bool collision(double t) {
 }
 
 int main() {
-    scanf("%d", &N); // printf/scanf because cin/cout gives TLE
+    scanf("%d", &N); // printf/scanf because cin/cout gets TLE
     double r_minpos = 2e9, l_maxpos = -2e9;
     rep(i,0,N) {
         scanf("%lf %lf", &pos[i], &vel[i]);

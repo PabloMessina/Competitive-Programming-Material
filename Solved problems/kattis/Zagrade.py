@@ -1,4 +1,5 @@
 def main():
+    # parte 1
     line = input().strip()
     stack = []
     brackets = []
@@ -8,9 +9,10 @@ def main():
         elif line[i] == ')':
             brackets.append((stack.pop(), i))
     n = len(brackets)
+    # parte 2
     expressions = set()
     for mask in range(1, 1 << n): # bitwise operator x << n == x * (2 ^ n)
-        skip = [False] * len(line) 
+        skip = [False] * len(line)
         for j in range(n):
             if (1 << j) & mask > 0:
                 skip[brackets[j][0]] = True

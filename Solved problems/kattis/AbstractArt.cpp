@@ -1,3 +1,4 @@
+// tags: geometry, 2D, cross product, dot product
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
@@ -75,7 +76,7 @@ int main() {
         int m; cin >> m;
         rep(j,0,m) {
             double x, y; cin >> x >> y;
-            pols[i].emplace_back(x, y);            
+            pols[i].emplace_back(x, y);
         }
         double area = polygon_area(pols[i]);
         if (area < 0) reverse(pols[i].begin(), pols[i].end());
@@ -90,7 +91,7 @@ int main() {
                 if (in_polygon(pols[ii], a)) events.emplace_back(0, 0);
                 int mm = pols[ii].size();
                 vector<pair<double,int>> events_;
-                rep(jj,0,mm) {
+                rep(jj,0,mm) {                    
                     P c = pols[ii][jj], d = pols[ii][(jj+1) % mm];
                     double t1, t2;
                     if (intersect_lines(a,b,c,d,t1,t2)) {
@@ -116,11 +117,10 @@ int main() {
                     if ((b1 and e0.ss == e1.ss) or (!b1 and !b2) or s == 1) events.emplace_back(e1);
                 }
             }
-            if (events.size()) {                
+            if (events.size()) {
                 sort(events.begin(), events.end());
                 int cnt = 0;
                 double t = 0;
-                double sum = 0;
                 for (auto& e : events) {
                     if (e.ss == 0) {
                         if (cnt++ == 0) area_union += sub_segment_integral(a, b, t, e.ff);

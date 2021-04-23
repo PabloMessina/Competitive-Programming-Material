@@ -2,22 +2,21 @@
 #include <bits/stdc++.h>
 using namespace std;
 // -------------------------------
-map<string,int> word2val;
-map<int,string> val2word;
 int main() {
-    string line;
-    while (getline(cin, line)) {        
+    // ios::sync_with_stdio(false); cin.tie(0); 
+    map<string,int> word2val;
+    map<int,string> val2word;
+    string line;    
+    while (getline(cin, line)) {
         stringstream ss;
         ss << line;
         string command;
         ss >> command;
         if (command == "clear") {
             word2val.clear();
-            val2word.clear();
+            val2word.clear();            
         } else if (command == "def") {
-            string w;
-            int v;
-            ss >> w >> v;
+            string w; int v; ss >> w >> v;
             if (word2val.count(w)) {
                 val2word.erase(word2val[w]);
             }
@@ -25,8 +24,7 @@ int main() {
             val2word[v] = w;
         } else {
             assert (command == "calc"); // paranoico
-            string w, op;
-            ss >> w;
+            string w, op; ss >> w;
             int ans = 0;
             bool valid = true;
             if (word2val.count(w) == 0) { // not found

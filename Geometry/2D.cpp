@@ -118,14 +118,14 @@ bool do_circles_intersect(Circle& c1, Circle& c2) {
 // get distance between p and projection of p on line <- a - b ->
 double point_line_dist(P& p, P& a, P& b) {
     P d = b-a;
-    double t = d.dot(p-a) / d.norm2();
+    double t = (d*(p-a)) / d.norm2();
     return (a + d * t - p).norm();
 }
 // get distance between p and truncated projection of p on segment a -> b
 double point_segment_dist(P& p, P& a, P& b) {
     if (a==b) return (p-a).norm(); // segment is a single point
     P d = b-a; // direction
-    double t = d.dot(p-a) / d.norm2();
+    double t = (d*(p-a)) / d.norm2();
     if (t <= 0) return (p-a).norm(); // truncate left
     if (t >= 1) return (p-b).norm(); // truncate right
     return (a + d * t - p).norm();
@@ -180,16 +180,16 @@ double polygon_area(vector<P>& p) { // ** points must be sorted ccw or cw
 // -----------------------------
 // 1) Convex Polygons
 // 1.1) O(N) method
-bool point_in_convexhull(P& p, vector<P>& ch) {
+bool in_convexhull(P& p, vector<P>& ch) {
     int n = ch.size();
     rep(i,0,n) if (turn(ch[i], ch[(i+1)%n], p) < 0) return false;
     return true;
 }
 // 1.2) O(log N) method
-bool point_in_triangle(P& a, P& b, P& c, P& x) {
+bool in_triangle(P& a, P& b, P& c, P& x) {
     return turn(a, b, x) >= 0 and turn(b, c, x) >= 0 and turn(c, a, x) >= 0;
 }
-bool point_in_convexhull(P& p, vector<P>& ch) {
+bool in_convexhull(P& p, vector<P>& ch) {
     if (turn(ch[0], ch[1], p) < 0) return false;
     if (turn(ch[0], ch.back(), p) > 0) return false;
     int l = 2, r = ch.size() - 1;
@@ -198,11 +198,15 @@ bool point_in_convexhull(P& p, vector<P>& ch) {
         if (turn(ch[0], ch[m], p) <= 0) r = m;
         else l = m+1;
     }
-    return point_in_triangle(ch[0], ch[l-1], ch[l], p);
+    return in_triangle(ch[0], ch[l-1], ch[l], p);
 }
 // ----------------------------------------------
 // 2) General methods: for complex / simple polygons
 // EvenOdd Rule (ray casting - crossing number)
+bool above(P &a, P &p) { return p.y >= a.y; }
+bool crosses_ray(P &a, P &p, P &q) {
+    return (above(a, q) - above(a, p)) * turn(a, p, q) > 0;
+}
 bool in_polygon_evenodd(vector<P> &p, P a, bool strict = true) {
     int c = 0, n = p.size();
     rep(i,0,n) {
