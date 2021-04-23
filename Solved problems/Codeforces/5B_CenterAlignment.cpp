@@ -1,12 +1,10 @@
 // tags: implementation
-#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     vector<string> lines;
     string line;
     int maxlen = 0;

@@ -3,7 +3,7 @@ import sys
 def main():
     word2val = dict()
     val2word = dict()
-    for line in sys.stdin.readlines():
+    for line in sys.stdin:
         line = line.strip()
         tokens = line.split()
         command = tokens[0]
@@ -13,10 +13,11 @@ def main():
         elif command == 'def':
             w = tokens[1]
             v = int(tokens[2])
-            if w in word2val:
+            if w in word2val: # caso borde
                 old_v = word2val[w]
-                del word2val[w]
-                del val2word[old_v]
+                # del word2val[w] # overkill, pero por si las moscas
+                del val2word[old_v] # sí o sí
+                del val
             word2val[w] = v
             val2word[v] = w
         else:
@@ -31,6 +32,6 @@ def main():
                 res = val2word[res]
             except KeyError:
                 res = 'unknown'
-            print('%s %s' % (line[5:], res))
+            print(line[5:], res)
 
 main()

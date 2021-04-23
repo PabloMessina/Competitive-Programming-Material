@@ -24,8 +24,8 @@ void print_and_remove_bicomp(int u, int v) {
 }
 
 // general version: find everything
-void dfs(int u, int p, int d) { // (node, parent, depth)
-    static num_root_children = 0;    
+int root_children = 0;    
+void dfs(int u, int p, int d) { // (node, parent, depth)    
     D[u] = L[u] = d; // u at least can reach itself (ignoring u-p edge)
     for(int v : g[u]) {
         if (v == p) continue; // direct edge to parent -> ignore
@@ -34,7 +34,7 @@ void dfs(int u, int p, int d) { // (node, parent, depth)
             dfs(v, u, d+1); // explore recursively v's subtree
             // 1) detect articulation points and biconnected components
             if (p == -1) { // 1.1) special case: if u is root
-                if (++num_root_children == 2) {
+                if (++root_children == 2) {
                     // we detected that root has AT LEAST 2 children
                     // therefore root is an articulation point
                     printf("root = %d is articulation point\n", root);
@@ -66,7 +66,6 @@ void dfs(int u, int p, int d) { // (node, parent, depth)
 
 // find cut edges
 void dfs(int u, int p, int d) {
-    static num_root_children = 0;
     D[u] = L[u] = d;
     for(int v : g[u]) {
         if (v == p) continue;

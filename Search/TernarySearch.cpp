@@ -6,21 +6,21 @@ double f(double x) { ... }
 double min_ternary_search(double l, double r, int times) {
     while (times--) {
         double d = (r - l) / 3.0;
-        double m1 = l + d;
-        double m2 = r - d;
-        if (f(m1) < f(m2)) r = m2;
-        else l = m1;
+        double m1 = l + d, m2 = r - d;
+        double f1 = f(m1), f2 = f(m2);
+        if (f1 <= f2) r = m2;
+        if (f1 >= f2) l = m1;
     }
     return f((l+r)*.5);
 }
-// finx maximum (concave function)
+// find maximum (concave function)
 double max_ternary_search(double l, double r, int times) {
     while (times--) {
         double d = (r - l) / 3.0;
-        double m1 = l + d;
-        double m2 = r - d;
-        if (f(m1) > f(m2)) r = m2;
-        else l = m1;
+        double m1 = l + d, m2 = r - d;
+        double f1 = f(m1), f2 = f(m2);
+        if (f1 >= f2) r = m2;
+        if (f1 <= f2) l = m1;
     }
     return f((l+r)*.5);
 }
@@ -28,21 +28,19 @@ double max_ternary_search(double l, double r, int times) {
 /* ========================== */
 /* Ternary Search on Integers */
 /* ========================== */
-int cost(int i) { ... }
-int min_search(int l, int r) { // convex cost function
+int f(int i) { ... }
+int min_search(int l, int r) { // convex function
     while (l < r) {
         int m = (i+j) >> 1;
-        int slope = cost(m+1) - cost(m);
-        if (slope >= 0) r = m;
+        if (f(m+1) >= f(m)) r = m;
         else l = m+1;
     }
     return l;
 }
-int max_search(int l, int r) { // concave cost function
+int max_search(int l, int r) { // concave function
     while (l < r) {
         int m = (i+j) >> 1;
-        int slope = cost(m+1) - cost(m);
-        if (slope <= 0) r = m;
+        if (f(m+1) <= f(m)) r = m;
         else l = m+1;
     }
     return l;

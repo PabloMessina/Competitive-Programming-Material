@@ -16,12 +16,11 @@ bool possible(int K) {
             break;
         if (pos[i] > r) {
             l = pos[i];
-            r = min(l + K-1, N-1);
         } else {
             while(++i < W && pos[i] <= r) {}
             l = r+1;
-            r = min(l + K-1, N-1);
-        }    
+        }
+        r = min(l + K-1, N-1);
     }
     return count <= L;
 }
@@ -30,10 +29,7 @@ int main() {
     int T; cin >> T;
     while (T--) {
         cin >> N >> W >> L;
-        rep (i, 0, W) {
-            cin >> pos[i];
-            pos[i]--;
-        }
+        rep(i, 0, W) { cin >> pos[i]; pos[i]--; }
         int l = 1, r = N;
         while (l < r) {
             int m = (l + r) >> 1;
