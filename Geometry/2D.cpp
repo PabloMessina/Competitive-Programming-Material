@@ -180,9 +180,9 @@ double polygon_area(vector<P>& p) { // ** points must be sorted ccw or cw
 // -----------------------------
 // 1) Convex Polygons
 // 1.1) O(N) method
-bool in_convexhull(P& p, vector<P>& ch) {
-    int n = ch.size();
-    rep(i,0,n) if (turn(ch[i], ch[(i+1)%n], p) < 0) return false;
+bool in_convex_poly(P& p, vector<P>& cp) {
+    int n = cp.size();
+    rep(i,0,n) if (turn(cp[i], cp[(i+1)%n], p) < 0) return false;
     return true;
 }
 // 1.2) O(log N) method
