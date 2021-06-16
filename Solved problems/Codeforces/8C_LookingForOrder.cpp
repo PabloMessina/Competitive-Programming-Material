@@ -23,8 +23,8 @@ int dp(int mask) {
     // base case 1: no objects to pick up -> we are done
     if (mask == 0) return 0;
     // base case 2: problem already solved -> we are done
-    int& ans = memo[mask];
-    if (ans != -1) return ans;
+    int& ans = memo[mask][i][j];
+    if (ans != -1) return ans;    
     // general case:
     //   we have 2 options with the first object to pick up
     //   1) go pick up the first object and then come back
@@ -41,9 +41,9 @@ int dp(int mask) {
     int mask2 = mask & ~b;
     for (j = i+1, b <<= 1; j <= N; b <<= 1, ++j) {
         if (mask2 & b) {
-            int tmp = dist2[0][i] + dist2[i][j] + dist2[j][0] + dp(mask2 & ~b);
-            if (tmp < ans) {
-                ans = tmp;
+            int aux = dist2[0][i] + dist2[i][j] + dist2[j][0] + dp(mask2 & ~b);
+            if (aux < ans) {
+                ans = aux;
                 choice[mask] = {i,j}; // remember the choice made
             }
         }

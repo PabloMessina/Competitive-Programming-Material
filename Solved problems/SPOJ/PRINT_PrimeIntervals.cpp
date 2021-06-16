@@ -32,7 +32,7 @@ int main() {
         int l, u; scanf("%d%d", &l, &u); // read L and U
         isprime.assign(u-l+1, true); // we will find all primes in range [L, U]
         int limit = (int) floor(sqrt(u)); // only consider primes <= sqrt(u)
-        for (ll p : all_primes) {
+        for (ll p : all_primes) {@
             if (p > limit) break;
             ll miny = max(p, (l/p+(l%p>0)))*p; // minimum multiple of p >= l
             for (ll y = miny; y <= u; y += p) { // similar to sieve of eratosthenes

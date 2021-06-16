@@ -1,4 +1,4 @@
-// tags: two pointers, binary lifting, implementation
+// tags: two pointers, greedy, binary lifting, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
