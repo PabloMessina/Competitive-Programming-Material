@@ -17,8 +17,7 @@ struct Interval {
     }
 };
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M;
     rep(i,0,N) cin >> X[i];
     rep(i,0,M) cin >> L[i];

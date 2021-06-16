@@ -6,7 +6,7 @@ using namespace std;
 typedef long long int ll;
 // -------------------------------
 ll a[5000];
-ll solve(int l, int r, int h) {
+ll paint(int l, int r, int h) {
     ll hmin = *min_element(a + l, a + r);
     ll ans = hmin - h;
     int i = l;
@@ -14,16 +14,15 @@ ll solve(int l, int r, int h) {
         while (i < r and a[i] == hmin) ++i;
         int j = i;
         while (j < r and a[j] > hmin) ++j;
-        if (i < j) ans += solve(i, j, hmin);
+        if (i < j) ans += paint(i, j, hmin);
         i = j;
     }
     return min(ans, (ll)(r - l));
 }
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int n; cin >> n;
     rep(i,0,n) cin >> a[i];
-    cout << solve(0, n, 0) << '\n';
+    cout << paint(0, n, 0) << '\n';
     return 0;
 }
