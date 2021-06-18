@@ -1,5 +1,6 @@
 const int MAXN = 1000;
 vector<int> g[MAXN]; // graph
+// vector<vector<int>> g(MAXN);
 int depth[MAXN]; // bfs depth per node
 int n; // number of nodes
 
@@ -27,7 +28,7 @@ int count_cc() {
     int count = 0;
     memset(visited, 0, sizeof(bool)*n);
     queue<int> q;
-    rep(i,0,n-1) {
+    rep(i,0,n) {
         if (!visited[i]) {
             count++;
             visited[i] = true;
