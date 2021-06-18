@@ -7,8 +7,7 @@ typedef long long int ll;
 // -------------------------------
 ll w[30];
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int t; cin >> t;
     vector<pair<ll,int>> left, right;
     left.reserve(1 << 15);
@@ -51,13 +50,13 @@ int main() {
             for (auto& p : left) {
                 if (p.first <= d) {
                     int l1 = 0, r1 = right.size();
-                    while (l1 < r1) {
+                    while (l1 < r1) { // lower bound
                         int m1 = (l1+r1) >> 1;
                         if (right[m1].first >= d - p.first) r1 = m1;
                         else l1 = m1+1;
                     }
                     int l2 = l1, r2 = right.size();
-                    while (l2 < r2) {
+                    while (l2 < r2) { // upper bound
                         int m2 = (l2+r2) >> 1;
                         if (right[m2].first > d - p.first) r2 = m2;
                         else l2 = m2+1;

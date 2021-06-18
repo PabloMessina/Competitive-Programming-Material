@@ -49,7 +49,7 @@ void dfs(int root) {
 int count_cc() {
     int count = 0;
     memset(visited, 0, sizeof(bool)*n);
-    rep(i,0,n-1) {
+    rep(i,0,n) {
         if (!visited[i]) {
             count++, dfs(i);
         }
@@ -81,6 +81,6 @@ int floodfill(int r, int c, char color) {
     if (grid[r][c] != EMPTY) return 0; // cannot be colored
     grid[r][c] = color;
     int ans = 1;
-    rep(i,0,3) ans += floodfill(r + dirs[i][0], c + dirs[i][1], color);
+    rep(i,0,4) ans += floodfill(r + dirs[i][0], c + dirs[i][1], color);
     return ans;
 }

@@ -30,6 +30,7 @@ int main() {
         vector<string> words(N);
         for (string& w : words) cin >> w;
         
+        // build graph
         vector<vector<ii>> g;
         si2id.clear(); ID = 0;
         queue<pair<string, int>> q;
@@ -63,6 +64,7 @@ int main() {
         }
         g.resize(ID);
 
+        // dijkstra
         priority_queue<ii, vector<ii>, greater<ii>> pq;
         vector<int> D(g.size(), INT_MAX);
         D[0] = 0;
@@ -78,6 +80,7 @@ int main() {
             }
         }
 
+        // output
         int ans_id = get_id("", 1);
         int ans = ans_id == D.size() ? INT_MAX : D[ans_id];
         if (ans == INT_MAX) ans = -1;
