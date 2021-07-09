@@ -1,18 +1,14 @@
-struct BIT { // BIT = binary indexed tree (a.k.a. Fenwick Tree)
-    vector<int> bit;
-    BIT(int n) { bit.assign(n+1, 0); }
-    // prefix sum query (sum in range 1 .. k)
-    int psq(int k) {
-        int sum = 0;
-        for (; k; k -= (k & -k)) sum += bit[k];
-        return sum;
+struct FT { // fenwick tree
+    vector<int> t;
+    FT(int n) { t.assign(n+1, 0); }    
+    int query(int i) { // sum in range 1 .. i
+        int ans = 0;
+        for (; i; i -= (i & -i)) ans += t[i];
+        return ans;
+    }    
+    int query(int i, int j) { return query(j) - query(i-1); } // sum in range [i .. j]
+    void update(int i, int v) { // increment i'th value by v (and propagate)
+        for (; i < t.size(); i += i & (-i)) t[i] += v;
     }
-    // range sum query (sum in range a .. b)
-    int rsq(int a, int b) {
-        return psq(b) - psq(a-1);
-    }
-    // increment k'th value by v (and propagate)
-    void add(int k, int v) {
-        for (; k < bit.size(); k += (k & -k)) bit[k] += v;
-    }
+    void update(int i, int j, int v) { update(i, v); update(j + 1, -v); }
 };

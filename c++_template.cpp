@@ -8,6 +8,8 @@ using namespace std;
 #define uset unordered_set
 #define ff first
 #define ss second
+#define pb push_back
+#define eb emplace_back
 // typedefs
 typedef vector<int> vi;
 typedef pair<int,int> ii;

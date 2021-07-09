@@ -1,7 +1,7 @@
 // tags: BFS / DFS, flood fill, graphs
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define uset unordered_set
 // -------------------------------
 enum { EMPTY = -2, IMP = -1 };
@@ -10,8 +10,7 @@ int board[1000][1000];
 int movr[4] = {0, 0, 1, -1};
 int movc[4] = {1, -1, 0, 0};
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> R >> C;
     rep(r,0,R) {
         string line; cin >> line;
@@ -22,6 +21,7 @@ int main() {
     queue<pair<int,int>> q;
     rep(r,0,R) rep(c,0,C) {
         if (board[r][c] == EMPTY) {
+            // BFS
             q.emplace(r,c);
             board[r][c] = ID;
             int count = 1;
@@ -50,11 +50,10 @@ int main() {
                 rep(i,0,4) {
                     int rr = r + movr[i];
                     int cc = c + movc[i];
-                    int id = board[rr][cc];
                     if (0 <= rr and rr < R and 0 <= cc and cc < C and
-                             id != IMP and used.count(id) == 0) {
-                        count += counts[id];
-                        used.insert(id);
+                             board[rr][cc] != IMP and used.count(board[rr][cc]) == 0) {
+                        count += counts[board[rr][cc]];
+                        used.insert(board[rr][cc]);
                     }
                 }
                 used.clear();

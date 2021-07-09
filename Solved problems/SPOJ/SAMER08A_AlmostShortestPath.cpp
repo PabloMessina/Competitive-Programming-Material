@@ -33,8 +33,7 @@ vector<int> dijkstra(int s, vector<vector<ii>>& g) {
     return dist;
 }
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int N, M;
     while (cin >> N >> M and N) {        
         vector<vector<ii>> g(N), gr(N), g2(N);
