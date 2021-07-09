@@ -10,6 +10,7 @@ void floyd_warshall(vector<vector<int>>& g, bool& neg_cycle) {
     // optional: detect negative cycle
     rep(k,0,n) if (g[k][k] < 0) {
         rep(i,0,n) rep(j,0,n) if (g[i][k] < INT_MAX and g[k][j] < INT_MAX) {
-        neg_cycle = true; return;
+            neg_cycle = true; return;
+        }
     }
 }

@@ -13,8 +13,8 @@ vector<int> bellman_ford(vector<vector<ii>>& g, int s, bool& neg_cycle) {
     // optional: detect negative cycle
     rep(u,0,n) if (d[u] < INT_MAX) for (auto& e : g[u]) {
         if (d[e.ff] > d[u] + e.ss) {
-            neg_cycle = true; goto output;
+            neg_cycle = true; return d;
         }
     }
-    output: return d;
+    return d;
 }

@@ -1,6 +1,6 @@
 // tags: math, sieve of eratosthenes, binary modular exponentiation,
 // prime factorization of factorials
-#include <bits/stdc++.h> // import everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
@@ -9,7 +9,7 @@ int freq[26];
 int exps[MAXN];
 vector<int> primes;
 
-vector<int> get_primes_up_to(int n) { // sieve of eratosthenes
+vector<int> sieve(int n) { // sieve of eratosthenes
     vector<bool> isprime(n+1, true);
     int limit = (int)floor(sqrt(n));
     rep(x,2,limit+1) {
@@ -46,7 +46,7 @@ int binary_exp(int a, int b, int m) {
 
 int main() {
     ios::sync_with_stdio(false); cin.tie(0);
-    primes = get_primes_up_to(MAXN);
+    primes = sieve(MAXN);
     string line;	
     while (cin >> line) {
         memset(freq, 0, sizeof freq);		

@@ -41,8 +41,7 @@ void topo_sort(int start) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N;
     g.resize(N);
     names.resize(N);
@@ -53,6 +52,7 @@ int main() {
         stringstream ss(line);
         string token;
         ss >> token;
+        // token.pop_back(); // quizás funciona
         token = token.substr(0, token.size()-1);
         int u = get_id(token);
         while (ss >> token) {
