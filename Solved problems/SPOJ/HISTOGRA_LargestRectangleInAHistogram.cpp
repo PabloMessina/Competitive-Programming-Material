@@ -4,6 +4,8 @@
 using namespace std;
 #define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,a,b) for(int i = a; i >= b; --i)
+#define ff first
+#define ss second
 typedef long long int ll;
 // -------------------------------
 const int MAXN = 100000;
@@ -11,34 +13,32 @@ int N;
 ll H[MAXN], L[MAXN], R[MAXN];
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
-    vector<pair<ll,ll>> s; // we use a vector to simulate a stack
-    s.reserve(MAXN+1);
+    ios::sync_with_stdio(false); cin.tie(0);
     while ((cin >> N) and N > 0) {
         rep(i,0,N) cin >> H[i];
-        ll x;
-        // fill L array
-        s.clear();        
-        s.emplace_back(0, -1);
-        x = 1;
-        rep(i,0,N) {
-            while (s.back().second >= H[i]) s.pop_back();
-            L[i] = s.back().first;
-            s.emplace_back(x++, H[i]);
+        // fill L array        
+        {
+            stack<pair<ll,ll>> s; // (índice, altura)            
+            s.emplace(-1, -1);
+            rep(i,0,N) {
+                while (s.top().ss >= H[i]) s.pop();
+                L[i] = s.top().ff;
+                s.emplace(i, H[i]);
+            }
         }
         // fill R array
-        s.clear();
-        s.emplace_back(N, -1);
-        x = N-1;
-        invrep(i,N-1,0) {
-            while (s.back().second >= H[i]) s.pop_back();
-            R[i] = s.back().first;
-            s.emplace_back(x--, H[i]);
+        {
+            stack<pair<ll,ll>> s; // (índice, altura)
+            s.emplace(N, -1);
+            invrep(i,N-1,0) {
+                while (s.top().ss >= H[i]) s.pop();
+                R[i] = s.top().ff;
+                s.emplace(i, H[i]);
+            }
         }
         // find maximum area
         ll ans = 0;
-        rep(i,0,N) ans = max(ans, (R[i] - L[i]) * H[i]);
+        rep(i,0,N) ans = max(ans, (R[i] - L[i] - 1) * H[i]);
         cout << ans << '\n';
     }
     return 0;
