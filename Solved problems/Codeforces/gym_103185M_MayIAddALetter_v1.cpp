@@ -124,7 +124,7 @@ struct SuffixArrayTree {
     int lcp_o1(int u, int v) {
         if (u == -1 or v == -1) return 0;
         int l = rank[u], r = rank[v];
-        int e = log2[r - l];;
+        int e = log2[r - l];
         int tmp = min(rmq[l][e], rmq[r-(1<<e)][e]);
         return tmp;
     }

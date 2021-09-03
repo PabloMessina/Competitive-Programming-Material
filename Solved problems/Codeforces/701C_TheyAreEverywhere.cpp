@@ -27,7 +27,7 @@ int main() {
     int ans = n;
     int j = 0;
     rep(i,0,n) {
-        while (j < i) j++; // paranoico
+        while (j < i) j++;
         while (j < n) {
             bool done = true;
             for (int p : pok) {

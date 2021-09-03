@@ -3,15 +3,16 @@ using namespace std;
 // time complexity:
 //  - filling DP table: O(N log N)
 //  - answering queries: O(1) / O(log N)
+// ---------- recursive ---------------
 template<class t> struct SparseTable {
-    int n; vector<int> memo, *arr;
+    int n; vector<int> memo, log2, *arr;
     SparseTable(vector<int>& _arr) {
-        arr = &_arr; n = arr->size();
-        int maxlog = 31 - __builtin_clz(n);
-        memo.assign(n * (maxlog + 1), -1);
+        arr = &_arr; log2.resize(n+1); n = arr->size();
+        rep(i,2,n+1) log2[i] = 1 + log2[i >> 1];
+        memo.assign(n * (log2[n] + 1), -1);
     }
     int dp(int i, int e) {
-        int& ans = memo[e * n + i];
+        int& ans = memo[e][i];
         if (ans != -1) return ans;
         if (e == 0) return ans = (*arr)[i];
         return ans = t::merge(dp(i, e-1), dp(i+(1<<(e-1)), e-1));
@@ -19,7 +20,7 @@ template<class t> struct SparseTable {
     // option 1: complexity O(1)
     // ** only works if queries can overlap (e.g. max, min, or, and)
     int query_O1(int l, int r) {
-        int e = 31 - __builtin_clz(r - l + 1);
+        int e = log2[r - l + 1];
         return t::merge(dp(l,e), dp(r - (1 << e) + 1, e));
     }    
     // option 2: complexity O(log N)
@@ -29,6 +30,42 @@ template<class t> struct SparseTable {
         for (int e = 0; d; e++, d>>=1) {
             if (d & 1) {
                 ans = t::merge(ans, dp(l, e));
+                l += 1 << e;
+            }
+        }
+        return ans;
+    }
+};
+// ---------- iterative ---------------
+template<class t> struct SparseTable {
+    int n; vector<int> log2; vector<vector<int>> memo;
+    SparseTable(vector<int>& _arr) {
+        log2.resize(n+1); n = arr->size();
+        rep(i,2,n+1) log2[i] = 1 + log2[i >> 1];
+        int maxe = log2[n];
+        memo.assign(n, vector<int>(maxe+1));
+        rep(i,0,n) memo[i][0] = arr[i];
+        rep(e,1,maxe+1) {
+            int d = 1 << (e-1);
+            rep(i,0,n) {
+                int j = i + d;
+                memo[i][e] = j < n ? t::merge(memo[i][e-1], memo[j][e-1]) : memo[i][e-1];
+            }            
+        }
+    }
+    // option 1: complexity O(1)
+    // ** only works if queries can overlap (e.g. max, min, or, and)
+    int query_O1(int l, int r) {
+        int e = log2[r - l + 1];
+        return t::merge(memo[l][e], memo[r - (1 << e) + 1][e]);
+    }    
+    // option 2: complexity O(log N)
+    int query_Ologn(int l, int r) {
+        int ans = t::neutro;
+        int d = r-l+1;
+        for (int e = 0; d; e++, d>>=1) {
+            if (d & 1) {
+                ans = t::merge(ans, memo[l][e]);
                 l += 1 << e;
             }
         }
