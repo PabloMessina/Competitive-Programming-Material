@@ -1,4 +1,4 @@
-// tags: geometry, sweep line, std::set, implementation
+// tags: geometry, sweep line, std::multiset, implementation
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
@@ -21,8 +21,7 @@ struct Event {
 };
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> Q;
     vector<Event> events;
     rep(i,0,N) {
@@ -42,7 +41,7 @@ int main() {
         if (e.type == RoadworkStart) {
             active_roadworks.insert(rw_dist[e.id]);
         } else if (e.type == RoadworkEnd) {
-            active_roadworks.erase(rw_dist[e.id]);
+            active_roadworks.erase(active_roadworks.find(rw_dist[e.id]));
         } else { // Person
             if (active_roadworks.empty()) {
                 p_dist[e.id] = -1;

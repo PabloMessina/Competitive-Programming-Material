@@ -9,8 +9,7 @@ struct Interval {
 };
 int L, C, N;
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     while (cin >> L >> C >> N) {
         set<Interval> s;
         vector<int> freq(C+1, 0);
