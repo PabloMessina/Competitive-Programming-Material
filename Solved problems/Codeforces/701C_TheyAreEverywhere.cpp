@@ -10,8 +10,7 @@ int char2int(char c) {
     return 26 + (c - 'A');
 }
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int n; cin >> n;
     string line; cin >> line;
     rep(i,0,n) {

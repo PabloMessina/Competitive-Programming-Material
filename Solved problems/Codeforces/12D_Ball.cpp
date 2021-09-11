@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define umap unordered_map
 // -------------------------------
 const int MAXN = 500000;
@@ -15,7 +15,7 @@ struct Lady {
     }
 } ladies[MAXN];
 
-struct BIT {
+struct BIT { // binary indexed tree (a.k.a. Fenwick Tree)
     vector<int> bit;
     BIT(int n) { bit.assign(n+1, 0); }
     int query(int k) {
@@ -29,27 +29,26 @@ struct BIT {
 };
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0); // ignoren esto
     cin >> N;
     set<int> iset;
-    rep(i,0,N-1) cin >> ladies[i].b;
-    rep(i,0,N-1) {
+    rep(i,0,N) cin >> ladies[i].b;
+    rep(i,0,N) {
         int tmp; cin >> tmp; tmp = -tmp;
         ladies[i].i = tmp;
         iset.insert(tmp);
     }
-    rep(i,0,N-1) cin >> ladies[i].r;
+    rep(i,0,N) cin >> ladies[i].r;
     int ID = 1;
     umap<int,int> i2id;
     for (int i : iset) i2id[i] = ID++;
-    BIT bit(ID);
+    BIT bit(ID); // nuestro segundo arreglo de paint
     sort(ladies, ladies + N);
     int cnt = 0;
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         Lady& l = ladies[i];
         if (l.r < bit.query(i2id[l.i]-1)) cnt++;
-        bit.update(i2id[l.i], l.r);
+        else bit.update(i2id[l.i], l.r);
     }
     cout << cnt << '\n';
     return 0;

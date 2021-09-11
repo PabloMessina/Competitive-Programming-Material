@@ -7,8 +7,7 @@ using namespace std;
 // -------------------------------
 int N, M, H[200000];
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M;
     rep(i,0,N) cin >> H[i];
     set<int> set_f;
