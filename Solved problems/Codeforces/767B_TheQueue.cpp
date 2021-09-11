@@ -5,8 +5,7 @@ using namespace std;
 typedef long long int ll;
 // -------------------------------
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     ll ts, tf, t; int n;
     cin >> ts >> tf >> t >> n;
     queue<ll> q;

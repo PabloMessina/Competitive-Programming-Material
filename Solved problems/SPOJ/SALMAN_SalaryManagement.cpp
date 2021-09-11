@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 
@@ -95,18 +95,17 @@ void dfs(int u) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     salary.reserve(MAXN);
     salary_dfs.reserve(MAXN);
     g.reserve(MAXN);
     int T; cin >> T;
-    rep(t,1,T) {
+    rep(t,1,T+1) {
         int N, Q; cin >> N >> Q;
         salary.resize(N);
         salary_dfs.resize(N);
         g.assign(N, vector<int>());
-        rep(i,0,N-1) {
+        rep(i,0,N) {
             int p; cin >> p >> salary[i];
             if (p > 0) g[p-1].push_back(i);
         }

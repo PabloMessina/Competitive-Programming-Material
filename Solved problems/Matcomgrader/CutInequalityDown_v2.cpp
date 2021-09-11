@@ -44,9 +44,8 @@ struct Event {
 };
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
-    cin >> N  >> L >> U;
+    ios::sync_with_stdio(false); cin.tie(0);
+    cin >> N >> L >> U;
     rep(i,0,N) cin >> A[i];
     cin >> Q;
     vector<Event> events;

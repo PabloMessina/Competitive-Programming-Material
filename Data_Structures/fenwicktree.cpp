@@ -5,7 +5,7 @@ struct FT { // fenwick tree
         int ans = 0;
         for (; i; i -= (i & -i)) ans += t[i];
         return ans;
-    }    
+    }
     int query(int i, int j) { return query(j) - query(i-1); } // sum in range [i .. j]
     void update(int i, int v) { // increment i'th value by v (and propagate)
         for (; i < t.size(); i += i & (-i)) t[i] += v;

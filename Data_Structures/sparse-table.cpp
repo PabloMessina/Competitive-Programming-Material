@@ -38,18 +38,18 @@ template<class t> struct SparseTable {
 };
 // ---------- iterative ---------------
 template<class t> struct SparseTable {
-    int n; vector<int> log2; vector<vector<int>> memo;
+    int n; vector<int> log2; vector<vector<int>> st;
     SparseTable(vector<int>& _arr) {
         log2.resize(n+1); n = arr->size();
         rep(i,2,n+1) log2[i] = 1 + log2[i >> 1];
         int maxe = log2[n];
-        memo.assign(n, vector<int>(maxe+1));
-        rep(i,0,n) memo[i][0] = arr[i];
+        st.assign(n, vector<int>(maxe+1));
+        rep(i,0,n) st[i][0] = arr[i];
         rep(e,1,maxe+1) {
             int d = 1 << (e-1);
             rep(i,0,n) {
                 int j = i + d;
-                memo[i][e] = j < n ? t::merge(memo[i][e-1], memo[j][e-1]) : memo[i][e-1];
+                st[i][e] = j < n ? t::merge(st[i][e-1], st[j][e-1]) : st[i][e-1];
             }            
         }
     }
@@ -57,7 +57,7 @@ template<class t> struct SparseTable {
     // ** only works if queries can overlap (e.g. max, min, or, and)
     int query_O1(int l, int r) {
         int e = log2[r - l + 1];
-        return t::merge(memo[l][e], memo[r - (1 << e) + 1][e]);
+        return t::merge(st[l][e], st[r - (1 << e) + 1][e]);
     }    
     // option 2: complexity O(log N)
     int query_Ologn(int l, int r) {
@@ -65,7 +65,7 @@ template<class t> struct SparseTable {
         int d = r-l+1;
         for (int e = 0; d; e++, d>>=1) {
             if (d & 1) {
-                ans = t::merge(ans, memo[l][e]);
+                ans = t::merge(ans, st[l][e]);
                 l += 1 << e;
             }
         }
