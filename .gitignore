@@ -3,6 +3,8 @@
 *.in
 *.exe
 *.class
+*.txt
+*.zip
 
 ## Core latex/pdflatex auxiliary files:
 *.aux

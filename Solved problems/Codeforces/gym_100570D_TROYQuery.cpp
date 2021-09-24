@@ -19,7 +19,6 @@ struct UnionFind {
         if (!isSameSet(i, j)) {
             numSets--; 
             int x = findSet(i), y = findSet(j);
-            // rank is used to keep the tree short
             if (rank[x] > rank[y]) {
                 p[y] = x; setSize[x] += setSize[y];
             } else {
@@ -36,18 +35,14 @@ int row2id(ll x) {
     static int ID = 0;
     static umap<ll,int> x2id;
     auto it = x2id.find(x);
-    if (it == x2id.end()) {
-        return x2id[x] = ID++;
-    }
+    if (it == x2id.end()) return x2id[x] = ID++;
     return it->second;
 }
 int col2id(ll x) {
     static int ID = 0;
     static umap<ll,int> x2id;
     auto it = x2id.find(x);
-    if (it == x2id.end()) {
-        return x2id[x] = ID++;
-    }
+    if (it == x2id.end()) return x2id[x] = ID++;
     return it->second;
 }
 
