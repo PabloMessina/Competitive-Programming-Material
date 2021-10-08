@@ -67,7 +67,7 @@ void dfs(int u, int p, int d) { // (node, parent, depth)
 // find cut edges
 void dfs(int u, int p, int d) {
     D[u] = L[u] = d;
-    for(int v : g[u]) {
+    for (int v : g[u]) {
         if (v == p) continue;
         if (D[v] == -1) {
             dfs(v, u, d+1);
@@ -88,14 +88,14 @@ void dfs(int u, int p, int d) {
             if (p == -1) { if (++root_children == 2) printf("root = %d is AP\n", root); }
             else if (L[v] >= d) printf("u = %d is AP\n",  u);
             L[u] = min(L[u], L[v]); 
-        } else if (D[v] < d) L[u] = min(L[u], D[v]);
+        } else L[u] = min(L[u], D[v]);
     }
 }
 
 // find biconnected components
 void dfs(int u, int p, int d) {
     D[u] = L[u] = d;
-    for(int v : g[u]) {
+    for (int v : g[u]) {
         if (v == p) continue;
         if (D[v] == -1) {
             s.emplace(u,v);
