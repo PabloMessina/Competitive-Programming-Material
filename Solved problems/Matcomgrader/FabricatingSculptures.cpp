@@ -39,8 +39,7 @@ ll dp(int s, int b) {
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> S >> B;
     rep(s,0,S+1) rep(b,0,B+1) {
         memo[s][b] = -1;

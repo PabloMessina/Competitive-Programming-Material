@@ -1,10 +1,23 @@
 // tags: max flow, Dinic
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i=a;i<=b;++i)
-#define MAXN 50
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define umap unordered_map
+#define uset unordered_set
+#define ff first
+#define ss second
+#define pb push_back
+#define eb emplace_back
+// typedefs
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef unsigned long long int ull;
 typedef long long int ll;
-
+// -------------------------------
+const int MAXN = 50;
 int indegree[MAXN];
 int g[MAXN][2];
 
@@ -81,47 +94,43 @@ struct Dinic {
     }
 };
 
-
 int main() {
-    int n; scanf("%d", &n);
+    ios::sync_with_stdio(false); cin.tie(0);
+    int n; cin >> n;
     memset(indegree, 0, sizeof indegree);
-    rep(i,0,n-1) {
-        int a,b; scanf("%d%d",&a,&b); --a,--b;
+    rep(i,0,n) {
+        int a, b; cin >> a >> b; --a,--b;
         g[i][0] = a, g[i][1] = b;
         indegree[a]++;
         indegree[b]++;
     }
-
     int count = 0;
-    rep(w,0,n-1) {
+    rep(w,0,n) {
         if (indegree[w] < 2) {
             count++; continue;
-        }
-        
+        }        
         int wa = g[w][0], wb = g[w][1];
         int s = 2*n, t = 2*n+1;
         Dinic din(2*n+2);
-
-        rep(i,0,n-1) {
+        rep(i,0,n) {
             int a = g[i][0], b = g[i][1];
             if (i == w or a == w or b == w) continue;
             din.add_edge(s, i, 1);
             din.add_edge(i, n+a, 1);
             din.add_edge(i, n+b, 1);      
         }
-        rep(i, 0, n-1) {
+        rep(i,0,n) {
             if (i == w) continue;
             if (i == wa or i == wb)
                 din.add_edge(n+i, t, indegree[w]-2);
             else
                 din.add_edge(n+i, t, indegree[w]-1);
         }
-
         int votes = n - indegree[w] - 1;
         int mf = (int)din.max_flow(s, t);
         if (votes > mf)
             count++;
     }
-    printf("%d\n", count);
+    cout << count << '\n';
     return 0;
 }

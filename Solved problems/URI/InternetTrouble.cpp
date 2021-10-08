@@ -45,19 +45,16 @@ void fill(int k, int i1, int i2, int j1, int j2) {
     int best_j = -1;
     rep(j,jmin,jmax) {
         ll val = cost(j,im+1) + (j > 0 ? dp[k-1][j-1] : 0);
-        printf("    j=%d, val=%lld\n", j,val);
         if (val < min_val) min_val = val, best_j = j;
     }
     dp[k][im] = min_val;
-    printf("k=%d, im=%d, i1=%d, i2=%d, j1=%d, j2=%d, minv=%lld\n",
-        k,im,i1,i2,j1,j2,min_val);
     fill(k,i1,im-1,j1,best_j);
     fill(k,im+1,i2,best_j,j2);
 }
 
 int main() {
     while (scanf("%d%lld%lld", &N, &B, &C) == 3) {
-        rep(i,0,N-1) scanf("%lld", &H[i]);
+        rep(i,0,N) scanf("%lld", &H[i]);
 
         // -- precompute acc sums --
         accH[0] = H[0];
@@ -69,10 +66,7 @@ int main() {
 
         // -- DP --
         // k = 0
-        rep(i,0,N-2) {
-            dp[0][i] = cost(-1, i+1);
-            printf("dp[0][%d]=%lld\n",i,dp[0][i]);
-        }
+        rep(i,0,N-2) dp[0][i] = cost(-1, i+1);
         // k >= 1
         rep(k,1,N) fill(k,k-1,N-1,0,N-1);
 
