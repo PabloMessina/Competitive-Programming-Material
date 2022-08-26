@@ -15,8 +15,7 @@ struct Event {
     }
 };
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     vector<Event> events;
     int l, h, r;
     while (cin >> l >> h >> r) {
@@ -24,14 +23,14 @@ int main() {
         events.emplace_back(END, r, h);
     }
     sort(events.begin(), events.end());
-    vector<int> profile;
+    vector<int> skyline;
     multiset<int> active_hs;
     int max_h = 0;
     for (auto& e : events) {
         if (e.kind == START) {
             if (max_h < e.h) {
-                profile.push_back(e.x);
-                profile.push_back(e.h);
+                skyline.push_back(e.x);
+                skyline.push_back(e.h);
                 max_h = e.h;
             }
             active_hs.insert(e.h);
@@ -42,17 +41,18 @@ int main() {
             if (active_hs.empty()) {
                 next_max_h = 0;
             } else {
-                next_max_h = *prev(active_hs.end());
+                // next_max_h = *prev(active_hs.end());
+                next_max_h = *active_hs.rbegin();
             }
             if (next_max_h < max_h) {
-                profile.push_back(e.x);
-                profile.push_back(next_max_h);
+                skyline.push_back(e.x);
+                skyline.push_back(next_max_h);
             }
             max_h = next_max_h;
         }
     }
     bool f = true;
-    for (int x : profile) {
+    for (int x : skyline) {
         if (f) f = false;
         else cout << ' ';
         cout << x;

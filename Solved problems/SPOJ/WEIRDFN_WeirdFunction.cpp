@@ -1,8 +1,8 @@
 // tags: std::priority_queue, implementation
-#pragma GCC optimize("Ofast") // OPTIONAL: for faster execution
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 const ll MOD =  1000000007;
@@ -10,8 +10,7 @@ ll inline mul(ll a, ll b) { return (a*b)%MOD; }
 ll inline add(ll a, ll b) { return (a+b)%MOD; }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int T; ll a,b,c,n;
     cin >> T;
     while (T--) {
@@ -20,7 +19,7 @@ int main() {
         priority_queue<ll, vector<ll>, greater<ll>> upper;
         ll sum = 1;
         lower.push(1);
-        rep(i,2,n) {
+        rep(i,2,n+1) {
             ll median = lower.top();
             ll x = add(add(mul(a,median),mul(b,i)),c);
             sum += x;

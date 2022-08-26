@@ -6,11 +6,11 @@ def main():
         A = dict()
         B = dict()
         for i in range(n):
-            name = input()
-            tokens = input().strip().split()
+            name = input() # nombre de la pizza
+            tokens = input().strip().split() # ingredientes restaurant 1
             for token in tokens[1:]:
                 A[token] = A.get(token, 0) | (1 << i)
-            tokens = input().strip().split()
+            tokens = input().strip().split() # ingredientes restaurant 2
             for token in tokens[1:]:
                 B[token] = B.get(token, 0) | (1 << i)
         A = list(A.items())

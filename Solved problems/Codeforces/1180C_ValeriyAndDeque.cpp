@@ -2,17 +2,16 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 int N, Q;
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> Q;
     int maxv = INT_MIN;
     deque<int> d(N);
-    rep(i,0,N) {
+    rep(i,0,N+1) {
         cin >> d[i];
         maxv = max(maxv, d[i]);
     }

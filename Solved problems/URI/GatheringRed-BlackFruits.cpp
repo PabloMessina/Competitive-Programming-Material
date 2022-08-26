@@ -3,7 +3,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 // -------------------------------
 const ll MOD = 1000000007;
@@ -61,24 +61,21 @@ pair<ll,ll> hash_slope(const Point& p1, const Point& p2) {
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N;    
     vector<Point> pts(N);
     map<Point, int> pt2f;
-    rep(i,0,N-1) {
+    rep(i,0,N) {
         cin >> pts[i].x >> pts[i].y;
         pt2f[pts[i]]++;
     }
     
     vector<ll> fact(N + 1);
     fact[0] = 1;
-    rep(i, 1, N) fact[i] = mul(i, fact[i-1]);
+    rep(i,1,N+1) fact[i] = mul(i, fact[i-1]);
     
     ll default_ways = 1;
-    for (auto& p : pt2f) {
-        default_ways = mul(default_ways, fact[p.second]);
-    };
+    for (auto& p : pt2f) default_ways = mul(default_ways, fact[p.second]);
 
     map<pair<ll,ll>, map<tuple<ll,ll,ll>, set<Point>>> m;
     for (auto it1 = pt2f.begin(); it1 != pt2f.end(); ++it1) {

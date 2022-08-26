@@ -19,8 +19,8 @@ int gcd (ll a, ll b) {
 // extended euclid's algorithm: find g, x, y such that
 // a * x + b * y = g = gcd(a, b)
 // The algorithm finds a solution (x0,y0) but there are infinite more:
-//   x = x0 + n * (b/g)
-//   y = y0 - n * (a/g)
+//   x(n) = x0 + n * (b/g)
+//   y(n) = y0 - n * (a/g)
 // where n is integer, are the set of all solutions
 
 // --- version 1: iterative

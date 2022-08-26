@@ -18,7 +18,7 @@ def main():
             rpad = space // 2
             lpad = space - rpad
             left = True
-        print('*%s%s%s*' % (' ' * lpad, line, ' ' * rpad))
+        print('*' + ' ' * lpad + line + ' ' * rpad + '*')
     print('*' * (maxlen + 2))
 
 main()

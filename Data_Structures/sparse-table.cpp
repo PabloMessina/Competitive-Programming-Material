@@ -7,12 +7,12 @@ using namespace std;
 template<class t> struct SparseTable {
     int n; vector<int> memo, log2, *arr;
     SparseTable(vector<int>& _arr) {
-        arr = &_arr; log2.resize(n+1); n = arr->size();
+        arr = &_arr; n = arr->size(); log2.resize(n+1);
         rep(i,2,n+1) log2[i] = 1 + log2[i >> 1];
         memo.assign(n * (log2[n] + 1), -1);
     }
     int dp(int i, int e) {
-        int& ans = memo[e][i];
+        int& ans = memo[e * n + i];
         if (ans != -1) return ans;
         if (e == 0) return ans = (*arr)[i];
         return ans = t::merge(dp(i, e-1), dp(i+(1<<(e-1)), e-1));
@@ -39,8 +39,8 @@ template<class t> struct SparseTable {
 // ---------- iterative ---------------
 template<class t> struct SparseTable {
     int n; vector<int> log2; vector<vector<int>> st;
-    SparseTable(vector<int>& _arr) {
-        log2.resize(n+1); n = arr->size();
+    SparseTable(vector<int>& arr) {
+        log2.resize(n+1); n = arr.size();
         rep(i,2,n+1) log2[i] = 1 + log2[i >> 1];
         int maxe = log2[n];
         st.assign(n, vector<int>(maxe+1));

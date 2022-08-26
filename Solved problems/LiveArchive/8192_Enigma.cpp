@@ -1,11 +1,11 @@
 // tags: greedy, backtracking + memoization (DP), modular arithmetics, math
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 // -------------------------------
 int N, M;
 string digits;
-int modpow10[1000];
+int modpow10[1000]; // modpow10[i] = (10 ^ i) % N
 
 
 // possible(i,mod) = whether it is possible to fill in all missing digits ('?') in suffix[i .. M-1]
@@ -23,7 +23,7 @@ int possible(int i, int mod) {
         return ans = possible(i+1, (mod + N - val) % N);
     }
     int mink = i == 0 ? 1 : 0;
-    rep(k, mink, 9) { // greedily try from smallest to largest
+    rep(k, mink, 10) { // greedily try from smallest to largest
         int val = (k * p) % N;
         if (possible(i+1, (mod + N - val) % N)) {
             digits[i] = (char)(k + '0');
@@ -34,13 +34,12 @@ int possible(int i, int mod) {
 }
 
 int main() {
-    ios::sync_with_stdio(false);
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     while(cin >> digits >> N) {
         M = digits.size();
         memset(memo, -1, sizeof memo);
         modpow10[0] = 1;
-        rep(i,1,M-1) modpow10[i] = (modpow10[i-1] * 10) % N;
+        rep(i,1,M) modpow10[i] = (modpow10[i-1] * 10) % N;
         if (possible(0, 0)) cout << digits << endl;
         else cout << "*\n";
     }

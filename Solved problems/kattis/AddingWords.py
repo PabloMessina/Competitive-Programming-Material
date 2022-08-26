@@ -11,13 +11,13 @@ def main():
             word2val.clear()
             val2word.clear()
         elif command == 'def':
-            w = tokens[1]
-            v = int(tokens[2])
+            w = tokens[1] # word
+            v = int(tokens[2]) # value
             if w in word2val: # caso borde
                 old_v = word2val[w]
                 # del word2val[w] # overkill, pero por si las moscas
                 del val2word[old_v] # sí o sí
-                del val
+                # del val
             word2val[w] = v
             val2word[v] = w
         else:

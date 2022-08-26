@@ -5,15 +5,14 @@ using namespace std;
 // -------------------------------
 int pop[500000];
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     while (true) {
         int N, B; cin >> N >> B;
         if (N==-1) break;
         rep(i,0,N) cin >> pop[i];
         int l = 1, r = *max_element(pop, pop+N);
         while (l < r) {
-            int m = (l+r) >> 1;
+            int m = (l+r) >> 1; // (l+r) / 2;
             int c = B;
             rep(i,0,N) {
                 c -= ((pop[i] / m) + (pop[i] % m > 0));
