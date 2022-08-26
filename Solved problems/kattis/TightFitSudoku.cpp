@@ -27,7 +27,7 @@ void toggle_masks(int r, int c, int b) {
 
 void read_board() {
     string tmp;
-    rep(r,0,5) rep(c,0,5) {
+    rep(r,0,6) rep(c,0,6) {
         cin >> tmp;
         Cell& cell = cells[r][c];
         if (tmp.size() == 1) { // one digit
@@ -58,7 +58,7 @@ void read_board() {
 
 bool solve(int r, int c, OP op) {
     // base case: out of board -> we are done
-    if (r == 6 or c == 6) return true;
+    if (r == 6) return true;
     
     Cell& cell = cells[r][c]; // reference to cell at (r,c)
 
@@ -128,8 +128,7 @@ void print_board() {
 
 int main() {
     // for faster input/output
-    ios::sync_with_stdio(false);
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     // ------------
     read_board();
     solve(0,0,FIRST);

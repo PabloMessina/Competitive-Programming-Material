@@ -8,8 +8,7 @@ int N;
 struct Node {int p, d;} nodes[MAXN];
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int t;
     vector<int> banned;
     vector<bool> vis;

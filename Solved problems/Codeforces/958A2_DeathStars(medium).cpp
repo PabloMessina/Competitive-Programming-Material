@@ -51,11 +51,10 @@ int main() {
     ios::sync_with_stdio(false); cin.tie(0);
     RH::init();
     cin >> N >> M;
-    string A, tmp;
-    A.reserve(N * M);
+    string tmp;
     vector<RH> rha, rhb;
     rep(_,0,N) { cin >> tmp; rha.push_back(RH(tmp)); }
-    rep(_,0,M) { cin >> tmp; rhb.push_back(RH(tmp)); }    
+    rep(_,0,M) { cin >> tmp; rhb.push_back(RH(tmp)); }
     rep(i,0,N-M+1) {
         rep(j,0,N-M+1) {
             bool match = true;
@@ -66,6 +65,4 @@ int main() {
             }
         }
     }
-    assert (false);
-    return 0;
 }

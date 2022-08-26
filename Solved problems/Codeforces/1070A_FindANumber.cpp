@@ -14,8 +14,7 @@ typedef long long int ll;
 pair<int,int> prev_[500][5001];
 int num[500][5001];
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int d, s; cin >> d >> s;
     rep(i,0,d) rep(j,0,s+1) num[i][j] = -1;
     int ur, us;
@@ -31,7 +30,7 @@ int main() {
         num[ur][us] = k;
         prev_[ur][us] = {ur, us};
     }
-    while (!q.empty()) {
+    while (!q.empty()) { // BFS
         tie(ur, us) = q.front(); q.pop();
         rep(k,0,10) {
             int vr = (ur * 10 + k) % d;
@@ -51,7 +50,7 @@ int main() {
                 cout << '\n';
                 return 0;
             }
-            if (vs <= s and num[vr][vs] == -1)  {
+            if (vs <= s and num[vr][vs] == -1) {
                 num[vr][vs] = k;
                 prev_[vr][vs] = {ur, us};
                 q.emplace(vr, vs);

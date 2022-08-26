@@ -1,4 +1,4 @@
-// tags: graphs, trees, DFS, DP
+// tags: graphs, trees, DFS
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;

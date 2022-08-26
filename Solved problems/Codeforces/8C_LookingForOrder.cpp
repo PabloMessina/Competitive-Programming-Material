@@ -23,7 +23,7 @@ int dp(int mask) {
     // base case 1: no objects to pick up -> we are done
     if (mask == 0) return 0;
     // base case 2: problem already solved -> we are done
-    int& ans = memo[mask][i][j];
+    int& ans = memo[mask];
     if (ans != -1) return ans;    
     // general case:
     //   we have 2 options with the first object to pick up

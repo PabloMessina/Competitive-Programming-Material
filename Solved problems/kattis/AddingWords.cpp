@@ -6,6 +6,7 @@ int main() {
     // ios::sync_with_stdio(false); cin.tie(0); 
     map<string,int> word2val;
     map<int,string> val2word;
+
     string line;    
     while (getline(cin, line)) {
         stringstream ss;

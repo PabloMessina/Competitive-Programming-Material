@@ -6,7 +6,7 @@ function binsearch(array, i, j) {
     while (i < j) {
         m = (i+j) / 2;
         if (predicate(array[m]))
-            j = m 
+            j = m
         else
             i = m + 1
     }
@@ -57,7 +57,7 @@ int main () {
     sort (v.begin(), v.end());                       // 10 10 10 20 20 20 30 30
     auto low = lower_bound (v.begin(), v.end(), 20); //          ^
     auto up  = upper_bound (v.begin(), v.end(), 20); //                    ^
-    cout << "lower_bound at position " << (low- v.begin()) << '\n';
+    cout << "lower_bound at position " << (low - v.begin()) << '\n';
     cout << "upper_bound at position " << (up - v.begin()) << '\n';
     return 0;
 }

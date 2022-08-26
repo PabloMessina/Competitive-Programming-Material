@@ -291,8 +291,7 @@ Point get_position(ll p) {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     while (cin >> N >> M >> P and N) {
         rep(i,0,P) {
             ll x, y; cin >> y >> x;

@@ -1,7 +1,7 @@
 // tags: SCC, tarjan, DAGs, top-down DP, graphs
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 typedef long long int ll;
 typedef pair<int,int> ii;
 // -------------------------------
@@ -24,11 +24,7 @@ ll dp(int u) {
     if (ans != -1) return ans;
     if (u == dagE) return ans = dag_funs[dagE];
     ll tmp = LLONG_MIN;
-    for (int v : dag[u]) {
-        ll x = dp(v);
-        if (x == LLONG_MIN) continue;
-        tmp = max(tmp, x);
-    }
+    for (int v : dag[u]) tmp = max(tmp, dp(v));
     if (tmp != LLONG_MIN) tmp += dag_funs[u];
     return ans = tmp;
 }
@@ -83,27 +79,24 @@ namespace tarjanSCC {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     cin >> N >> M >> S >> E;
     --S, --E;
-    rep(i,0,N-1) cin >> funs[i];
+    rep(i,0,N) cin >> funs[i];
     g.assign(N, vector<int>());
     while (M--) {
         int a, b; cin >> a >> b; --a, --b;
         g[a].push_back(b);
     }
     tarjanSCC::run(g);
-    rep(u,0,N-1) {
+    rep(u,0,N) {
         for (int v : g[u]) {
             if (scc_ids[u] != scc_ids[v])
                 dag_edges.emplace(scc_ids[u], scc_ids[v]);
         }
     }
     dag.resize(SCC_ID);
-    for (auto& p : dag_edges) {
-        dag[p.first].push_back(p.second);
-    }
+    for (auto& p : dag_edges) dag[p.first].push_back(p.second);
     memset(memo, -1, sizeof(memo[0]) * SCC_ID);
     dagS = scc_ids[S];
     dagE = scc_ids[E];

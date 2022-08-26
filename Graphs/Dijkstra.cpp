@@ -1,9 +1,5 @@
+#include "../c++_template.cpp"
 // complexity: (|E| + |V|) * log |V|
-#include <bits/stdc++.h>
-#define ff first
-#define ss second
-using namespace std;
-typedef pair<int, int> ii;
 int N; // number of nodes
 vector<vector<ii>> g; // graph
 vector<int> D, P; // D: min distance from source to each node

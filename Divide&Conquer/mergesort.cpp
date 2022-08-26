@@ -1,3 +1,6 @@
+#include <bits/stdc++.h>
+using namespace std;
+
 void mergesort_(vector<int>& a, int i, int j, vector<int>& b) {
     if (i == j) return; // caso base
     // caso general
@@ -17,5 +20,3 @@ void mergesort(vector<int>& a) {
     vector<int> b(a.size());
     mergesort_(a, 0, a.size()-1, b);
 }
-
-sort(a.begin(), a.end()); // con la stl

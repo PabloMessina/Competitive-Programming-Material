@@ -2,7 +2,7 @@
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
@@ -17,7 +17,7 @@ typedef tuple<int,int,int> iii;
 
 const int MAXN = 100000;
 int N;
-struct Point { ll x,y; };
+struct Point { ll x, y; };
 Point pts[MAXN];
 ll acc_area[MAXN];
 
@@ -44,20 +44,20 @@ bool predicate(ll tot_area, int i, int j) {
 
 int main() {
     while (scanf("%d", &N) == 1) {
-        rep(i,0,N-1) scanf("%lld%lld", &pts[i].x, &pts[i].y);
+        rep(i,0,N) scanf("%lld%lld", &pts[i].x, &pts[i].y);
         ll tmp = 0;
-        rep(i,0,N-1) {
+        rep(i,0,N) {
             int j = (i+1) % N;
             tmp = acc_area[i] = tmp + (pts[i].x + pts[j].x) * (pts[j].y - pts[i].y);
         }
         ll tot_area = tmp;
         ll ans = 0;
-        rep(i,0,N-1) {
+        rep(i,0,N) { // Carol
             int j1 = i+2;
             int j2 = i+N-2;
-            while (j1 < j2) {
+            while (j1 < j2) { // Carla
                 int m = (j1 + j2) >> 1;
-                if (predicate(tot_area,i,m % N)) {
+                if (predicate(tot_area, i, m % N)) {
                     j2 = m;
                 } else {
                     j1 = m+1;
