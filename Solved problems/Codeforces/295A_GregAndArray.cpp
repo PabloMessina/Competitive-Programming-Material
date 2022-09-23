@@ -2,7 +2,7 @@
 #include <bits/stdc++.h> // import everything in one shot
 using namespace std;
 // defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
@@ -29,28 +29,28 @@ void lazy_range_increment(ll d, int i, int j, ll* arr) {
 
 void update_array(ll* arr, int size) {
     ll acc = 0;
-    rep(i,0,size-1) { acc = arr[i] = arr[i] + acc; }
+    rep(i,0,size) { acc = arr[i] = arr[i] + acc; }
 }
 
 int main() {
     ios::sync_with_stdio(false);
     cin >> n >> m >> k;
-    rep(i,0,n-1) cin >> values[i];
-    rep(i,0,m-1) {
+    rep(i,0,n) cin >> values[i];
+    rep(i,0,m) {
         int l, r; ll d; cin >> l >> r >> d;
         ops[i] = make_tuple(l-1, r-1, d);
     }
-    rep(i,1,k) {
+    rep(i,1,k+1) {
         int x, y; cin >> x >> y;
         lazy_range_increment(1, x-1, y-1, op_times);
     }
     update_array(op_times, m);
-    rep(i, 0, m-1) {
+    rep(i,0,m) {
         int l, r; ll d; tie(l,r,d) = ops[i];
         lazy_range_increment(d * op_times[i], l, r, deltas);
     }
     update_array(deltas, n);
-    rep(i,0,n-1) {
+    rep(i,0,n) {
         if (i) cout << ' ';
         cout << values[i] + deltas[i];
     }

@@ -17,7 +17,25 @@ struct RH_double { // rolling hashing
         pow[a][0] = 1;
         rep(i,1,MAXLEN) pow[a][i] =  mul(B, pow[a][i-1], a);
     }
-    static void init() { init(0); init(1); }    
+    static void init() { init(0); init(1); }
+    static ull shift_left(ull h, int k) {
+        ull ans = 0;
+        rep(a,0,2) {
+            ull hh = (h >> (32 * a)) & ((1ull << 32) - 1);
+            hh = mul(hh, pow[a][k], a);
+            ans |= hh << (32 * a);
+        }
+        return ans;
+    }
+    static ull add(ull x, ull y) {
+        ull ans = 0;
+        rep(a,0,2) {
+            ull xx = (x >> (32 * a)) & ((1ull << 32) - 1);
+            ull yy = (y >> (32 * a)) & ((1ull << 32) - 1);            
+            ans |= add(xx, yy, a) << (32 * a);
+        }
+        return ans;
+    }
     vector<ull> h[2];
     int len;
     void init(vector<int>& s) {

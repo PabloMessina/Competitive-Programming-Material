@@ -21,7 +21,7 @@ int main() {
         int a = d.front(); d.pop_front();
         int b = d.front(); d.pop_front();
         pairs.emplace_back(a,b);
-        if (a <= b) swap(a,b);
+        if (a < b) swap(a,b);
         d.push_front(a);
         d.push_back(b);
     }

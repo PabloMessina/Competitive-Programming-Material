@@ -2,7 +2,7 @@
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
@@ -77,8 +77,8 @@ namespace LCA { // lowest common ancestor, binary lifting (power of 2 jumps) met
     void init() {
         memset(D, -1, sizeof(int) * N);
         dfs(0, -1, 0, -1);
-        rep(j, 1, MAXLOG) {
-            rep(i, 0, N-1) {
+        rep(j,1,MAXLOG+1) {
+            rep(i,0,N) {
                 int p = P[i][j-1];
                 if (p == -1) {
                     P[i][j] = -1;
