@@ -1,5 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include "../c++_template.cpp"
 
 //=============================
 // 1) Segment Tree - ITERATIVE

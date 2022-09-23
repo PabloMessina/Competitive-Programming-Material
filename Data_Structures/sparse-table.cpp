@@ -1,5 +1,5 @@
-#include <bits/stdc++.h>
-using namespace std;
+#include "../c++_template.cpp"
+
 // time complexity:
 //  - filling DP table: O(N log N)
 //  - answering queries: O(1) / O(log N)

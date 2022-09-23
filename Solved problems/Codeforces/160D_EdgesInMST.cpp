@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define umap unordered_map
 typedef pair<int,int> ii;
 // -------------------------------
@@ -23,7 +23,7 @@ namespace Kruskal {
         UnionFind(int n) {
             rank.assign(n,0);
             p.resize(n);
-            rep(i,0,n-1) p[i] = i;
+            rep(i,0,n) p[i] = i;
         }
         int findSet(int i) { return (p[i] == i) ? i : (p[i] = findSet(p[i])); }
         bool isSameSet(int i, int j) { return findSet(i) == findSet(j); }
@@ -68,7 +68,7 @@ namespace Kruskal {
             
             umap<int, int> set2id;
             int ID  = 0;
-            rep(i,l,r-1) {
+            rep(i,l,r) {
                 Edge& e = edges[i];
                 
                 int set_u = uf.findSet(e.u);                
@@ -83,7 +83,7 @@ namespace Kruskal {
             g.assign(ID, vector<pair<int, Edge*>>());
             edge_count.clear();
 
-            rep(i,l,r-1) {
+            rep(i,l,r) {
                 Edge& e = edges[i];
                 int u = set2id[uf.findSet(e.u)];
                 int v = set2id[uf.findSet(e.v)];
@@ -98,9 +98,9 @@ namespace Kruskal {
             }
             depth.assign(ID, -1);
             low.resize(ID);
-            rep(u, 0, ID-1) if (depth[u] == -1) dfs(u, -1, 0);
+            rep(u,0,ID) if (depth[u] == -1) dfs(u, -1, 0);
 
-            rep(i,l,r-1) {
+            rep(i,l,r) {
                 Edge& e = edges[i];
                 uf.unionSet(e.u, e.v);
             }
@@ -111,18 +111,17 @@ namespace Kruskal {
 }
 
 int main() {
-    ios::sync_with_stdio(false); 
-    cin.tie(0); cout.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int N, M; cin >> N >> M;
     vector<Edge> edges; edges.reserve(M);
-    rep(i,0,M-1) {
+    rep(i,0,M) {
         int u, v, w; cin >> u >> v >> w;
         --u, --v;
         edges.emplace_back(u,v,w,i,SOME);
     }
     Kruskal::run(N, edges);
     vector<int> indexes(M);
-    rep(i,0,M-1) indexes[edges[i].i] = i;
+    rep(i,0,M) indexes[edges[i].i] = i;
     for (int i : indexes) {
         Edge& e = edges[i];
         if (e.type == SOME) {

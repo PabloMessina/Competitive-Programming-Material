@@ -1,9 +1,5 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define rep(i,a,b) for (int i=a; i<b; ++i)
-#define ff first
-#define ss second
-typedef pair<int,int> ii;
+#include "../c++_template.cpp"
+
 /* ================= */
 /* METHOD 1: KRUSKAL */
 /* ================= */
@@ -74,7 +70,7 @@ namespace Prim {
             total_cost += cost;
             mst[u].emplace_back(v, cost);
             mst[v].emplace_back(u, cost);
-            if (++count == N) break;
+            if (++count == n_nodes) break;
             for (ii& p : g[v]) {
                 if (visited[p.ff]) continue;
                 q.push({v, p.ff, p.ss});                

@@ -33,6 +33,7 @@ int main() {
             }
         }
         while (q.size() and q.front() <= x) q.pop();
+        if (last_exit < x) assert(q.empty());
         last_exit = max(last_exit, x) + t;
         q.push(last_exit);
         prev_x = x;
