@@ -1,14 +1,31 @@
-#include "../c++_include.cpp"
-// Tarjan's SCC algorithm
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
+using namespace std;
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define umap unordered_map
+#define uset unordered_set
+#define ff first
+#define ss second
+#define pb push_back
+#define eb emplace_back
+// typedefs
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef unsigned long long int ull;
+typedef long long int ll;
+// -------------------------------
+
 vector<int> s, D, L;
 vector<bool> instack;
-vector<vector<int>>* g;
+vector<vector<int>> g;
 int n, ID;
 void dfs(int u) {
     D[u] = L[u] = ID++;
     instack[u] = true;
     s.push_back(u);
-    for (int v : (*g)[u]) {
+    for (int v : g[u]) {
         if (D[v] == -1) {
             dfs(v);
             L[u] = min(L[v], L[u]);
@@ -25,20 +42,14 @@ void dfs(int u) {
         }
     }
 }    
-void find_sccs(vector<vector<int>>& _g) {
-    n = _g.size(); ID = 0;
+void find_sccs(vector<vector<int>>& g) {
+    n = g.size(); ID = 0;
     s.reserve(n); D.assign(n, -1); L.resize(n);
     instack.assign(n, 0);
-    g = &_g;
     rep(u,0,n) if (D[u] == -1) dfs(u);
 }
+
 int main() {
-    int n, m; cin >> n >> m;
-    vector<vector<int>> g(n);
-    while(m--) {
-        int u, v; cin >> u >> v; u--, v--;
-        g[u].push_back(v);
-    }
-    find_sccs(g);
+    ios::sync_with_stdio(false); cin.tie(0);
     return 0;
 }

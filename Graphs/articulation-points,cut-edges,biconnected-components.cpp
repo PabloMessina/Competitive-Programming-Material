@@ -71,7 +71,7 @@ void dfs(int u, int p, int d) {
             dfs(v, u, d+1);
             if (L[v] > D[u]) printf("(u,v) = (%d, %d) is cut edge\n", u, v);
             L[u] = min(L[u], L[v]); 
-        } else L[u] = min(L[u], D[v]);
+        } else L[u] = min(L[u], D[v]); // back edge
     }
 }
 
