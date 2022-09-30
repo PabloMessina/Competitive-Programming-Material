@@ -2,7 +2,7 @@
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 // -------------------------------
 struct LCA {
@@ -29,8 +29,8 @@ struct LCA {
         D.assign(n, -1);
         A.resize(n * (maxe + 1));
         dfs(root, -1, 0);
-        rep(e, 1, maxe) {
-            rep (u, 0, n-1) {
+        rep(e, 1, maxe+1) {
+            rep(u, 0, n) {
                 int a = anc(u,e-1);
                 anc(u,e) = (a == -1 ? -1 : anc(a,e-1));
             }
@@ -46,7 +46,7 @@ struct LCA {
         if (D[u] < D[v]) swap(u, v); 
         u = raise(u, D[u] - D[v]);
         if (u == v) return u;
-        invrep (e, maxe, 0) {
+        invrep(e, maxe, 0) {
             if (anc(u,e) != anc(v,e)) {
                 u = anc(u,e), v = anc(v,e);
             }
@@ -59,10 +59,10 @@ int main() {
     ios::sync_with_stdio(false); 
     cin.tie(0); cout.tie(0);
     int T; cin >> T;
-    rep(t,1,T) {
+    rep(t,0,T) {
         int N; cin >> N;
         vector<vector<int>> g(N);
-        rep(u,0,N-1) {
+        rep(u,0,N) {
             int m; cin >> m;
             while (m--) {
                 int v; cin >> v; v--;

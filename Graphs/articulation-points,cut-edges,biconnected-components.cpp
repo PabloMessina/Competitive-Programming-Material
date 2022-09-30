@@ -1,14 +1,12 @@
 // -------------------
 // Tarjan's Algorithm
 // -------------------
-//references:
-//https://www.youtube.com/watch?v=jFZsDDB0-vo
-//https://www.hackerearth.com/practice/algorithms/graphs/articulation-points-and-bridges/tutorial/
-//https://www.hackerearth.com/practice/algorithms/graphs/biconnected-components/tutorial/
-//http://web.iitd.ac.in/~bspanda/biconnectedMTL776.pdf
-#define ff first
-#define ss second
-typedef pair<int,int> ii;
+// references:
+// https://www.youtube.com/watch?v=jFZsDDB0-vo
+// https://www.hackerearth.com/practice/algorithms/graphs/articulation-points-and-bridges/tutorial/
+// https://www.hackerearth.com/practice/algorithms/graphs/biconnected-components/tutorial/
+// http://web.iitd.ac.in/~bspanda/biconnectedMTL776.pdf
+#include "../c++_template.cpp"
 vector<int> D, L;
 vector<vector<int>> g;
 stack<ii> s; int root;

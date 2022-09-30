@@ -106,7 +106,7 @@ struct LCA {
 //               efficient processor instruction)
 struct LCA {
     vector<int> E, D, H; // E = euler tour, D = depth, H = first index of node in euler tour
-    vector<int> DP // memo for range minimun query
+    vector<int> DP; // memo for range minimun query
     vector<vector<int>> *g; // pointer to graph
     int idx; // tracks node ocurrences
     int n; // number of nodes
@@ -164,7 +164,7 @@ struct LCA {
         // within the Euler Tour sequence before using D
         return D[H[u]] + D[H[v]] - 2 * D[H[lca(u,v)]];
     }
-}
+};
 
 // -----------------
 // EXAMPLE OF USAGE
@@ -187,4 +187,5 @@ int main() {
         cout << "LCA(" << u << "," << v << ") = " << lca.lca(u,v) << '\n';
         cout << "dist(" << u << "," << v << ") = " << lca.dist(u,v) << '\n';
     }
+    return 0;
 };
