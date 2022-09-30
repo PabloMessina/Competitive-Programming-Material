@@ -20,10 +20,14 @@ void print_and_remove_bicomp(int u, int v) {
         if (top == uv) break;
     }
 }
-
+/*
+    // How to use:
+    D.assign(g.size(), -1);
+    L.resize(g.size());
+    dfs(0, -1, 0);
+ */
 // general version: find everything
 int root_children = 0;
-// dfs(0, -1, 0); // first call
 void dfs(int u, int p, int d) { // (node, parent, depth)    
     D[u] = L[u] = d; // u at least can reach itself (ignoring u-p edge)
     for(int v : g[u]) {
