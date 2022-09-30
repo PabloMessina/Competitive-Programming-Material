@@ -1,6 +1,4 @@
-#include <bits/stdc++.h>
-#define rep(i,a,b) for(int i=a; i<b; ++i)
-using namespace std;
+#include "../c++_template.cpp"
 // Tarjan's SCC algorithm
 vector<int> s, D, L;
 vector<bool> instack;
@@ -31,8 +29,8 @@ void find_sccs(vector<vector<int>>& g) {
     s.reserve(n); D.assign(n, -1); L.resize(n);
     instack.assign(n, 0);
     n = g.size(); ID = 0;
-    rep(u,0,n) if (ids[u] == -1) dfs(u);
-};
+    rep(u,0,n) if (D[u] == -1) dfs(u);
+}
 int main() {
     int n, m; cin >> n >> m;
     vector<vector<int>> g(n);
