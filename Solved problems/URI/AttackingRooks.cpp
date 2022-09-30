@@ -1,8 +1,8 @@
 // tags: max flow, dinic
-#include <bits/stdc++.h> // add almost everything in one shot
+#include <bits/stdc++.h>
 using namespace std;
 // defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
@@ -97,13 +97,13 @@ public:
 int main() {
     int N;
     while (scanf("%d", &N) == 1) {
-        rep(i,0,N-1) scanf("%s", board[i]);
+        rep(i,0,N) scanf("%s", board[i]);
         int r = -1;
         bool out;
         // rows
-        rep(i,0,N-1) {
+        rep(i,0,N) {
             out = true;
-            rep(j,0,N-1) {
+            rep(j,0,N) {
                 if (board[i][j] == '.') {
                     if (out) { ++r; out = false; }
                     rows[i][j] = r;
@@ -115,9 +115,9 @@ int main() {
         }
         // cols
         int c = -1;
-        rep(j,0,N-1) {
+        rep(j,0,N) {
             out = true;
-            rep(i,0,N-1) {
+            rep(i,0,N) {
                 if (board[i][j] == '.') {
                     if (out) { ++c; out = false; }
                     cols[i][j] = c;
@@ -132,10 +132,10 @@ int main() {
         int NC = c+1;
         int s = 0, t = NR+NC+1;
         Dinic din(NR+NC+2);
-        rep(r,0,NR-1) din.add_edge(s,1+r,1);
-        rep(c,0,NC-1) din.add_edge(1+NR+c,t,1);
-        rep(i,0,N-1) {
-            rep(j,0,N-1) {
+        rep(r,0,NR) din.add_edge(s,1+r,1);
+        rep(c,0,NC) din.add_edge(1+NR+c,t,1);
+        rep(i,0,N) {
+            rep(j,0,N) {
                 int r = rows[i][j];
                 int c = cols[i][j];
                 if (r >= 0) {
