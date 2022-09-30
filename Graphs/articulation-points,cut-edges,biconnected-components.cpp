@@ -22,7 +22,8 @@ void print_and_remove_bicomp(int u, int v) {
 }
 
 // general version: find everything
-int root_children = 0;    
+int root_children = 0;
+// dfs(0, -1, 0); // first call
 void dfs(int u, int p, int d) { // (node, parent, depth)    
     D[u] = L[u] = d; // u at least can reach itself (ignoring u-p edge)
     for(int v : g[u]) {

@@ -51,5 +51,7 @@ void find_sccs(vector<vector<int>>& g) {
 
 int main() {
     ios::sync_with_stdio(false); cin.tie(0);
+    int N, M; cin >> N >> M;
+        
     return 0;
 }
