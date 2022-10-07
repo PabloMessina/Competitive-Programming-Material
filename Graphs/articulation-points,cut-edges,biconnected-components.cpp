@@ -9,7 +9,7 @@
 #include "../c++_template.cpp"
 vector<int> D, L;
 vector<vector<int>> g;
-stack<ii> s; int root;
+stack<ii> s;
 
 void print_and_remove_bicomp(int u, int v) {
     puts("biconnected component found:");
@@ -88,7 +88,7 @@ void dfs(int u, int p, int d) {
         if (v == p) continue;
         if (D[v] == -1) {
             dfs(v, u, d+1);
-            if (p == -1) { if (++root_children == 2) printf("root = %d is AP\n", root); }
+            if (p == -1) { if (++root_children == 2) printf("root = %d is AP\n", u); }
             else if (L[v] >= d) printf("u = %d is AP\n",  u);
             L[u] = min(L[u], L[v]); 
         } else L[u] = min(L[u], D[v]);
@@ -109,5 +109,12 @@ void dfs(int u, int p, int d) {
             s.emplace(u,v);
             L[u] = min(L[u], D[v]);
         }
+    }
+}
+
+int main() {
+    int n, m;
+    while ((cin >> n >> m) && n) {
+
     }
 }
