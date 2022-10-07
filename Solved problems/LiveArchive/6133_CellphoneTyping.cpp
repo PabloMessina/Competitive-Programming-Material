@@ -33,7 +33,7 @@ int main() {
     ios::sync_with_stdio(false); cin.tie(0);
 	int N;
 	while (cin >> N) {
-		Trie t(26, 80);
+		Trie t(26, 1000000);
 		vector<string> words;
 		rep(i,0,N) {
 			string w; cin >> w; t.insert(w);
