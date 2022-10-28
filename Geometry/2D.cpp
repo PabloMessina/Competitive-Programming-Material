@@ -1,6 +1,4 @@
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long int ll;
+#include "../c++_template.cpp"
 // -------------------------------
 const double PI = acos(-1);
 const double EPS = 1e-12;
@@ -26,10 +24,10 @@ struct P { // 2D
     P unit() { return (*this)/norm(); }
     bool operator<(const P& p) const { // smaller quadrant or same quadrant and to the right
         int q = quad(), qp = p.quad();
-        return q != qp ? q < qp : (*this)^p > 0;
+        return q != qp ? q < qp : ((*this)^p) > 0;
     }
     bool same_angle(const P& p) { // two vectors pointing to the same direction
-        return quad() == p.quad() and (*this)^p == 0;
+        return quad() == p.quad() and ((*this)^p) == 0;
     }
 };
 
@@ -43,7 +41,7 @@ bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; /* abs((a-p)*(b-p)) <=
 
 bool on_segment(P &a, P &b, P &p) { return on_line(a,b,p) && in_disk(a,b,p); }
 
-double closest_t(P& a, P& b, P& p) { return -(a-p)*(b-a) / ((b-a)*(b-a)*2.); }
+double closest_t(P& a, P& b, P& p) { return -((a-p)*(b-a) / ((b-a)*(b-a)*2.)); }
 
 /* ======================================================= */
 /* Check if a segment is below another segment (wrt a ray) */
@@ -56,7 +54,7 @@ double closest_t(P& a, P& b, P& p) { return -(a-p)*(b-a) / ((b-a)*(b-a)*2.); }
 // 3) segments are not collinear to the ray
 // 4) the ray intersects all segments
 struct Segment { P p1, p2;};
-Segment segments[MAXN]; // array of line segments
+Segment segments[100000]; // array of line segments
 bool is_si_below_sj(int i, int j) { // custom comparator based on cross product
     Segment& si = segments[i];
     Segment& sj = segments[j];
@@ -96,7 +94,7 @@ bool intersect_lines(P& a, P& b, P& c, P& d, double& t1, double& t2) {
 }
 
 // Circle Intersection
-struct Circle { double x, y, r; }
+struct Circle { double x, y, r; };
 bool fully_outside(double r1, double r2, double d_sqr) {
     double tmp = r1 + r2; return d_sqr > tmp * tmp;
 }
@@ -137,7 +135,6 @@ double point_segment_dist(P& p, P& a, P& b) {
 // representation {a,b,c} such that a*x + b*y + c = 0 is the equation
 // of the straight line defined by p1, p2. This representation must be
 // unique for each straight line, no matter which p1 and p2 are sampled.
-struct Point { ll x, y; };
 tuple<ll,ll,ll> hash_line(const P& p1, const P& p2) {
     ll a = p1.y - p2.y;
     ll b = p2.x - p1.x;
@@ -159,7 +156,7 @@ pair<ll,ll> hash_slope(const P& p1, const P& p2) {
 
 // Circumcenter of 3 points
 // reference: https://codeforces.com/blog/entry/22194
-Point bary(const P& A, const P& B, const P& C, double a, double b, double c) {
+P bary(const P& A, const P& B, const P& C, double a, double b, double c) {
     return (A*a + B*b + C*c) / (a + b + c);
 }
 P circumcenter(const P& A, const P& B, const P& C) {
@@ -216,14 +213,15 @@ bool in_polygon_evenodd(vector<P> &p, P a, bool strict = true) {
     return c & 1;
 }
 // Nonzero Rule (winding number)
-bool in_polygon_nonzero(vector<P> &p, P a, bool strict = true) {
-    int wn = 0, n = p.size();
+bool in_polygon_nonzero(vector<P> &pol, P p, bool strict = true) {
+    int wn = 0, n = pol.size();
     rep(i,0,n) {
-        int j = (i+1)%n; if (on_segment(p[i], p[j], a)) return !strict;
+        int j = (i+1)%n; if (on_segment(pol[i], pol[j], p)) return !strict;
+        P &a = pol[i], &b = pol[j];
         if (a.y <= p.y) {
-            if (p.y < b.y and (b-a)^(p-a) > 0) ++wn; // upward & left
+            if (p.y < b.y and ((b-a)^(p-a)) > 0) ++wn; // upward & left
         } else {
-            if (p.y >= b.y and (b-a)^(p-a) < 0) --wn; // downward & right
+            if (p.y >= b.y and ((b-a)^(p-a)) < 0) --wn; // downward & right
         }
     }
     return wn != 0; // nonzero
@@ -264,6 +262,19 @@ pair<int,int> find_crossing_edge(P& a, P& b, vector<P>& ch, int start, int end) 
     }
     return {(l-1+n) % n, l%n};
 }
+ll det(P& a, P& b) { return a.x * b.y - a.y * b.x; }
+bool find_line_line_intersection(P& a1, P& b1, P& a2, P& b2,
+        long double& t1, long double& t2) {
+    P d1 = b1 - a1;
+    P d2 = b2 - a2;
+    P _d2 = d2 * -1;
+    ll detA = det(d1, _d2);
+    if (detA == 0) return false;
+    P b = a2 - a1;
+    t1 = (long double)det(b, _d2)/(long double)detA;
+    t2 = (long double)det(d1, b)/(long double)detA;
+    return true;
+}
 void find_segment_convexhull_intersection(P& a, P& b, vector<P>& ch) {
     // find rightmost and leftmost points in convex hull wrt vector a -> b
     int i1 = extreme_point_index(a, b, ch);
@@ -276,9 +287,9 @@ void find_segment_convexhull_intersection(P& a, P& b, vector<P>& ch) {
     pair<int,int> e1 = find_crossing_edge(a, b, ch, i1, i2); // binsearch from i1 to i2 ccw
     pair<int,int> e2 = find_crossing_edge(a, b, ch, i2, i1); // binsearch from i2 to i1 ccw
     // find exact intersection points
-    double r1, s1, r2, s2;
-    assert (find_line_line_intersection(a, b, ch[e1.first], ch[e1.second], r1, s1));
-    assert (find_line_line_intersection(a, b, ch[e2.first], ch[e2.second], r2, s2));
+    long double r1, s1, r2, s2;
+    assert(find_line_line_intersection(a, b, ch[e1.first], ch[e1.second], r1, s1));
+    assert(find_line_line_intersection(a, b, ch[e2.first], ch[e2.second], r2, s2));
     // make sure intersections are significant and within line segment range
     if (r1 > 1.0 - EPS and r2 > 1.0 - EPS) return; // intersections above line segment
     if (r1 < EPS and r2 < EPS) return; // intersections below line segment
