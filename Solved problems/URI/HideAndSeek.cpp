@@ -3,7 +3,7 @@
 #include <bits/stdc++.h> // add almost everything in one shot
 using namespace std;
 // defines
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+#define rep(i,a,b) for(int i = a; i < b; ++i)
 #define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
 #define uset unordered_set
@@ -83,7 +83,7 @@ namespace Solver {
     // with all the walls intersected by the ray (center -> target)
     void init_active_walls() {        
         active_walls.clear();
-        rep(i,0,W-1) {
+        rep(i,0,W) {
             Segment& w = walls[i];
             int oa = orientation(center, target, w.a);
             int ob = orientation(center, target, w.b);
@@ -113,7 +113,7 @@ namespace Solver {
         if (start_i == n) return 0; // no kid found -> trivially return 0
         // 2) execute radial sweep
         int count = 0;
-        rep(i,start_i,start_i+n-1) {
+        rep(i,start_i,start_i+n) {
             auto& e = events[i % n];
             update_target(e.pt); // point to the new target
             switch(e.type) {
@@ -140,23 +140,23 @@ namespace Solver {
 int main() {
     while (scanf("%d%d%d", &S, &K, &W) == 3) {
         // read kids' coordinates
-        rep(i,0,K-1) scanf("%lld%lld", &kids[i].x, &kids[i].y);
+        rep(i,0,K) scanf("%lld%lld", &kids[i].x, &kids[i].y);
         // read walls' coordinates
-        rep(i,0,W-1) {
+        rep(i,0,W) {
             Segment& w = walls[i];
             scanf("%lld%lld%lld%lld", &w.a.x, &w.a.y, &w.b.x, &w.b.y);
         }
         // for each seeker kid
-        rep(i,0,S-1) {
+        rep(i,0,S) {
             // --- collect radial events ---
             vector<RadialEvent> events;
             // 1) KID events
-            rep(j,0,K-1) if (i != j) {                
+            rep(j,0,K) if (i != j) {                
                 double a = atan2(kids[j].y - kids[i].y, kids[j].x - kids[i].x);
                 events.emplace_back(KID, kids[j], a, j);
             }
             // 2) WALL_START and WALL_END events 
-            rep(j,0,W-1) {
+            rep(j,0,W) {
                 Point p1 = walls[j].a;
                 Point p2 = walls[j].b;
                 // make sure p1 comes before p2 counter-clockwise

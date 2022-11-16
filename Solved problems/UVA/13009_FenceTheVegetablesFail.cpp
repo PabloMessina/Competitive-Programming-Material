@@ -1,122 +1,119 @@
 // tags: domain compression, sweep line, fenwick tree (range update & point query)
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
 #define umap unordered_map
-typedef long long int ll;
+#define uset unordered_set
+#define ff first
+#define ss second
+#define pb push_back
+#define eb emplace_back
+// typedefs
+typedef vector<int> vi;
 typedef pair<int,int> ii;
+typedef unsigned long long int ull;
+typedef long long int ll;
 // -------------------------------
+
 int P, V;
-
-// define 2 structs: Plant and Vertical Segment
-// both inheriting from struct X, in order to use
-// polymorphism
-enum Type { PLANT, VSEGMENT };
-struct X { int x; Type type; }; // keep track of x coordinate and type
-struct Plant : X {
-	int y, val;
-	Plant(int x, int y, int val) {
-		this->x = x; this->y = y; this->val = val;
-		this->type = PLANT;
-	}
+struct Point {
+	ll x, y;
+	Point(ll x, ll y) : x(x), y(y) {}
 };
-struct VerticalSegment : X {
-	int miny, maxy;
-	VerticalSegment(int x, int miny, int maxy) {
-		this->x = x; this->miny = miny; this->maxy = maxy;
-		this->type = VSEGMENT;
-	}	
+
+vector<Point> plants, fence;
+struct Event {
+	ll x, y1, y2;
+	int idx;
+	bool isPlant;
+	Event(ll x, ll y1, ll y2, int idx, bool isPlant) : x(x), y1(y1), y2(y2), idx(idx), isPlant(isPlant) {}
 };
-// custom comparator used later on for sorting
-bool cmp(const X* a, const X* b) { return a->x < b->x; }
 
-
-// data structure used for range updates and single point queries
-struct FenwickTree {
-	vector<int> ft;
-	FenwickTree(int n) { ft.assign(n+1, 0); }	
-	// prefix sum query
-	int psq(int b) {
-		int sum = 0;
-		for (; b; b -= (b & -b)) sum += ft[b];
-		return sum;
-	}
-	// range sum query
-	int rsq(int a, int b) { return psq(b) - psq(a-1); }
-	// add v to k'th position (and propagate)
-	void add(int k, int v) {
-		for (; k < ft.size(); k += (k & -k)) ft[k] += v;
-	}
-	// add v to range [i..j] (and propagate)
-	void range_add(int i, int j, int v) {
-		add(i, v); add(j+1, -v);
-	}
+struct FT { // fenwick tree
+    vector<int> t;
+    FT(int n) { t.assign(n+1, 0); }    
+    int query(int i) { // sum in range 1 .. i
+        int ans = 0;
+        for (; i; i -= (i & -i)) ans += t[i];
+        return ans;
+    }
+    int query(int i, int j) { return query(j) - query(i-1); } // sum in range [i .. j]
+    void update(int i, int v) { // increment i'th value by v (and propagate)
+        for (; i < t.size(); i += i & (-i)) t[i] += v;
+    }
+    void update(int i, int j, int v) { update(i, v); update(j + 1, -v); }
 };
 
 int main() {
-    while (scanf("%d%d", &P, &V) == 2) { // for each input case
-
-		set<int> ys; // use ordered set to keep track of y coordinates in increasing order
-		vector<X*> xs; // polymorphic list of X objects
-
-		// read plant coordinates
-		rep(i,1,P) {
-			int x, y; scanf("%d%d", &x, &y);
-			xs.push_back(new Plant(x, y, i));
-			ys.insert(y);
+    ios::sync_with_stdio(false); cin.tie(0);
+	while (cin >> P >> V) { // for each input case
+		set<ll> yset;
+		rep(i,0,P) { // read plant coordinates
+			ll x, y; cin >> x >> y;
+			plants.emplace_back(x, y);
+			yset.insert(y);
 		}
-
-		// read fence's vertices coordinates
-		vector<ii> vcoords;
-		rep(i,1,V) {
-			int x,y; scanf("%d%d", &x, &y); vcoords.emplace_back(x,y);
-			ys.insert(y);
+		rep(i,0,V) { // read fence's vertices coordinates
+			ll x, y; cin >> x >> y;
+			fence.emplace_back(x, y);
+			yset.insert(y);
 		}
-		rep(i,0,V-1) {
+		// create events
+		vector<Event> events;
+		// add plant events
+		rep(i,0,P) {
+			ll x = plants[i].x;
+			ll y = plants[i].y;
+			events.emplace_back(x, y, y, i, true);
+		}
+		// add segment events
+		rep(i,0,V) {
 			int j = (i+1) % V;
-			if (vcoords[i].first == vcoords[j].first) { // vertical segment
-				int miny = vcoords[i].second;
-				int maxy = vcoords[j].second;
+			if (fence[i].x == fence[j].x) { // vertical segment
+				assert (fence[i].y != fence[j].y);
+				ll miny = fence[i].y;
+				ll maxy = fence[j].y;
 				if (miny > maxy) swap(miny, maxy);
-				xs.push_back(new VerticalSegment(vcoords[i].first, miny, maxy));
+				events.emplace_back(fence[i].x, miny, maxy, -1, false);
 			}
 		}
-		
-		// sort X objects using custom comparator
-		sort(xs.begin(), xs.end(), cmp);
-
+		// sort events by x coordinate
+		sort(events.begin(), events.end(), [](Event& a, Event& b) {
+			return a.x < b.x;
+		});
 		// domain compression: map all y values to a narrower domain
+		umap<ll,ll> y2idx;
 		int idx = 1;
-		umap<int,int> y2idx;
-		for (int y : ys) y2idx[y] = idx++;
-
-		// ---------------------------------
+		for (ll y : yset) y2idx[y] = idx++;
 		// run sweep line: left to right
-		FenwickTree ft(y2idx.size());
-		ll sum = 0; // use long long (avoid int overflow)
-		for (X* p : xs) {
-			if (p->type == VSEGMENT) { // vertical segment encountered
-				VerticalSegment* vseg = static_cast<VerticalSegment*>(p);
-				int a = y2idx[vseg->miny];
-				int b = y2idx[vseg->maxy];
-				if (ft.psq(a) == 0) { // nothing in range
+		FT ft(y2idx.size()+5);
+		ll ans = 0;
+		for (Event& e : events) {
+			if (e.isPlant) { // plant encountered
+				int idx = y2idx[e.y1];
+				// if outside fence -> add plant's value to sum
+				if (ft.query(idx) == 0) ans += e.idx + 1;
+			} else { // segment encountered
+				int a = y2idx[e.y1];
+				int b = y2idx[e.y2];
+				assert(a < b);
+				if (ft.query(a) == 0) { // nothing in range
 					// add 1 to range -> we are now inside the fence
-					ft.range_add(a, b-1, 1);
+					ft.update(a, b-1, 1);
 				} else {
 					// substract 1 to range -> we are now outside the fence
-					ft.range_add(a, b-1, -1);
+					ft.update(a, b-1, -1);
 				}
-			} else { // plant encountered
-				Plant* plant = static_cast<Plant*>(p);
-				int idx = y2idx[plant->y];
-				// if outside fence -> add plant's value to sum
-				if (ft.psq(idx) == 0) sum += plant->val;
 			}
-			delete p; // clear memory
 		}
 		// print answer
-		printf("%lld\n", sum);
-
+		cout << ans << '\n';
+		// clear memory
+		plants.clear();
+		fence.clear();
 	}
     return 0;
 }

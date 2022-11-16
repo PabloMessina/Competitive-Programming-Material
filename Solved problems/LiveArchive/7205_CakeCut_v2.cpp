@@ -64,7 +64,7 @@ int main() {
                 }
             }
             tmp = get_area(i,j1%N);
-            ans = max(ans, max(tmp, tot_area - tmp));
+            ans = max({ans, tmp, tot_area - tmp});
         }
         printf("%lld %lld\n", ans, tot_area - ans);
     }
