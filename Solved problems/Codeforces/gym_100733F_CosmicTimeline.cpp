@@ -66,6 +66,7 @@ int main() {
         ds.insert(D[i]);
         ds.insert(D[i] - T[i]);
     }
+    // domain compression
     int i = 0;
     for (ll d : ds) {
         d2i[d] = i;
@@ -73,13 +74,16 @@ int main() {
     }
     int M = ds.size();
     ST<node> st(M);
+    // hacemos DP bottom-up
     DP[0] = V[0];
     st.set_point(d2i[D[0]], node(DP[0]));
     rep(i,1,N) {
         ll tmp = st.query(d2i[D[i] - T[i]], d2i[D[i]] + 1).value;
         DP[i] = max(tmp, 0LL) + V[i];
+        // DP[i] = max(max(tmp, 0LL) + V[i], D[i-1]);
         st.set_point(d2i[D[i]], node(DP[i]));
     }
     cout << st.query(0, M).value << '\n';
+    // cout << DP[N-1] << '\n';
     return 0;
 }
