@@ -1,3 +1,4 @@
+// tags: bitwise, brute force, backtracking, probabilities
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
