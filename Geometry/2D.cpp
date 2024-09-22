@@ -37,7 +37,7 @@ int turn_sign(P& a, P& b, P& c) { T t = turn(a,b,c); return t < 0 ? -1 : t == 0 
 
 bool on_line(P& a, P& b, P& p) { return turn(a,b,p) == 0; /* abs(turn(a,b,p)) < EPS; */}
 
-bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; /* abs((a-p)*(b-p)) <= EPS */}
+bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; }
 
 bool on_segment(P &a, P &b, P &p) { return on_line(a,b,p) && in_disk(a,b,p); }
 
@@ -82,14 +82,17 @@ bool do_segments_intersect(P& p1, P& q1, P& p2, P& q2) {
 }
 
 // Line - Line Intersection
-// return whether straight lines <-a-b-> and <-c-d-> intersect each other
-// if they intersect, we assign values to t1 and t2 such that
+// return whether straight lines <-a-b-> and <-c-d-> intersect each other at a specific point
+// if they do, we assign values to t1 and t2 such that
 //    a + (b - a) * t1 == c + (d - c) * t2
-bool intersect_lines(P& a, P& b, P& c, P& d, double& t1, double& t2) {
-    double x = (b - a) ^ (c - d);
+bool intersect_lines(const P& a, const P& b, const P& c, const P& d, double& t1, double& t2) {
+    P c_d = c-d;
+    P b_a = b-a;
+    double x = b_a^c_d;
     if (x == 0) return false; /* if (abs(x) < EPS) */ // parallel
-    t1 = (c-a)^(c-d) / x;
-    t2 = (b-a)^(c-a) / x;
+    P c_a = c-a;
+    t1 = c_a^c_d/x;
+    t2 = b_a^c_a/x;
     return true;
 }
 
