@@ -1,3 +1,4 @@
+// tags: geometry 2D, segment intersection detection
 #pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
@@ -80,22 +81,18 @@ int main() {
                 if (ti < 0 or tj < 0) continue; // collision in the past
                 P col_p = A[i] + D[i] * ti; // collision point
                 double di = (col_p - A[i]).norm2();
-                ti = (di / S[i]) / S[i]; // time to reach collision (square of time)
+                ti = di / S[i] / S[i]; // time to reach collision (square of time)
                 double dj = (col_p - A[j]).norm2();
-                tj = (dj / S[j]) / S[j]; // time to reach collision (square of time)
+                tj = dj / S[j] / S[j]; // time to reach collision (square of time)
                 ans = min(ans, max(ti, tj));
-            // Case 2: if lines are the same and each car is facing the other
-            } else if (on_line(A[i], B[i], A[j]) and on_line(A[j], B[j], A[i]) and
-                      (B[i] - A[i]) * (A[j] - A[i]) >= 0 and (B[j] - A[j]) * (A[i] - A[j]) >= 0) {
-                double s = S[i] + S[j];
-                ans = min(ans, (A[i] - A[j]).norm2() / s / s);
-            // Case 3.1: if car i is moving towards car j
-            } else if (on_line(A[i], B[i], A[j]) and (B[i] - A[i]) * (A[j] - A[i]) >= 0) {
-                double s = S[i];
-                ans = min(ans, (A[i] - A[j]).norm2() / s / s);
-            // Case 3.2: if car j is moving towards car i
-            } else if (on_line(A[j], B[j], A[i]) and (B[j] - A[j]) * (A[i] - A[j]) >= 0) {
-                double s = S[j];
+            // Case 2: if lines are parallel
+            } else {
+                double s = 0;
+                // if car i is moving towards car j
+                if (on_line(A[i], B[i], A[j]) and (B[i] - A[i]) * (A[j] - A[i]) >= 0) s += S[i];
+                // if car j is moving towards car i
+                if (on_line(A[j], B[j], A[i]) and (B[j] - A[j]) * (A[i] - A[j]) >= 0) s += S[j];
+                if (s == 0) continue; // cars are moving away from each other
                 ans = min(ans, (A[i] - A[j]).norm2() / s / s);
             }
         }
