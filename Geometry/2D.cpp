@@ -33,11 +33,11 @@ struct P { // 2D
 
 T turn(P &a, P &b, P &c) { return (b-a)^(c-a); }
 
-int turn_sign(P& a, P& b, P& c) { T t = turn(a,b,c); return t < 0 ? -1 : t == 0 ? 0 : 1; }
+int turn_sign(P& a, P& b, P& c) { T t = turn(a,b,c); return t < 0 ? -1 : t == 0 ? 0 : 1; /* (t < -EPS) ? -1 : (t > EPS) ? 1 : 0; */ }
 
 bool on_line(P& a, P& b, P& p) { return turn(a,b,p) == 0; /* abs(turn(a,b,p)) < EPS; */}
 
-bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; }
+bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; /* (a-p)*(b-p) <= EPS; */ }
 
 bool on_segment(P &a, P &b, P &p) { return on_line(a,b,p) && in_disk(a,b,p); }
 
@@ -304,4 +304,84 @@ void find_segment_convexhull_intersection(P& a, P& b, vector<P>& ch) {
     //   2) a + (b-a) * min(r2, 1)  <--- last point of segment a -> b inside convex hull
     //      if r2 > 1, point b is strictly inside the convex hull
     cout << "(significant) intersection detected!\n";
+}
+
+// Check if at least one pair of segments intersect among many
+// ----------------------------------------------------------
+// given a list of segments, check if at least one pair of segments intersect
+// in O(N log N) time complexity with a sweep line algorithm
+enum EventType { START, END };
+struct Event {
+    P p; // point of the event
+    EventType type; // type of the event
+    int id; // id of the segment
+    Event(P p, EventType type, int id) : p(p), type(type), id(id) {}
+    bool operator<(const Event& e) const {
+        if (abs(p.x - e.p.x) > EPS) return p.x < e.p.x;
+        return type < e.type;
+    }
+};
+// Custom comparator for sorting segments
+long double current_x; // current x coordinate for the sweep line
+long double get_y(P& p1, P& p2, long double x) { // get y coordinate of a point on the segment
+    if (p1.x == p2.x) return min(p1.y, p2.y); // vertical segment
+    return p1.y + (p2.y - p1.y) * (x - p1.x) / (p2.x - p1.x);
+}
+struct is_below {
+    vector<Segment>& segments;
+    is_below(vector<Segment>& segments) : segments(segments) {}
+    bool operator()(int i, int j) const {
+        Segment& si = segments[i];
+        Segment& sj = segments[j];
+        long double y1 = get_y(si.p1, si.p2, current_x);
+        long double y2 = get_y(sj.p1, sj.p2, current_x);
+        if (abs(y1 - y2) > EPS) return y1 < y2;
+        return i < j; // if same y, sort by id to avoid collisions
+    }
+};
+bool do_segments_intersect(int i, int j, vector<Segment>& segments) {
+    Segment& si = segments[i];
+    Segment& sj = segments[j];
+    return do_segments_intersect(si.p1, si.p2, sj.p1, sj.p2);
+}
+bool do_at_least_one_pair_of_segments_intersect(vector<Segment>& segments) {    
+    // Create events for each segment
+    int n = segments.size();
+    vector<Event> events;
+    rep(i,0,n) {
+        Segment& s = segments[i];
+        if (s.p1.x > s.p2.x) swap(s.p1, s.p2);
+        events.eb(s.p1, START, i);
+        events.eb(s.p2, END, i);
+    }
+    sort(events.begin(), events.end());
+    // Run sweep line
+    multiset<int, is_below> active_segments = multiset<int, is_below>(is_below(segments));
+    vector<set<int, is_below>::iterator> active_segments_it(n);
+    for (auto& e : events) {
+        current_x = e.p.x;
+        Segment& cur_s = segments[e.id];
+        if (e.type == START) {
+            auto it = active_segments.insert(e.id);
+            active_segments_it[e.id] = it;
+            if (it != active_segments.begin()) {
+                auto prev = std::prev(it);
+                if (do_segments_intersect(e.id, *prev, segments)) return true;
+            }
+            auto next = std::next(it);
+            if (next != active_segments.end()) {
+                if (do_segments_intersect(e.id, *next, segments)) return true;
+            }
+        } else {
+            auto it = active_segments_it[e.id];
+            assert(it != active_segments.end());
+            if (it != active_segments.begin() && std::next(it) != active_segments.end()) {
+                auto prev = std::prev(it);
+                auto next = std::next(it);
+                if (do_segments_intersect(*prev, *next, segments)) return true;
+            }
+            active_segments.erase(it);
+        }
+    }
+    return false;
 }
