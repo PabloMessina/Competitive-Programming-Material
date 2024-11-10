@@ -158,7 +158,7 @@ struct PairHash {
 int main() {
     ios::sync_with_stdio(false); cin.tie(0);
 
-    auto start = std::chrono::high_resolution_clock::now();
+    // auto start = std::chrono::high_resolution_clock::now();
 
     cin >> n;
     triangles.reserve(n);
@@ -252,7 +252,7 @@ int main() {
         return 0;
     }
 
-    start = std::chrono::high_resolution_clock::now();
+    // start = std::chrono::high_resolution_clock::now();
 
     // find border (counter clockwise)
     P current = p_start;
@@ -395,7 +395,7 @@ int main() {
 
     // dijkstra
 
-    start = std::chrono::high_resolution_clock::now();
+    // start = std::chrono::high_resolution_clock::now();
 
     vector<double> distances;
     vector<int> parents;
