@@ -72,7 +72,7 @@ bool intersect_circle_line(Circle& c, Line& l, int& n, P& ip1, P& ip2) {
     P p1 = l.p1 - c.c;
     P p2 = l.p2 - c.c;
 
-    // Step 2: Calculate line co    efficients
+    // Step 2: Calculate line coefficients
     double a = p2.y - p1.y;
     double b = p1.x - p2.x;
     double cc = -a * p1.x - b * p1.y;
