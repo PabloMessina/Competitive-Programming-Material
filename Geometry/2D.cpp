@@ -97,7 +97,12 @@ bool intersect_lines(const P& a, const P& b, const P& c, const P& d, double& t1,
 }
 
 // Circle Intersection
-struct Circle { double x, y, r; };
+struct Circle {
+    P c;
+    double r;
+    Circle(P c, double r) : c(c), r(r) {}
+    Circle(double x, double y, double r) : c(P(x, y)), r(r) {}
+};
 bool fully_outside(double r1, double r2, double d_sqr) {
     double tmp = r1 + r2; return d_sqr > tmp * tmp;
 }
@@ -112,6 +117,62 @@ bool do_circles_intersect(Circle& c1, Circle& c2) {
     if (fully_inside(c2.r, c1.r, d_sqr)) return false;
     if (fully_outside(c1.r, c2.r, d_sqr)) return false;
     return true;
+}
+
+// Based on https://cp-algorithms.com/geometry/circle-line-intersection.html
+// Circle - Line Intersection
+// Returns whether a circle and a line intersect each other.
+// There are 3 possible cases:
+// 1) The line is tangent to the circle (one intersection point)
+// 2) The line intersects the circle at two points
+// 3) The line does not intersect the circle
+// If there are 2 intersection points, we assign values to ip1 and ip2.
+// If there is 1 intersection point, we assign values to ip1.
+// If there are no intersection points, we return false.
+struct Line {
+    P p1, p2;
+    Line(P p1, P p2) : p1(p1), p2(p2) {}
+    Line(double x1, double y1, double x2, double y2) : p1(P(x1, y1)), p2(P(x2, y2)) {}
+};
+bool intersect_circle_line(Circle& c, Line& l, int& n, P& ip1, P& ip2) {
+    // Calculate coefficients a, b, c for the line equation a*x + b*y + c = 0,
+    // given the circle center (c.c.x, c.c.y), radius c.r, and the line l (l.p1, l.p2).
+
+    // Step 1: Calculate line points relative to the circle center
+    P p1 = l.p1 - c.c;
+    P p2 = l.p2 - c.c;
+
+    // Step 2: Calculate line co    efficients
+    double a = p2.y - p1.y;
+    double b = p1.x - p2.x;
+    double cc = -a * p1.x - b * p1.y;
+
+    // Step 3: Calculate the projected point (x0, y0): closest point on the line to the center (now (0, 0))
+    double x0 = -a * cc / (a * a + b * b);
+    double y0 = -b * cc / (a * a + b * b);
+
+    // Step 4: Check number of intersection points by comparing squared distance from center to line
+    // with the squared radius
+    double sq = a * a + b * b;
+    if (cc * cc > c.r * c.r * sq + EPS) {
+        // Case 1: No intersection
+        n = 0;
+        return false;
+    } else if (std::abs(cc * cc - c.r * c.r * sq) < EPS) {
+        // Case 2: Tangent (one intersection)
+        ip1 = P(x0 + c.c.x, y0 + c.c.y); // transform back to original coordinates
+        n = 1;
+        return true;
+    } else {
+        // Case 3: Two intersection points
+        double d = c.r * c.r - cc * cc / sq;
+        double mult = sqrt(d / sq);
+
+        ip1 = P(x0 + b * mult + c.c.x, y0 - a * mult + c.c.y);
+        ip2 = P(x0 - b * mult + c.c.x, y0 + a * mult + c.c.y);
+        n = 2;
+        return true;
+    }
 }
 
 // Point - Line / Line Segment distance
