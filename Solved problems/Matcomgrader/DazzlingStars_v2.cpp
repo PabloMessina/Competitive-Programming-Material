@@ -63,7 +63,7 @@ int update_interval(Point& a, Point& b, Point& c, Point& d) {
     }
 }
 
-valid_order(const Point& dir) {
+bool valid_order(const Point& dir) {
     rep(i,0,N) idxs[i] = i;
     sort(idxs, idxs + N, [&dir](int i, int j) {
         return dir.dot(pts[i]) < dir.dot(pts[j]);

@@ -33,11 +33,11 @@ struct P { // 2D
 
 T turn(P &a, P &b, P &c) { return (b-a)^(c-a); }
 
-int turn_sign(P& a, P& b, P& c) { T t = turn(a,b,c); return t < 0 ? -1 : t == 0 ? 0 : 1; }
+int turn_sign(P& a, P& b, P& c) { T t = turn(a,b,c); return t < 0 ? -1 : t == 0 ? 0 : 1; /* (t < -EPS) ? -1 : (t > EPS) ? 1 : 0; */ }
 
 bool on_line(P& a, P& b, P& p) { return turn(a,b,p) == 0; /* abs(turn(a,b,p)) < EPS; */}
 
-bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; /* abs((a-p)*(b-p)) <= EPS */}
+bool in_disk(P &a, P &b, P &p) { return (a-p)*(b-p) <= 0; /* (a-p)*(b-p) <= EPS; */ }
 
 bool on_segment(P &a, P &b, P &p) { return on_line(a,b,p) && in_disk(a,b,p); }
 
@@ -82,19 +82,27 @@ bool do_segments_intersect(P& p1, P& q1, P& p2, P& q2) {
 }
 
 // Line - Line Intersection
-// return whether straight lines <-a-b-> and <-c-d-> intersect each other
-// if they intersect, we assign values to t1 and t2 such that
+// return whether straight lines <-a-b-> and <-c-d-> intersect each other at a specific point
+// if they do, we assign values to t1 and t2 such that
 //    a + (b - a) * t1 == c + (d - c) * t2
-bool intersect_lines(P& a, P& b, P& c, P& d, double& t1, double& t2) {
-    double x = (b - a) ^ (c - d);
+bool intersect_lines(const P& a, const P& b, const P& c, const P& d, double& t1, double& t2) {
+    P c_d = c-d;
+    P b_a = b-a;
+    double x = b_a^c_d;
     if (x == 0) return false; /* if (abs(x) < EPS) */ // parallel
-    t1 = (c-a)^(c-d) / x;
-    t2 = (b-a)^(c-a) / x;
+    P c_a = c-a;
+    t1 = c_a^c_d/x;
+    t2 = b_a^c_a/x;
     return true;
 }
 
 // Circle Intersection
-struct Circle { double x, y, r; };
+struct Circle {
+    P c;
+    double r;
+    Circle(P c, double r) : c(c), r(r) {}
+    Circle(double x, double y, double r) : c(P(x, y)), r(r) {}
+};
 bool fully_outside(double r1, double r2, double d_sqr) {
     double tmp = r1 + r2; return d_sqr > tmp * tmp;
 }
@@ -109,6 +117,62 @@ bool do_circles_intersect(Circle& c1, Circle& c2) {
     if (fully_inside(c2.r, c1.r, d_sqr)) return false;
     if (fully_outside(c1.r, c2.r, d_sqr)) return false;
     return true;
+}
+
+// Based on https://cp-algorithms.com/geometry/circle-line-intersection.html
+// Circle - Line Intersection
+// Returns whether a circle and a line intersect each other.
+// There are 3 possible cases:
+// 1) The line is tangent to the circle (one intersection point)
+// 2) The line intersects the circle at two points
+// 3) The line does not intersect the circle
+// If there are 2 intersection points, we assign values to ip1 and ip2.
+// If there is 1 intersection point, we assign values to ip1.
+// If there are no intersection points, we return false.
+struct Line {
+    P p1, p2;
+    Line(P p1, P p2) : p1(p1), p2(p2) {}
+    Line(double x1, double y1, double x2, double y2) : p1(P(x1, y1)), p2(P(x2, y2)) {}
+};
+bool intersect_circle_line(Circle& c, Line& l, int& n, P& ip1, P& ip2) {
+    // Calculate coefficients a, b, c for the line equation a*x + b*y + c = 0,
+    // given the circle center (c.c.x, c.c.y), radius c.r, and the line l (l.p1, l.p2).
+
+    // Step 1: Calculate line points relative to the circle center
+    P p1 = l.p1 - c.c;
+    P p2 = l.p2 - c.c;
+
+    // Step 2: Calculate line co    efficients
+    double a = p2.y - p1.y;
+    double b = p1.x - p2.x;
+    double cc = -a * p1.x - b * p1.y;
+
+    // Step 3: Calculate the projected point (x0, y0): closest point on the line to the center (now (0, 0))
+    double x0 = -a * cc / (a * a + b * b);
+    double y0 = -b * cc / (a * a + b * b);
+
+    // Step 4: Check number of intersection points by comparing squared distance from center to line
+    // with the squared radius
+    double sq = a * a + b * b;
+    if (cc * cc > c.r * c.r * sq + EPS) {
+        // Case 1: No intersection
+        n = 0;
+        return false;
+    } else if (std::abs(cc * cc - c.r * c.r * sq) < EPS) {
+        // Case 2: Tangent (one intersection)
+        ip1 = P(x0 + c.c.x, y0 + c.c.y); // transform back to original coordinates
+        n = 1;
+        return true;
+    } else {
+        // Case 3: Two intersection points
+        double d = c.r * c.r - cc * cc / sq;
+        double mult = sqrt(d / sq);
+
+        ip1 = P(x0 + b * mult + c.c.x, y0 - a * mult + c.c.y);
+        ip2 = P(x0 - b * mult + c.c.x, y0 + a * mult + c.c.y);
+        n = 2;
+        return true;
+    }
 }
 
 // Point - Line / Line Segment distance
@@ -301,4 +365,84 @@ void find_segment_convexhull_intersection(P& a, P& b, vector<P>& ch) {
     //   2) a + (b-a) * min(r2, 1)  <--- last point of segment a -> b inside convex hull
     //      if r2 > 1, point b is strictly inside the convex hull
     cout << "(significant) intersection detected!\n";
+}
+
+// Check if at least one pair of segments intersect among many
+// ----------------------------------------------------------
+// given a list of segments, check if at least one pair of segments intersect
+// in O(N log N) time complexity with a sweep line algorithm
+enum EventType { START, END };
+struct Event {
+    P p; // point of the event
+    EventType type; // type of the event
+    int id; // id of the segment
+    Event(P p, EventType type, int id) : p(p), type(type), id(id) {}
+    bool operator<(const Event& e) const {
+        if (abs(p.x - e.p.x) > EPS) return p.x < e.p.x;
+        return type < e.type;
+    }
+};
+// Custom comparator for sorting segments
+long double current_x; // current x coordinate for the sweep line
+long double get_y(P& p1, P& p2, long double x) { // get y coordinate of a point on the segment
+    if (p1.x == p2.x) return min(p1.y, p2.y); // vertical segment
+    return p1.y + (p2.y - p1.y) * (x - p1.x) / (p2.x - p1.x);
+}
+struct is_below {
+    vector<Segment>& segments;
+    is_below(vector<Segment>& segments) : segments(segments) {}
+    bool operator()(int i, int j) const {
+        Segment& si = segments[i];
+        Segment& sj = segments[j];
+        long double y1 = get_y(si.p1, si.p2, current_x);
+        long double y2 = get_y(sj.p1, sj.p2, current_x);
+        if (abs(y1 - y2) > EPS) return y1 < y2;
+        return i < j; // if same y, sort by id to avoid collisions
+    }
+};
+bool do_segments_intersect(int i, int j, vector<Segment>& segments) {
+    Segment& si = segments[i];
+    Segment& sj = segments[j];
+    return do_segments_intersect(si.p1, si.p2, sj.p1, sj.p2);
+}
+bool do_at_least_one_pair_of_segments_intersect(vector<Segment>& segments) {    
+    // Create events for each segment
+    int n = segments.size();
+    vector<Event> events;
+    rep(i,0,n) {
+        Segment& s = segments[i];
+        if (s.p1.x > s.p2.x) swap(s.p1, s.p2);
+        events.eb(s.p1, START, i);
+        events.eb(s.p2, END, i);
+    }
+    sort(events.begin(), events.end());
+    // Run sweep line
+    multiset<int, is_below> active_segments = multiset<int, is_below>(is_below(segments));
+    vector<set<int, is_below>::iterator> active_segments_it(n);
+    for (auto& e : events) {
+        current_x = e.p.x;
+        Segment& cur_s = segments[e.id];
+        if (e.type == START) {
+            auto it = active_segments.insert(e.id);
+            active_segments_it[e.id] = it;
+            if (it != active_segments.begin()) {
+                auto prev = std::prev(it);
+                if (do_segments_intersect(e.id, *prev, segments)) return true;
+            }
+            auto next = std::next(it);
+            if (next != active_segments.end()) {
+                if (do_segments_intersect(e.id, *next, segments)) return true;
+            }
+        } else {
+            auto it = active_segments_it[e.id];
+            assert(it != active_segments.end());
+            if (it != active_segments.begin() && std::next(it) != active_segments.end()) {
+                auto prev = std::prev(it);
+                auto next = std::next(it);
+                if (do_segments_intersect(*prev, *next, segments)) return true;
+            }
+            active_segments.erase(it);
+        }
+    }
+    return false;
 }
