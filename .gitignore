@@ -42,3 +42,4 @@ _debug*.cpp
 *.png
 __pycache__
 failed_input
+my-mailmap
