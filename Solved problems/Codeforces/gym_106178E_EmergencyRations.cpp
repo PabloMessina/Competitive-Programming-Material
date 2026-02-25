@@ -1,14 +1,25 @@
+// tags: segment tree lazy, rmq, implementation
+#pragma GCC optimize("Ofast")
 #include <bits/stdc++.h>
 using namespace std;
-
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i)
+#define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define umap unordered_map
+#define uset unordered_set
+#define ff first
+#define ss second
+#define pb push_back
+#define eb emplace_back
+// typedefs
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef unsigned long long int ull;
 typedef long long int ll;
+// -------------------------------
+int Q;
+vector<int> X;
 
-/**
- * Segment Tree with Lazy Propagation
- * ----------------------------------
- * Supports range updates and range queries in O(log N) time.
- * The template 't' defines the behavior (Sum, Min, Max, etc.).
- */
 template<class t> class SegTreeLazy {
     // st: Segment Tree array, lazy: Pending updates array
     vector<ll> *arr, st, lazy; 
@@ -108,21 +119,6 @@ public:
     void update(int a, int b, ll value) { update(a, b, value, 0, 0, n - 1); }
 };
 
-/**
- * RSQ: Range Sum Query
- * range_op: NodeSum + (RangeLength * AddValue)
- */
-struct RSQ {
-    static ll const neutro = 0;
-    static ll merge_op(ll x, ll y) { return x + y; }
-    static ll range_op(ll st_u, int i, int j, ll x) { return st_u + (ll)(j - i + 1) * x; }
-    static ll prop_op(ll child, ll x) { return child + x; }
-};
-
-/**
- * RMinQ: Range Minimum Query
- * range_op: MinValue + AddValue (adding to all elements shifts the min)
- */
 struct RMinQ {
     static ll const neutro = LLONG_MAX;
     static ll merge_op(ll x, ll y) { return min(x, y); }
@@ -130,28 +126,31 @@ struct RMinQ {
     static ll prop_op(ll child, ll x) { return child + x; }
 };
 
-/**
- * RMaxQ: Range Maximum Query
- */
-struct RMaxQ {
-    static ll const neutro = LLONG_MIN;
-    static ll merge_op(ll x, ll y) { return max(x, y); }
-    static ll range_op(ll st_u, int a, int b, ll x) { return st_u + x; }
-    static ll prop_op(ll child, ll x) { return child + x; }
-};
-
 int main() {
-    // Example: Initial array A = [18, 17, 13, 19, 15, 11, 20]
-    vector<ll> A = { 18, 17, 13, 19, 15, 11, 20 };
-    SegTreeLazy<RSQ> stl(A);
-
-    // Update range: indices 1 to 5 inclusive, add 100 to each.
-    // Resulting range [1,5] becomes: [117, 113, 119, 115, 111]
-    stl.update(1, 5, 100);
-
-    // Query sum of range: indices 1 to 3 inclusive.
-    // Logic: A[1] + A[2] + A[3] = 117 + 113 + 119 = 349
-    cout << "Sum [1, 3]: " << stl.query(1, 3) << endl; 
-
+    ios::sync_with_stdio(false); cin.tie(0);
+    cin >> Q;
+    X.resize(Q);
+    rep(i,0,Q) cin >> X[i];
+    set<int> S;
+    for (int x : X) S.insert(abs(x)); // unique positive values
+    S.insert(0); // 0 is the leftmost position
+    S.insert(INT_MAX); // INT_MAX is the rightmost position
+    umap<int,int> x2i;
+    vector<ll> A(S.size());
+    for (int x : S) {
+        int i = x2i.size();
+        x2i[x] = i;
+        A[i] = x;
+    }
+    SegTreeLazy<RMinQ> st(A);
+    bool first = true;
+    for (int x : X) {
+        int i = x2i[abs(x)];
+        st.update(0, i-1, x < 0 ? -1 : 1);
+        if (first) first = false;
+        else cout << ' ';
+        cout << st.query(0, A.size()-1);
+    }
+    cout << '\n';
     return 0;
 }

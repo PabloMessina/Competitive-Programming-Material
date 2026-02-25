@@ -155,6 +155,103 @@ upper_bound(pts.begin(), pts.end(), {1,2});
 set<Point> pt_set;
 map<Point, int> pt_map;
 
+/* ========================================================================= */
+/* Lambda Functions                                                          */
+/* Syntax: [capture](parameters) -> return_type { body };                    */
+/* ========================================================================= */
+
+// ---------------------------------------------------------
+// 1. Capture Clauses (How lambda sees external variables)
+// ---------------------------------------------------------
+// []        : Captures nothing. (Required for C++20 decltype tricks)
+// [&]       : Captures all variables by reference. (Fastest, go-to for CP)
+// [=]       : Captures all variables by value/copy. (Slower, uses more memory)
+// [x, &y]   : Captures 'x' by value, 'y' by reference.
+
+// ---------------------------------------------------------
+// 2. Standard Usage: Sorting based on external arrays
+// ---------------------------------------------------------
+// Very common in CP: Sorting an array of indices based on values in another array.
+vector<int> H = {50, 20, 40, 10, 30};
+vector<int> idxs(5);
+iota(idxs.begin(), idxs.end(), 0); // Fills idxs with 0, 1, 2, 3, 4 (requires <numeric>)
+
+// We use [&] so the lambda can read the vector 'H' without copying it.
+auto cmp_idx = [&](int i, int j) { 
+    return H[i] < H[j]; 
+};
+sort(idxs.begin(), idxs.end(), cmp_idx); 
+// idxs is now: 3, 1, 4, 2, 0
+
+
+// ---------------------------------------------------------
+// 3. Lambdas with Sets/Maps/Priority Queues (C++11 / C++14 / C++17)
+// ---------------------------------------------------------
+// Before C++20, lambdas had no default constructor. To use a custom 
+// comparator in a set/map/pq, you MUST pass the lambda type using 
+// decltype AND pass the lambda instance to the container's constructor.
+
+// Note: Use [] (empty capture) for container comparators.
+auto cmp_desc = [](int a, int b) { 
+    return a > b; 
+};
+
+// 1. Pass type via decltype(cmp_desc)
+// 2. Pass instance via constructor (cmp_desc)
+set<int, decltype(cmp_desc)> my_set(cmp_desc);
+my_set.insert(1); 
+my_set.insert(5); // Set contents: 5, 1
+
+// Same rule applies for priority_queue:
+priority_queue<int, vector<int>, decltype(cmp_desc)> pq(cmp_desc);
+
+
+// ---------------------------------------------------------
+// 4. Lambdas with Sets/Maps (C++20 Simpler Approach)
+// ---------------------------------------------------------
+// In C++20, "stateless" lambdas (those with empty captures []) gained 
+// a default constructor. This means you no longer need to instantiate 
+// the variable or pass it to the constructor. You can define it inline.
+
+/*
+#if __cplusplus >= 202002L
+    // Much cleaner! No need to pass an instance to the constructor.
+    multiset<int, decltype([](int a, int b) { return a < b; })> ms;
+    ms.insert(3); ms.insert(1);
+#endif
+*/
+
+
+// ---------------------------------------------------------
+// 5. Generic Lambdas (C++14)
+// ---------------------------------------------------------
+// You can use 'auto' in parameters. Great for writing a single comparator 
+// that works for vector<int>, vector<long long>, or vector<pair<int, int>>.
+auto cmp_generic = [](const auto& a, const auto& b) {
+    return a > b; 
+};
+
+
+// ---------------------------------------------------------
+// 6. Recursive Lambdas (DFS / Tree Traversals)
+// ---------------------------------------------------------
+// Useful for writing quick DFS functions inside 'solve()' without making global variables.
+// Since a lambda cannot deduce its own type internally, you must pass it to itself.
+// We use 'auto& self' as the first parameter (Requires C++14).
+
+// vector<vector<int>> adj(N);
+auto dfs = [&](auto& self, int u, int parent) -> void {
+    for (int v : adj[u]) {
+        if (v != parent) {
+            // ... logic here ...
+            self(self, v, u); // Call recursively, passing 'self'
+        }
+    }
+};
+
+// To start the DFS, you pass the lambda to itself:
+// dfs(dfs, 1, 0);
+
 /* =============== */
 /* RANDOM INTEGERS */
 /* =============== */
