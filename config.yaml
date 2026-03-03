@@ -1,0 +1,62 @@
+# Metadata & Layout
+out: "notebook.pdf"
+university: "CCL"
+team: "dulces tea"
+theme: "Custom"
+paper: "a4"
+font_size: "6.984pt"
+column_count: 3
+column_gutter: "5mm"
+margin: "10mm"
+portrait: false
+
+# Document Structure (Ordered)
+sections:
+  - C++_Utils
+  - Data_Structures
+  - Strings
+  - Parsers
+  - Divide&Conquer
+  - Mathematics
+  - Dynamic_Programming
+  - Search
+  - Graphs
+  - Geometry
+
+file_names_to_sort_first:
+  - c++ template
+
+# Exclusions
+exclude_dirs:
+  - Solved problems
+  - .git
+  - .vscode
+  - Python Scripts
+  - cursor
+  - Parsers
+
+exclude_files:
+  - random_tests.cpp
+  - latex.tex
+  - script.py
+  - c++_include.cpp
+  - time_command.py
+  - printf_scanf.cpp
+  - array.cpp
+  - list.cpp
+  - queue & stack.cpp
+  - ordered_set.cpp
+  - unordered_set&multiset.cpp
+  - unordered_map&multimap.cpp
+  - vector.cpp
+  - map & multimap.cpp
+  - priority_queue.cpp
+  - set & multiset.cpp
+  - pairs & tuples.cpp
+  - fibonacci.cpp
+  - Knapsack.cpp
+  - deque.cpp
+  - EdmondsKarp.cpp
+  - iterators.cpp
+  - DFS.cpp
+  - BFS.cpp

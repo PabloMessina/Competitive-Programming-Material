@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define rep(i,a,b) for(int i=a;i<b;++i)
-typedef long long int ll;
-
 #define MAXG 1000
 #define MAXL 1000
 int G,L;

@@ -1,11 +1,6 @@
 /* ============================ */
 /* LCA (Lowest Common Ancestor) */
 /* ============================ */
-#include <bits/stdc++.h>
-using namespace std;
-#define rep(i,a,b) for (int i=a; i<b; ++i)
-#define invrep(i,b,a) for (int i=b; i>=a; --i)
-
 // General comments:
 // * Both of these methods assume that we are working with a connected
 //   graph 'g' of 'n' nodes, and that nodes are compactly indexed from 0 to n-1.

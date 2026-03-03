@@ -1,4 +1,3 @@
-#include "../c++_include.cpp"
 // Tarjan's SCC algorithm
 vector<int> s, D, L;
 vector<bool> instack;

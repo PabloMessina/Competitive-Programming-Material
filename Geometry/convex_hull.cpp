@@ -1,8 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-typedef long long int ll;
 // ----------------------------------------------
 // Convex Hull: Andrew's Montone Chain Algorithm 
 // ----------------------------------------------
@@ -21,7 +16,7 @@ vector<Point> upper_hull(vector<Point>& P) {
     sort(P.begin(), P.end());
     // build upper hull
     vector<Point> uh(n);
-    invrep (i, n-1, 0) {
+    invrep(i,n-1,0) {
         while (k >= 2 && turn(uh[k-2], uh[k-1], P[i]) <= 0) k--;
         uh[k++] = P[i];
     }
@@ -35,7 +30,7 @@ vector<Point> lower_hull(vector<Point>& P) {
     sort(P.begin(), P.end());
     // collect lower hull
     vector<Point> lh(n);
-    rep (i, 0, n-1) {
+    rep(i,0,n) {
         while (k >= 2 && turn(lh[k-2], lh[k-1], P[i]) <= 0) k--;
         lh[k++] = P[i];
     }

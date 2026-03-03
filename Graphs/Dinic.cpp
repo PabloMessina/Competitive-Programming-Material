@@ -2,11 +2,6 @@
 // - general worst case: O (|E| * |V|^2)
 // - unit capacities: O( min(V^(2/3), sqrt(E)) * E)
 // - Bipartite graph (unit capacities) + source & sink (any capacities): O(E sqrt V)
-
-#include <bits/stdc++.h>
-using namespace std;
-typedef long long int ll;
-
 struct Dinic {
     struct Edge { int to, rev; ll f, c; };
     int n, t_; vector<vector<Edge>> G;

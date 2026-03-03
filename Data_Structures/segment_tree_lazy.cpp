@@ -1,25 +1,8 @@
-#include <bits/stdc++.h>
-using namespace std;
-
-typedef long long int ll;
-
-/**
- * Segment Tree with Lazy Propagation
- * ----------------------------------
- * Supports range updates and range queries in O(log N) time.
- * The template 't' defines the behavior (Sum, Min, Max, etc.).
- */
 template<class t> class SegTreeLazy {
-    // st: Segment Tree array, lazy: Pending updates array
     vector<ll> *arr, st, lazy; 
     int n;
 
-    /**
-     * @brief Recursively builds the tree from the input array.
-     * @param u Current node index in 'st'
-     * @param i Left boundary of the current node's range
-     * @param j Right boundary of the current node's range
-     */
+    // Build the segment tree from input array (u: node, [i,j]: range)
     void build(int u, int i, int j) {
         if (i == j) { // Leaf node: represents a single element in the array
             st[u] = (*arr)[i];
@@ -32,10 +15,7 @@ template<class t> class SegTreeLazy {
         st[u] = t::merge_op(st[l], st[r]);
     }
 
-    /**
-     * @brief Applies pending updates to a node and pushes them to children.
-     * @param x The value to be applied (the "lazy" value)
-     */
+    // Apply pending updates to a node and push them to children.
     void propagate(int u, int i, int j, ll x) {
         // Update the current node's value based on the range size (i to j)
         st[u] = t::range_op(st[u], i, j, x);
@@ -46,20 +26,14 @@ template<class t> class SegTreeLazy {
         lazy[u] = 0; // Reset lazy value for current node
     }
 
-    /**
-     * @brief Internal query function.
-     * @param a, b The target query range [a, b]
-     */
+    // Internal query function.
     ll query(int a, int b, int u, int i, int j) {
         // 1. Out of bounds
         if (j < a || b < i) return t::neutro;
-        
         // 2. Handle pending updates before processing
         if (lazy[u]) propagate(u, i, j, lazy[u]);
-        
         // 3. Current node range is fully within target range
         if (a <= i && j <= b) return st[u];
-        
         // 4. Partial overlap: check both children
         int m = (i + j) / 2, l = u * 2 + 1, r = u * 2 + 2;
         ll x = query(a, b, l, i, m);
@@ -67,10 +41,7 @@ template<class t> class SegTreeLazy {
         return t::merge_op(x, y);
     }
 
-    /**
-     * @brief Internal update function.
-     * @param value The value to add/apply to the range [a, b]
-     */
+    // Internal update function.
     void update(int a, int b, ll value, int u, int i, int j) {
         // Handle pending updates first
         if (lazy[u]) propagate(u, i, j, lazy[u]);
@@ -91,10 +62,6 @@ template<class t> class SegTreeLazy {
     }
 
 public:
-    /**
-     * @brief Constructor: Initializes tree with 0-indexing.
-     * @param v Reference to the input data vector.
-     */
     SegTreeLazy(vector<ll>& v) {
         arr = &v;
         n = v.size();
@@ -144,14 +111,11 @@ int main() {
     // Example: Initial array A = [18, 17, 13, 19, 15, 11, 20]
     vector<ll> A = { 18, 17, 13, 19, 15, 11, 20 };
     SegTreeLazy<RSQ> stl(A);
-
     // Update range: indices 1 to 5 inclusive, add 100 to each.
     // Resulting range [1,5] becomes: [117, 113, 119, 115, 111]
     stl.update(1, 5, 100);
-
     // Query sum of range: indices 1 to 3 inclusive.
     // Logic: A[1] + A[2] + A[3] = 117 + 113 + 119 = 349
     cout << "Sum [1, 3]: " << stl.query(1, 3) << endl; 
-
     return 0;
 }

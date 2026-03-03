@@ -1,5 +1,3 @@
-#include "../c++_template.cpp"
-
 struct FT { // fenwick tree
     vector<int> t;
     FT(int n) { t.assign(n+1, 0); }    

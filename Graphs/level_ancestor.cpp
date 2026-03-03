@@ -1,12 +1,6 @@
 /* =========================== */
 /* LA (Level Ancestor Problem) */
 /* =========================== */
-#include <vector>
-using namespace std;
-#define rep (i,a,b) for(int i=a; i<=b; ++i)
-#define invrep(i,b,a) for(int i=b; i>=a; --i)
-typedef vector<int> vi;
-
 const int MAXN = 10000;
 const int MAXLOG = 16;
 int P[MAXN][MAXLOG + 1]; // level ancestor table
@@ -31,8 +25,8 @@ void init_la(int n) {
     dfs(root, -1, 0);
     // fill sparse table
     int m = log2(n);
-    rep(j, 1, m) {
-        rep(i, 0, n - 1) {
+    rep(j, 1, m+1) {
+        rep(i, 0, n) {
             // 2^j th ancestor of i
             // = 2^(j-1) th ancestor of 2^(j-1) th ancestor of i
             int p = P[i][j-1];

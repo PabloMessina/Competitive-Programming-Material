@@ -1,5 +1,3 @@
-#include "../c++_template.cpp"
-
 template<typename T> struct FT2D {
     vector<vector<T>> ft;
     int R, C;

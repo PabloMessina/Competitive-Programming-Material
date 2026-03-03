@@ -4,11 +4,6 @@
 // Complexity: O(N*log(N))
 // references: https://www.cs.helsinki.fi/u/tpkarkka/opetus/10s/spa/lecture11.pdf
 // https://youtu.be/_TUeAdu-U_k
-#include <bits/stdc++.h>
-#define rep(i,a,b) for(int i = a; i < b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
-using namespace std;
-
 struct SA {
     int n; vector<int> counts, rank, rank_, sa, sa_, lcp; // lcp is optional
     inline int gr(int i) { return i < n ? rank[i]: 0; }

@@ -1,6 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 void mergesort_(vector<int>& a, int i, int j, vector<int>& b) {
     if (i == j) return; // caso base
     // caso general

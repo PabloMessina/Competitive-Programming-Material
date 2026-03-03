@@ -1,5 +1,3 @@
-#include "../c++_template.cpp"
-
 const int MAXN = 1000;
 vector<int> g[MAXN]; // graph
 // vector<vector<int>> g(MAXN);

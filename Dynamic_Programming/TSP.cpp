@@ -22,20 +22,16 @@ int dp(int mask, int i) {
     // base case 1: problem already solved
     int& ans = memo[mask][i];
     if (ans != -1) return ans;
-    
     // mark i-th node as visited
     int mask2 = mask & ~(1 << i);
-    
     // base case 2: nothing else to visit
     if (mask2 == 0) return ans = 0;
     // if (mask2 == 0) return ans = cost[i][start_index]; // <--- if returning back to start
-
     // general case: try all possible next nodes
     ans = INT_MAX;
     for (int j = 0, tmp=mask2; tmp; ++j, tmp>>=1) {
         if (tmp & 1) ans = min(ans, cost[i][j] + dp(mask2, j));
     }
-
     // return answer
     return ans;
 }

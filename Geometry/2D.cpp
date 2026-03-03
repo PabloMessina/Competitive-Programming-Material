@@ -1,5 +1,3 @@
-#include "../c++_template.cpp"
-// -------------------------------
 const double PI = acos(-1);
 const double EPS = 1e-12;
 typedef double T;

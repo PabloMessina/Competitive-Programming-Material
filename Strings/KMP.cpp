@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define rep(i,a,b) for(int i=a; i<b; ++i)
-
 // Build longest proper prefix/suffix array (lps) for pattern
 // lps[i] = length of the longest proper prefix which is also suffix in pattern[0 .. i]
 void init_lps(string& pattern, int lps[]) {

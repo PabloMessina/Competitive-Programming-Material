@@ -1,17 +1,20 @@
 // Find the index of the first item that satisfies a predicate
 // over a range [i,j), i.e., from i to j-1
 // If no such index exists, j is returned
-function binsearch(array, i, j) {
-    // assert(i < j) // since the range is [i,j), then j must be > i
+template<typename T, typename Predicate>
+int binsearch(const std::vector<T>& array, int i, int j, Predicate predicate) {
+    // assert(i < j); // since the range is [i,j), then j must be > i
     while (i < j) {
-        m = (i+j) / 2;
-        if (predicate(array[m]))
-            j = m
-        else
-            i = m + 1
+        int m = (i + j) / 2;
+        if (predicate(array[m])) j = m;
+        else i = m + 1;
     }
     return i; // notice that i == j if the predicate is false for the whole range
 }
+// Example usage with a predicate function
+vector<int> array = {1, 2, 3, 4, 5};
+int predicate(int x) { return x >= 3; }
+int index = binsearch(array, 0, array.size(), predicate);
 
 // -----------------------------
 // EXAMPLE 1: Integer Lowerbound
@@ -20,10 +23,8 @@ function binsearch(array, i, j) {
 int lowerbound(vector<int>& a, int key, int i, int j) {
     while (i < j) {
         int m = (i + j) / 2;
-        if (a[m] >= key)
-            j = m;
-        else
-            i = m + 1;
+        if (a[m] >= key) j = m;
+        else i = m + 1;
     }
     return i;
 }
@@ -35,10 +36,8 @@ int lowerbound(vector<int>& a, int key, int i, int j) {
 int upperbound(vector<int>& a, int key, int i, int j) {
     while (i < j) {
         int m = (i + j) / 2;
-        if (a[m] > key)
-            j = m;
-        else
-            i = m + 1;
+        if (a[m] > key) j = m;
+        else i = m + 1;
     }
     return i
 }
@@ -46,12 +45,8 @@ int upperbound(vector<int>& a, int key, int i, int j) {
 /* ======================================= */
 /*  std::upper_bound(), std::lower_bound() */
 /* ======================================= */
-
 // search between [first, last)
 // if no value is >= key (lb) / > key (ub), return last
-
-#include <bits/stdc++.h>
-
 int main () {
     vector<int> v{10,20,30,30,20,10,10,20};          // 10 20 30 30 20 10 10 20
     sort (v.begin(), v.end());                       // 10 10 10 20 20 20 30 30
@@ -64,12 +59,9 @@ int main () {
 
 // ------------------------------------------------
 // Query: how many items are LESS THAN (<) value x
-
 lower_bound(v.begin(), v.end(), x) - v.begin();
-
 // ------------------------------------------------
 // Query: how many items are GREATER THAN (>) value x
-
 v.end() - upper_bound(v.begin(), v.end(), x);
 
 //======================
@@ -80,13 +72,10 @@ std::vector<int> v{1,2,3,4,5,4,3,2,1};
 sort(v.begin(), v.end());
 bool found = std::binary_search (v.begin(), v.end(), 6, myfunction)
 
-
 /* ======================= */
 /* Discrete Ternary Search */
 /* ======================= */
-
 int cost(int i) { ... }
-
 int min_search(int l, int r) { // convex cost function
     while (l < r) {
         int m = (i+j) >> 1;
@@ -96,7 +85,6 @@ int min_search(int l, int r) { // convex cost function
     }
     return l;
 }
-
 int max_search(int l, int r) { // concave cost function
     while (l < r) {
         int m = (i+j) >> 1;

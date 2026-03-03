@@ -1,5 +1,3 @@
-#define rep(i,a,b) for(int i = a; i <= b; ++i)
-typedef long long int ll;
 const ll MOD = 1000000007ll; // a prime number
 const int MAXN = 1000;
 
@@ -26,9 +24,9 @@ ll choose(int n, int k) {
 
 // 1.2) DP bottom-up
 ll choose[MAXN+1][MAXN+1];
-rep(m,1,MAXN) {
+rep(m,1,MAXN+1) {
     choose[m][0] = choose[m][m] = 1;
-    rep(k,1,m-1) choose[m][k] = (choose[m-1][k] + choose[m-1][k-1]) % MOD;
+    rep(k,1,m) choose[m][k] = (choose[m-1][k] + choose[m-1][k-1]) % MOD;
 }
 
 // -------------------------------------------------
@@ -40,7 +38,7 @@ ll fac[MAXN+1];
 ll choose_memo[MAXN+1][MAXN+1];
 void init() {
     fac[0] = 1;
-    rep(i,1,MAXN) fac[i] = (i * fac[i-1]) % MOD;
+    rep(i,1,MAXN+1) fac[i] = (i * fac[i-1]) % MOD;
     memset(choose_memo, -1, sizeof choose_memo);
 }
 ll choose_mod(int n, int k) {

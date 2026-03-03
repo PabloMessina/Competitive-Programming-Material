@@ -1,5 +1,3 @@
-typedef long long int ll;
-
 inline ll mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
 
 /* ============================= */

@@ -1,5 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
 struct Trie {
     vector<vector<int>> g;
     vector<int> count;

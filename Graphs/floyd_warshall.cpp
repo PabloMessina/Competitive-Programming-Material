@@ -1,4 +1,3 @@
-#include "../c++_template.cpp"
 // complexity: O(|V|^3)
 #define rep(i,a,b) for(int i=a; i<b; ++i)
 void floyd_warshall(vector<vector<int>>& g, bool& neg_cycle) {

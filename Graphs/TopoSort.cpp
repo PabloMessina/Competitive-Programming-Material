@@ -1,4 +1,3 @@
-#define rep(i,a,b) for(int i = a; i < b; ++i)
 // ----------------------------
 // option 1: tarjan's algorithm
 // ----------------------------

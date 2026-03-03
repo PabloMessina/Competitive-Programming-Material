@@ -1,7 +1,3 @@
-#include <bits/stdc++.h>
-typedef long long int ll;
-using namespace std;
-
 inline ll mod(ll x, ll m) { return ((x %= m) < 0) ? x+m : x; }
 inline ll mul(ll x, ll y, ll m) { return (x * y) % m; }
 inline ll add(ll x, ll y, ll m) { return (x + y) % m; }

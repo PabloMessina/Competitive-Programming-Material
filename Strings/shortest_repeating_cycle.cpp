@@ -1,6 +1,3 @@
-#include <bits/stdc++.h>
-using namespace std;
-
 int shortest_repeating_cycle(string& seq) {
     // KMP : lps step
     int n = seq.size();

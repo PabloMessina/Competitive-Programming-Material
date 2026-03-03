@@ -1,16 +1,13 @@
 /* ================================= */
 /* Input/Output with C++: cin & cout */
 /* ================================= */
-
 // reading many lines of unknown length
 string line;
 while(getline(cin, line)) {}
-
 // reading tokens from a line
 string token;
 stringstream ss(line);
 while (ss >> token) { /* do something with token */}
-
 // printing floating with fixed precision
 cout << setprecision(6) << fixed;
 cout << 12312.12312355;
@@ -18,7 +15,6 @@ cout << 12312.12312355;
 /* ================================= */
 /* CONVERTING FROM STRING TO NUMBERS */
 /* ================================= */
-
 // 1) stringstream
 string s = "12345"; 
 stringstream ss(s);
@@ -27,7 +23,6 @@ ss >> x; // x = 12345
 ss << "12345678910";
 long long y;
 ss >> y; // y = 12345678910
-
 // 2) stoi, stoll
 string str_dec = "2001, A Space Odyssey";
 string str_hex = "40c3";
@@ -67,7 +62,6 @@ void * memcpy ( void * destination, const void * source, size_t num );
 /* ============================ */
 /* C++ STRING UTILITY FUNCTIONS */
 /* ============================ */
-
 // split a string by a single char delimiter
 void split(const string &s, char delim, vector<string> &elems) {
     stringstream ss(s);
@@ -75,17 +69,14 @@ void split(const string &s, char delim, vector<string> &elems) {
     while (getline(ss, item, delim))
         elems.push_back(item);
 }
-
 // find index of string or char within string
 string str = "random";
 size_t pos = str.find("ra");
 size_t pos = str.find('m');
 if (pos == string::npos) // not found
-
 // substrings
 string subs = str.substr(pos, length);
 string subs = str.substr(pos); // default: to the end of the string
-
 // std::string from cstring's substring
 const char* s = "bla1 bla2";
 int offset = 5, len = 4;
@@ -103,15 +94,10 @@ if (str2.compare(str2.size()-5,5,"apple") == 0)
     cout << "and " << str2 << " is also an apple\n";
 if (str1.compare(6,5,str2,4,5) == 0)
     cout << "therefore, both are apples\n";
-// green apple is not red apple
-// still, green apple is an apple
-// and red apple is also an apple
-// therefore, both are apples
 
 /* ===================== */
 /*  OPERATOR OVERLOADING */
 /* ===================== */
-
 //--------------------------
 // method #1: inside struct
 struct Point {
@@ -155,10 +141,10 @@ upper_bound(pts.begin(), pts.end(), {1,2});
 set<Point> pt_set;
 map<Point, int> pt_map;
 
-/* ========================================================================= */
-/* Lambda Functions                                                          */
-/* Syntax: [capture](parameters) -> return_type { body };                    */
-/* ========================================================================= */
+/* ====================================================== */
+/* Lambda Functions                                       */
+/* Syntax: [capture](parameters) -> return_type { body }; */
+/* ====================================================== */
 
 // ---------------------------------------------------------
 // 1. Capture Clauses (How lambda sees external variables)
@@ -175,14 +161,12 @@ map<Point, int> pt_map;
 vector<int> H = {50, 20, 40, 10, 30};
 vector<int> idxs(5);
 iota(idxs.begin(), idxs.end(), 0); // Fills idxs with 0, 1, 2, 3, 4 (requires <numeric>)
-
 // We use [&] so the lambda can read the vector 'H' without copying it.
 auto cmp_idx = [&](int i, int j) { 
     return H[i] < H[j]; 
 };
 sort(idxs.begin(), idxs.end(), cmp_idx); 
 // idxs is now: 3, 1, 4, 2, 0
-
 
 // ---------------------------------------------------------
 // 3. Lambdas with Sets/Maps/Priority Queues (C++11 / C++14 / C++17)
@@ -205,52 +189,12 @@ my_set.insert(5); // Set contents: 5, 1
 // Same rule applies for priority_queue:
 priority_queue<int, vector<int>, decltype(cmp_desc)> pq(cmp_desc);
 
-
 // ---------------------------------------------------------
-// 4. Lambdas with Sets/Maps (C++20 Simpler Approach)
-// ---------------------------------------------------------
-// In C++20, "stateless" lambdas (those with empty captures []) gained 
-// a default constructor. This means you no longer need to instantiate 
-// the variable or pass it to the constructor. You can define it inline.
-
-/*
-#if __cplusplus >= 202002L
-    // Much cleaner! No need to pass an instance to the constructor.
-    multiset<int, decltype([](int a, int b) { return a < b; })> ms;
-    ms.insert(3); ms.insert(1);
-#endif
-*/
-
-
-// ---------------------------------------------------------
-// 5. Generic Lambdas (C++14)
+// 4. Generic Lambdas (C++14)
 // ---------------------------------------------------------
 // You can use 'auto' in parameters. Great for writing a single comparator 
 // that works for vector<int>, vector<long long>, or vector<pair<int, int>>.
-auto cmp_generic = [](const auto& a, const auto& b) {
-    return a > b; 
-};
-
-
-// ---------------------------------------------------------
-// 6. Recursive Lambdas (DFS / Tree Traversals)
-// ---------------------------------------------------------
-// Useful for writing quick DFS functions inside 'solve()' without making global variables.
-// Since a lambda cannot deduce its own type internally, you must pass it to itself.
-// We use 'auto& self' as the first parameter (Requires C++14).
-
-// vector<vector<int>> adj(N);
-auto dfs = [&](auto& self, int u, int parent) -> void {
-    for (int v : adj[u]) {
-        if (v != parent) {
-            // ... logic here ...
-            self(self, v, u); // Call recursively, passing 'self'
-        }
-    }
-};
-
-// To start the DFS, you pass the lambda to itself:
-// dfs(dfs, 1, 0);
+auto cmp_generic = [](const auto& a, const auto& b) { return a > b; };
 
 /* =============== */
 /* RANDOM INTEGERS */

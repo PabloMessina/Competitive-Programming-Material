@@ -1,4 +1,3 @@
-#include "../c++_template.cpp"
 // complexity: (|E| + |V|) * log |V|
 int N; // number of nodes
 vector<vector<ii>> g; // graph

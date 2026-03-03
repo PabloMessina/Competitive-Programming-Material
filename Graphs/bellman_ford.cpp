@@ -1,4 +1,3 @@
-#include "../c++_template.cpp"
 // complexity: O(|V||E|)
 vector<int> bellman_ford(vector<vector<ii>>& g, int s, bool& neg_cycle) {
     int n = g.size();

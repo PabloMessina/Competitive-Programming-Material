@@ -6,7 +6,6 @@
 // https://www.hackerearth.com/practice/algorithms/graphs/articulation-points-and-bridges/tutorial/
 // https://www.hackerearth.com/practice/algorithms/graphs/biconnected-components/tutorial/
 // http://web.iitd.ac.in/~bspanda/biconnectedMTL776.pdf
-#include "../c++_template.cpp"
 vector<int> D, L;
 vector<vector<int>> g;
 stack<ii> s;
@@ -109,12 +108,5 @@ void dfs(int u, int p, int d) {
             s.emplace(u,v);
             L[u] = min(L[u], D[v]);
         }
-    }
-}
-
-int main() {
-    int n, m;
-    while ((cin >> n >> m) && n) {
-
     }
 }

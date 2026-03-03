@@ -1,8 +1,5 @@
-#include <bits/stdc++.h>
-using namespace std;
 typedef vector<int>::iterator iter;
-
-struct WaveTree {
+struct WaveletTree {
     vector<vector<int>> r0; int n, s;
     vector<int> arrCopy;
 
@@ -13,8 +10,7 @@ struct WaveTree {
         r0[u].reserve(e-b+1); r0[u].push_back(0);
         for (iter it = b; it != e; ++it)
             r0[u].push_back(r0[u].back() + (*it<=m));
-        iter p = stable_partition(b, e, [=](int i){
-                                                            return i<=m;});
+        iter p = stable_partition(b, e, [=](int i){return i<=m;});
         build(b, p, l, m, u*2);
         build(p, e, m+1, r, u*2+1);
     }
@@ -31,7 +27,7 @@ struct WaveTree {
     }
 
     // arr[i] in [0,sigma)
-    WaveTree(vector<int> arr, int sigma) {
+    WaveletTree(vector<int> arr, int sigma) {
         n = arr.size(); s = sigma;
         r0.resize(s*2); arrCopy = arr;
         build(arr.begin(), arr.end(), 0, s-1, 1);

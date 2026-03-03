@@ -1,5 +1,4 @@
-#define rep(i,a,b) for(int i=a; i < b; ++i)
-// find the smallest circle enclosing a list of points using Welzl’s randomized algorithm
+// Find the smallest circle enclosing a list of points using Welzl’s randomized algorithm
 // O(N) expected time
 // references: https://www.cse.iitk.ac.in/users/ssahai/talks/sec.pdf
 // https://www.nayuki.io/res/smallest-enclosing-circle/computational-geometry-lecture-6.pdf

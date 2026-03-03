@@ -2,8 +2,8 @@
 #include <bits/stdc++.h>
 using namespace std;
 // defines
-#define rep(i,a,b) for(int i = a; i < b; ++i)
-#define invrep(i,b,a) for(int i = b; i >= a; --i)
+#define rep(i,a,b) for(int i = a; i < b; ++i) // [a, b), inclusive-exclusive
+#define invrep(i,b,a) for(int i = b; i >= a; --i) // [b, a], inclusive-inclusive
 #define umap unordered_map
 #define uset unordered_set
 #define ff first

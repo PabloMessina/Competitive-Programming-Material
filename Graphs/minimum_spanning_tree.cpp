@@ -1,5 +1,3 @@
-#include "../c++_template.cpp"
-
 /* ================= */
 /* METHOD 1: KRUSKAL */
 /* ================= */

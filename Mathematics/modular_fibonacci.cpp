@@ -2,10 +2,6 @@
 // Modular Fibonacci with (Modular) Matrix Exponentiation
 //=========================================================
 //source: http://mathoverflow.net/questions/40816/fibonacci-series-mod-a-number
-#include <cstdio>
-#include <vector>
-using namespace std;
-typedef unsigned long long ull;
 const ull MOD = 1000000000;
 
 vector<ull> mult(const vector<ull>& A, const vector<ull>& B) {
@@ -30,8 +26,7 @@ vector<ull> raise(const vector<ull>& matrix, ull exp) {
 }
 
 int main() {
-	int P;
-	int k;
+	int P, k;
 	ull y;
 	scanf("%d", &P);
 	vector<ull> fib_matrix { 1, 1, 1, 0 }; //starting fibonacci matrix [f2, f1, f1, f0]

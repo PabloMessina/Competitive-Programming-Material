@@ -1,12 +1,6 @@
-#include <bits/stdc++.h>
-using namespace std;
-#define rep(i,a,b) for(int i = a; i < b; ++i)
-typedef unsigned long long int ull;
 const int MAXLEN = 1e6;
-
 // --------------------------------------------
 // Rolling Hashing: double hash (extra safety)
-
 struct RH_double { // rolling hashing
     static const ull B = 131; // base
     static const ull P[2]; // primes
@@ -65,7 +59,6 @@ ull RH_double::pow[2][MAXLEN];
 
 // -----------------------------
 // Rolling Hashing: single hash
-
 struct RH_single { // rolling hashing
     static const ull B = 131; // base
     static const ull P = 1e9 + 21; // prime
