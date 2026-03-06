@@ -16,6 +16,4 @@ double arc_integral(double x, double r, double a, double b) {
 // x(t) = a.x + (b.x - a.x) * t
 // y(t) = a.y + (b.y - a.y) * t
 // 0 <= t <= 1
-double segment_integral(Point& a, Point& b) {
-    return 0.5 * (a.x + b.x) * (b.y - a.y);
-}
+double segment_integral(Point& a, Point& b) { return 0.5 * (a.x + b.x) * (b.y - a.y); }

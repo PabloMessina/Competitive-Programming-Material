@@ -22,9 +22,7 @@ template<typename T> struct FT2D {
         return sum(r2, c2) - sum(r1-1, c2) - sum(r2, c1-1) + sum(r1-1, c1-1);
     }
     // get value at cell (r,c)
-    T get(int r, int c) {
-        return sum(r, c, r, c);
-    }
+    T get(int r, int c) { return sum(r, c, r, c); }
     // set value to cell (r,c)
     void set(int r, int c, int value) {
         add(r, c, -get(r, c) + value);

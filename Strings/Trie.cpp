@@ -28,8 +28,7 @@ struct Trie {
     int size() { return g.size(); }
 };
 
-// example of usage
-int main() {
+int main() { // example of usage
     Trie trie(26);
     for (string s : {"hell", "hello", "hellyeah", "helpzzzz", "abcdefg"}) {
         cout << "inserting " <<  s << '\n';

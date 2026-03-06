@@ -5,18 +5,14 @@ int shortest_repeating_cycle(string& seq) {
     lps[0] = 0;
     int i = 0, j = 1;
     while (j < n) {
-        while (i > 0 and seq[i] != seq[j])
-            i = lps[i-1];
-        if (seq[i] == seq[j])
-            lps[j] = ++i;
-        else
-            lps[j] = 0;
+        while (i > 0 and seq[i] != seq[j]) i = lps[i-1];
+        if (seq[i] == seq[j]) lps[j] = ++i;
+        else lps[j] = 0;
         j++;
     }
     int len = n - lps[n-1];
     return (n % len) ? n : len;
 }
-
 // test
 int main() {
     string line; cin >> line;

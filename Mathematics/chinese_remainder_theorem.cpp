@@ -67,7 +67,6 @@ pair<ll,ll> CRT(ll r1, ll m1, ll r2, ll m2) {
 //      and lcm = LCM(m[0], m[1], ..., m[n-1])
 //      if there is no solution, the output is {-1, -1}
 // ** Note: this solution works if LCM(m[0],...,m[n-1]) fits in a long long (64 bits)
-#define rep(i,a,b) for (int i=a; i<b; ++i)
 pair<ll,ll> CRT(ll* r, ll* m, int n) {
     ll r1 = r[0], m1 = m[0];
     rep(i,1,n) {

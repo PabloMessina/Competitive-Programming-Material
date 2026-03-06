@@ -1,14 +1,3 @@
-/* ============================ */
-/* LCA (Lowest Common Ancestor) */
-/* ============================ */
-// General comments:
-// * Both of these methods assume that we are working with a connected
-//   graph 'g' of 'n' nodes, and that nodes are compactly indexed from 0 to n-1.
-//   In case you have a forest of trees, a simple trick is to create a fake
-//   root and connect all the trees to it (make sure to re-index all your nodes)
-// * 'g' need not be a 'tree', DFS fill implictly find a tree for you
-//   in case you don't care of the specific tree (e.g. if cycles are not important)
-
 // ------------------------------------------------------------
 // METHOD 1: SPARSE TABLE - BINARY LIFTING (aka JUMP POINTERS)
 // ------------------------------------------------------------

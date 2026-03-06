@@ -1,10 +1,10 @@
 void mergesort_(vector<int>& a, int i, int j, vector<int>& b) {
-    if (i == j) return; // caso base
-    // caso general
+    if (i == j) return; // base case
+    // general case
     int m = (i+j)/2;
     mergesort_(a, i, m, b);
     mergesort_(a, m+1, j, b);
-    // merge eficiente
+    // merge efficiently
     int r = i, s = m+1;
     int k = i;
     while (r <= m and s <= j) b[k++] = a[r] <= a[s] ? a[r++] : a[s++];

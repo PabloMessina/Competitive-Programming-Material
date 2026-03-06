@@ -106,28 +106,13 @@ struct Point {
         if (x != p.x) return x < p.x;
         return y < p.y;
     }
-    bool operator>(const Point& p) const {
-        if (x != p.x) return x > p.x;
-        return y > p.y;
-    }
-    bool operator==(const Point& p) const {
-        return x == p.x && y == p.y;
-    }
 };
-
 //--------------------------
 // method #2: outside struct
 struct Point {int x, y; };
 bool operator<(const Point& a, const Point& b) {
     if (a.x != b.x) return a.x < b.x;
     return a.y < b.y;
-}
-bool operator>(const Point& a, const Point& b) {
-    if (a.x != b.x) return a.x > b.x;
-    return a.y > b.y;
-}
-bool operator==(const Point& a, const Point& b) {
-    return a.x == b.x && a.y == b.y;
 }
 // Note: if you overload the < operator for a custom struct,
 // then you can use that struct with any library function
@@ -145,7 +130,6 @@ map<Point, int> pt_map;
 /* Lambda Functions                                       */
 /* Syntax: [capture](parameters) -> return_type { body }; */
 /* ====================================================== */
-
 // ---------------------------------------------------------
 // 1. Capture Clauses (How lambda sees external variables)
 // ---------------------------------------------------------
@@ -162,11 +146,8 @@ vector<int> H = {50, 20, 40, 10, 30};
 vector<int> idxs(5);
 iota(idxs.begin(), idxs.end(), 0); // Fills idxs with 0, 1, 2, 3, 4 (requires <numeric>)
 // We use [&] so the lambda can read the vector 'H' without copying it.
-auto cmp_idx = [&](int i, int j) { 
-    return H[i] < H[j]; 
-};
-sort(idxs.begin(), idxs.end(), cmp_idx); 
-// idxs is now: 3, 1, 4, 2, 0
+auto cmp_idx = [&](int i, int j) { return H[i] < H[j]; };
+sort(idxs.begin(), idxs.end(), cmp_idx); // idxs is now: 3, 1, 4, 2, 0
 
 // ---------------------------------------------------------
 // 3. Lambdas with Sets/Maps/Priority Queues (C++11 / C++14 / C++17)
@@ -176,16 +157,12 @@ sort(idxs.begin(), idxs.end(), cmp_idx);
 // decltype AND pass the lambda instance to the container's constructor.
 
 // Note: Use [] (empty capture) for container comparators.
-auto cmp_desc = [](int a, int b) { 
-    return a > b; 
-};
-
+auto cmp_desc = [](int a, int b) { return a > b; };
 // 1. Pass type via decltype(cmp_desc)
 // 2. Pass instance via constructor (cmp_desc)
 set<int, decltype(cmp_desc)> my_set(cmp_desc);
 my_set.insert(1); 
 my_set.insert(5); // Set contents: 5, 1
-
 // Same rule applies for priority_queue:
 priority_queue<int, vector<int>, decltype(cmp_desc)> pq(cmp_desc);
 
@@ -199,8 +176,6 @@ auto cmp_generic = [](const auto& a, const auto& b) { return a > b; };
 /* =============== */
 /* RANDOM INTEGERS */
 /* =============== */
-#include <cstdlib>
-#include <ctime>
 srand(time(NULL));
 int x = rand() % 100; // 0-99
 int randBetween(int a, int b) { // a-b
@@ -234,7 +209,6 @@ int reverse_bits(int x) {
 string bitstring(int x) {
     int len = sizeof(x) * 8 - __builtin_clz(x);
     if (len == 0) return "0";
-
     char buff[len+1]; buff[len] = '\0';
     for (int i = len-1; i >= 0; --i, x >>= 1)
         buff[i] = (char)('0' + (x&1));
@@ -245,23 +219,9 @@ string bitstring(int x) {
 /* Hexadecimal Tricks */
 /* ================== */
 // get string hex representation of an integer
-string to_hex(int num) {
-    static char buff[100];
-    static const char* hexdigits = "0123456789abcdef";
-    buff[99] = '\0';
-    int i = 98;
-    do {
-        buff[i--] = hexdigits[num & 0xf];
-        num >>= 4;
-    } while (num);
-    return string(buff+i+1);
-}
-// ['0'-'9' 'a'-'f'] ->  [0 - 15]
-int char_to_digit(char c) {
-    if ('0' <= c && c <= '9')
-        return c - '0';
-    return 10 + c - 'a';
-}
+std::stringstream stream;
+stream << std::hex << your_int;
+std::string result(stream.str());
 
 /* ================= */
 /* CLIMITS CONSTANTS */

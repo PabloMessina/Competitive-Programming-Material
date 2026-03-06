@@ -42,30 +42,6 @@ template<class node> struct ST {
     }
 };
 
-// Interval Product (LiveArchive)
-struct prodsgn {
-    int sgn;
-    prodsgn() {sgn = 1;}
-    prodsgn(int x) { sgn = (x > 0) - (x < 0); }
-    prodsgn(const prodsgn &a, const prodsgn &b) { sgn = a.sgn*b.sgn; }
-};
-
-// Maximum Sum (SPOJ)
-struct maxsum {
-    int first, second;
-    maxsum() {first = second = -1;}
-    maxsum(int x) { first = x; second = -1; }
-    maxsum(const maxsum &a, const maxsum &b) {
-        if (a.first > b.first) {
-            first = a.first;
-            second = max(a.second, b.first);
-        } else {
-            first = b.first; second = max(a.first, b.second);
-        }
-    }
-    int answer() { return first + second; }
-};
-
 // Range Minimum Query
 struct rminq {
     int value;
@@ -79,7 +55,6 @@ struct rminq {
 //=============================
 // 2) Segment Tree - RECURSIVE
 //=============================
-
 template<class t> class ST {
     vector<ll> *arr, st; int n;
 
@@ -93,7 +68,6 @@ template<class t> class ST {
         build(r, m+1, j);
         st[u] = t::merge_op(st[l], st[r]);
     }
-
     ll query(int a, int b, int u, int i, int j) {
         if (j < a or b < i) return t::neutro;
         if (a <= i and j <= b) return st[u];
@@ -102,7 +76,6 @@ template<class t> class ST {
         ll y = query(a, b, r, m+1, j);
         return t::merge_op(x, y);
     }
-
     void update(int a, ll value, int u, int i, int j) {
         if (j < a or a < i) return;
         if (i == j) st[a] += value;
@@ -121,11 +94,9 @@ public:
         st.resize(n*4+5);
         build(0, 0, n-1);
     }
-
     ll query(int a, int b) {
         return query(a, b, 0, 0, n-1);
     }
-
     void update(int a, ll value) { // adding value to position a
         update(a, value, 0, 0, n-1);
     }
@@ -135,12 +106,10 @@ struct RSQ { // range sum query
     static ll const neutro = 0;
     static ll merge_op(ll x, ll y) { return x + y; }
 };
-
 struct RMinQ { // range minimun query
     static ll const neutro = LLONG_MAX;
     static ll merge_op(ll x, ll y) { return min(x, y); }
 };
-
 struct RMaxQ { // range maximum query
     static ll const neutro = LLONG_MIN;
     static ll merge_op(ll x, ll y) { return max(x, y); }

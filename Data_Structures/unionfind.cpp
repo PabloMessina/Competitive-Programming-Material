@@ -23,20 +23,3 @@ struct UnionFind {
     int numDisjointSets() { return numSets; }
     int sizeOfSet(int i) { return setSize[findSet(i)]; }
 };
-
-
-int main() {
-    UnionFind uf(100);
-    // antes
-    if (uf.isSameSet(1, 5)) cout << "Yes\n";
-    else cout << "No\n";
-    // juntamos 1 con 5
-    uf.unionSet(1, 5);
-    // después
-    if (uf.isSameSet(1, 5)) cout << "Yes\n";
-    else cout << "No\n";
-    // transitividad
-    uf.unionSet(5, 7);
-    if (uf.isSameSet(1, 7)) cout << "Yes\n";
-    else cout << "No\n";
-}

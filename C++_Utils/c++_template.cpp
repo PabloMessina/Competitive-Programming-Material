@@ -16,7 +16,7 @@ typedef pair<int,int> ii;
 typedef unsigned long long int ull;
 typedef long long int ll;
 // -------------------------------
-int main() {
+signed main() { // signed allows using #define int long long
     ios::sync_with_stdio(false); cin.tie(0);
     return 0;
 }

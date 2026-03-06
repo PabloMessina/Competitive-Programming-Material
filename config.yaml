@@ -22,9 +22,11 @@ sections:
   - Search
   - Graphs
   - Geometry
+  - Apuntes Javi
 
 file_names_to_sort_first:
   - c++ template
+  - 2D / point2d
 
 # Exclusions
 exclude_dirs:
@@ -45,13 +47,11 @@ exclude_files:
   - array.cpp
   - list.cpp
   - queue & stack.cpp
-  - ordered_set.cpp
   - unordered_set&multiset.cpp
   - unordered_map&multimap.cpp
   - vector.cpp
   - map & multimap.cpp
   - priority_queue.cpp
-  - set & multiset.cpp
   - pairs & tuples.cpp
   - fibonacci.cpp
   - Knapsack.cpp
@@ -60,3 +60,8 @@ exclude_files:
   - iterators.cpp
   - DFS.cpp
   - BFS.cpp
+  - 3D.cpp
+  - centroid_decomposition.cpp
+  - wavelet_tree.cpp
+  - segment_tree_lazy.cpp
+  - advanced_2d_algorithms.cpp
