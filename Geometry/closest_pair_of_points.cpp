@@ -1,3 +1,4 @@
+// Taken from https://cp-algorithms.com/geometry/nearest_points.html
 using ll = long long;
 using ld = long double;
 struct pt {
