@@ -18,7 +18,7 @@ typedef unsigned long long int ull;
 typedef long long int ll;
 // -------------------------------
 signed main() {
-    // ios::sync_with_stdio(false); cin.tie(0);
+    ios::sync_with_stdio(false); cin.tie(0);
     int N, L; cin >> N >> L;
     vector<ll> A(N), B(N);
     rep(i,0,N) { cin >> A[i]; A[i]--; }
