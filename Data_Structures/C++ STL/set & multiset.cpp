@@ -81,7 +81,7 @@ s.erase(itlow,itup);          // 10 20 70 80 90
 multiset<int> ms{30, 10, 10, 40, 30, 90}; // 10 10 30 30 40 90
 auto itlow = ms.lower_bound(30);          //       ^
 auto itup = ms.upper_bound(40);           //                ^
-ms.erase(itlow,itup);                     // 10 20 90
+ms.erase(itlow,itup);                     // 10 10 90
 
 //=======================
 // multiset::equal_range
