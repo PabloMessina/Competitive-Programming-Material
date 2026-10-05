@@ -26,7 +26,7 @@ $M$ operations ($N, M \le 2 \times 10^5$):
      state. Lazy propagation handles assignments, not only additions.
 
 3. **Store capacity in each node, so "fill completely" is $O(1)$.**
-   - Node = $\{\text{fill}, \text{cap}\}$. Capacities never change, so "full" means
+   - Node = $\lbrace \text{fill}, \text{cap}\rbrace$. Capacities never change, so "full" means
      $\text{fill} = \text{cap}$ for the whole node.
 
 4. **Find $l$ by searching down the tree, not with an outer binary search.**
@@ -73,14 +73,14 @@ overwrites the older one.
 
 ### 3. Store capacity in each node, so "fill completely" is $O(1)$
 
-Each node stores $\{\text{fill}, \text{cap}\}$ for its range: how much malbec its barrels hold, and
+Each node stores $\lbrace \text{fill}, \text{cap}\rbrace$ for its range: how much malbec its barrels hold, and
 their total capacity. Merging two nodes adds both fields. Capacities never change, so the tags are:
 
 | Tag | Effect on a node | Meaning |
 |---|---|---|
 | `NONE` | unchanged | no pending update |
-| `EMPTY` | $\{0, \text{cap}\}$ | every barrel in the range is empty |
-| `FULL` | $\{\text{cap}, \text{cap}\}$ | every barrel in the range is full |
+| `EMPTY` | $\lbrace 0, \text{cap}\rbrace$ | every barrel in the range is empty |
+| `FULL` | $\lbrace \text{cap}, \text{cap}\rbrace$ | every barrel in the range is full |
 
 Combining tags: the newer one wins, unless it is `NONE`.
 

@@ -59,7 +59,7 @@ joins two positions with the same parity, so the graph is two separate paths:
 Each edge is a window. Tag it "same" if its two letters are equal (a palindrome), "different"
 otherwise. The two chains share no positions, so they can be colored independently.
 
-*Example* ($N = 5$): even chain $\{0, 2, 4\}$ has $m_1 = 2$ edges, odd chain $\{1, 3\}$ has
+*Example* ($N = 5$): even chain $\lbrace 0, 2, 4\rbrace$ has $m_1 = 2$ edges, odd chain $\lbrace 1, 3\rbrace$ has
 $m_2 = 1$ edge. Total $m_1 + m_2 = 3 = N - 2$ windows.
 
 ### 3. For a fixed tagging, the count only depends on how many edges are "same"
@@ -122,7 +122,9 @@ $O(\log p)$. It applies to $N!$ because $N \le 10^6 < p$, so $N!$ has no factor 
 **Only one inverse is needed.** Compute `inv_fact[N]` with Fermat, then go backwards using
 $(i-1)! = i!/i$:
 
-$$\frac{1}{(i-1)!} = i \cdot \frac{1}{i!} \quad\Longrightarrow\quad \texttt{inv\_fact[i-1]} = \texttt{inv\_fact[i]} \cdot i.$$
+$$\frac{1}{(i-1)!} = i \cdot \frac{1}{i!}$$
+
+which in code is `inv_fact[i - 1] = inv_fact[i] * i % MOD`.
 
 **Overflow.** Every value is below $p < 2^{30}$, so a product of two fits in a `long long`. Reduce
 after **each** multiplication: `fact[n] * inv_fact[k] % MOD * inv_fact[n - k] % MOD` (`*` and `%`

@@ -96,7 +96,7 @@ independently:
 - $s[k+1..m-1]$, nested in the second gap;
 - $s[m+1..r]$, to the right of the triple.
 
-$$\mathrm{can}(l, r) = \bigvee_{l < k < m \le r} \Big( \{s_l, s_k, s_m\} \text{ distinct} \wedge \mathrm{can}(l{+}1, k{-}1) \wedge \mathrm{can}(k{+}1, m{-}1) \wedge \mathrm{can}(m{+}1, r) \Big)$$
+$$\mathrm{can}(l, r) = \bigvee_{l < k < m \le r} \Big( \lbrace s_l, s_k, s_m\rbrace \text{ distinct} \wedge \mathrm{can}(l{+}1, k{-}1) \wedge \mathrm{can}(k{+}1, m{-}1) \wedge \mathrm{can}(m{+}1, r) \Big)$$
 
 There are $O(N^2)$ segments and $O(N^2)$ pairs $(k, m)$ each: $O(N^4)$, too slow for $N = 999$.
 
@@ -105,7 +105,7 @@ There are $O(N^2)$ segments and $O(N^2)$ pairs $(k, m)$ each: $O(N^4)$, too slow
 The first three conditions only involve $l$, $k$ and $m$, not $r$: they describe the part covered
 by $s_l$'s triple. Store that part in its own function:
 
-$$\mathrm{closed}(l, m) = \bigvee_{l < k < m} \Big( \{s_l, s_k, s_m\} \text{ distinct} \wedge \mathrm{can}(l{+}1, k{-}1) \wedge \mathrm{can}(k{+}1, m{-}1) \Big)$$
+$$\mathrm{closed}(l, m) = \bigvee_{l < k < m} \Big( \lbrace s_l, s_k, s_m\rbrace \text{ distinct} \wedge \mathrm{can}(l{+}1, k{-}1) \wedge \mathrm{can}(k{+}1, m{-}1) \Big)$$
 
 meaning "$s[l..m]$ can be erased with $s_l$ and $s_m$ in the same triple". The main recurrence then
 only chooses where $s_l$'s triple ends:
@@ -116,13 +116,13 @@ Each function loops over a single index, so the total is $O(N^3)$.
 
 **This is a standard technique.** Erasable strings form a context-free language:
 
-$$S \to \varepsilon \mid x\,S\,y\,S\,z\,S \qquad (x, y, z \text{ pairwise different letters})$$
+$$S \to \varepsilon \mid x\ S\ y\ S\ z\ S \qquad (x, y, z \text{ pairwise different letters})$$
 
 The CYK algorithm decides membership with an interval DP, and it is $O(n^3)$ when every rule has at
 most two parts with a free split point between them. Long rules are rewritten with helper symbols
 ("binarization"). Here the helper symbol $C$ is exactly `closed`:
 
-$$S \to \varepsilon \mid C\,S, \qquad C \to x\,S\,y\,S\,z.$$
+$$S \to \varepsilon \mid C\ S, \qquad C \to x\ S\ y\ S\ z.$$
 
 $C$'s rule still has several parts, but $x$ and $z$ are fixed at the segment's ends, so only one
 split point ($k$) is free. In competitive programming the same trick is usually described as
