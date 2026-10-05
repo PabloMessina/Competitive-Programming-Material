@@ -59,6 +59,9 @@ ll gcdext(ll a, ll b, ll& x, ll& y) {
 /* multiplicative inverse */
 /* ====================== */
 // find x such that a * x = 1 (mod m)
+// an inverse exists iff gcd(a, m) == 1
+
+// --- option 1: extended euclid (works for ANY modulus m)
 // this is the same as finding x, y such that
 // a * x + m * y = 1, which can be done with gcdext
 // and then returning x (mod m)
@@ -66,6 +69,20 @@ ll mulinv(ll a, ll m) {
     ll x, y;
     if (gcdext(a, m, x, y) == 1) return mod(x, m); // make sure 0 <= x < m
     return -1; // no inverse exists
+}
+
+// --- option 2: Fermat's little theorem (ONLY when the modulus p is PRIME)
+// Fermat: if p is prime and a is not a multiple of p, then
+//   a^(p-1) = 1 (mod p)
+// dividing both sides by a:
+//   a^(p-2) = a^(-1) (mod p)
+// so the inverse is just a fast power, O(log p).
+// Typical use: p = 1e9+7 or p = 998244353 (both prime).
+// WARNING: if a is a multiple of p (e.g. a = 0), no inverse exists and this
+// silently returns 0. When inverting n!, this is safe as long as n < p.
+// binary_exp: see binary_modular_exponentiation.cpp
+ll mulinv_fermat(ll a, ll p) {
+    return binary_exp(mod(a, p), p - 2, p);
 }
 
 /* =========================== */

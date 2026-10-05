@@ -30,6 +30,30 @@ rep(m,1,MAXN+1) {
 }
 
 // -------------------------------------------------
+// method 2: factorials + inverse factorials (RECOMMENDED for large n, MOD prime)
+// precompute in O(MAXN), then each query is O(1), with no MAXN x MAXN table,
+// so it works for MAXN ~ 1e6 or more.
+//   fac[i]     = i! (mod MOD)
+//   inv_fac[i] = (i!)^-1 (mod MOD)
+//   choose(n,k) = fac[n] * inv_fac[k] * inv_fac[n-k] (mod MOD)
+// only ONE modular inverse is needed (of MAXN!), via Fermat's little theorem
+// (mulinv_fermat in euclidean_algorithm.cpp). Requires MAXN < MOD, so that
+// MAXN! is not a multiple of MOD.
+// The rest are filled backwards, since (i-1)! = i! / i:
+//   1 / (i-1)! = i * (1 / i!)  =>  inv_fac[i-1] = inv_fac[i] * i
+ll fac[MAXN+1], inv_fac[MAXN+1];
+void init() {
+    fac[0] = 1;
+    rep(i,1,MAXN+1) fac[i] = fac[i-1] * i % MOD;
+    inv_fac[MAXN] = binary_exp(fac[MAXN], MOD-2, MOD); // Fermat
+    invrep(i,MAXN,1) inv_fac[i-1] = inv_fac[i] * i % MOD;
+}
+ll choose(int n, int k) {
+    if (k < 0 or k > n) return 0;
+    return fac[n] * inv_fac[k] % MOD * inv_fac[n-k] % MOD;
+}
+
+// -------------------------------------------------
 // method 3: factorials and multiplicative inverse
 // n! / (k! * (n-k)!) =  n! * (k! * (n-k)!)^-1  (MOD N)
 // we need to find the multiplicative inverse of (k! * (n-k)!) MOD N

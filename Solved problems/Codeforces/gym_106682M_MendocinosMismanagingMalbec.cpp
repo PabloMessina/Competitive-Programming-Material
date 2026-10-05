@@ -1,3 +1,23 @@
+// tags: segment tree, lazy propagation, range assignment, binary search on segment tree, min_left
+#pragma GCC optimize("Ofast")
+#include <bits/stdc++.h>
+using namespace std;
+// defines
+#define rep(i,a,b) for(int i = a; i < b; ++i) // [a, b), inclusive-exclusive
+#define invrep(i,b,a) for(int i = b; i >= a; --i) // [b, a], inclusive-inclusive
+#define umap unordered_map
+#define uset unordered_set
+#define ff first
+#define ss second
+#define pb push_back
+#define eb emplace_back
+// typedefs
+typedef vector<int> vi;
+typedef pair<int,int> ii;
+typedef unsigned long long int ull;
+typedef long long int ll;
+// -------------------------------
+
 /* ========================================================================= */
 /* Lazy Segment Tree (based on AtCoder Library's lazy_segtree, needs C++17)  */
 /* ========================================================================= */
@@ -171,43 +191,59 @@ private:
 };
 
 /* ---------------------------------------------- */
-/* Example 1: range add + range sum               */
+/* Problem-specific node and updates              */
 /* ---------------------------------------------- */
-struct SumNode { ll sum; int len; };
-SumNode sum_op(SumNode a, SumNode b) { return {a.sum + b.sum, a.len + b.len}; }
-SumNode sum_e() { return {0, 0}; }
-SumNode add_mapping(ll f, SumNode x) { return {x.sum + f * x.len, x.len}; }
-ll add_composition(ll f, ll g) { return f + g; }
-ll add_id() { return 0; }
-using RangeAddSum = LazySegTree<SumNode, sum_op, sum_e, ll, add_mapping, add_composition, add_id>;
+// Each node stores how much malbec its barrels hold and their total capacity.
+// Capacity never changes, so "fill completely" can be applied to a whole node in O(1).
+struct Node { ll fill, cap; };
+Node node_op(Node a, Node b) { return {a.fill + b.fill, a.cap + b.cap}; }
+Node node_e() { return {0, 0}; }
 
-/* ---------------------------------------------- */
-/* Example 2: range assign + range min            */
-/* ---------------------------------------------- */
-const ll NO_ASSIGN = LLONG_MIN; // sentinel: must be a value never assigned
-ll min_op(ll a, ll b) { return min(a, b); }
-ll min_e() { return LLONG_MAX; }
-ll assign_mapping(ll f, ll x) { return f == NO_ASSIGN ? x : f; }
-ll assign_composition(ll f, ll g) { return f == NO_ASSIGN ? g : f; } // newer one wins
-ll assign_id() { return NO_ASSIGN; }
-using RangeAssignMin = LazySegTree<ll, min_op, min_e, ll, assign_mapping, assign_composition, assign_id>;
+// Updates are range assignments: empty every barrel, or fill every barrel.
+enum Upd { NONE, EMPTY, FULL };
+Node upd_mapping(Upd f, Node x) {
+    if (f == EMPTY) return {0, x.cap};
+    if (f == FULL) return {x.cap, x.cap};
+    return x;
+}
+Upd upd_composition(Upd f, Upd g) { return f == NONE ? g : f; } // newer one wins
+Upd upd_id() { return NONE; }
 
-int main() {
-    // range add + range sum
-    vector<ll> A = {18, 17, 13, 19, 15, 11, 20};
-    vector<SumNode> init;
-    for (ll x : A) init.push_back({x, 1});
-    RangeAddSum st(init);
-    st.apply(1, 6, 100);              // add 100 to indices 1..5
-    cout << st.prod(1, 4).sum << '\n'; // 117 + 113 + 119 = 349
-    // first r such that sum(a[0..r]) > 200  (prefix sums: 18, 135, 248, ...)
-    int r = st.max_right(0, [](SumNode s) { return s.sum <= 200; });
-    cout << r << '\n';                 // 2
+using SegTree = LazySegTree<Node, node_op, node_e, Upd, upd_mapping, upd_composition, upd_id>;
 
-    // range assign + range min
-    RangeAssignMin mn(A);
-    mn.apply(2, 5, 7);                 // A = [18, 17, 7, 7, 7, 11, 20]
-    cout << mn.prod(0, 7) << '\n';     // 7
-    cout << mn.prod(5, 7) << '\n';     // 11
+signed main() { // signed allows using #define int long long
+    ios::sync_with_stdio(false); cin.tie(0);
+    int N, M; cin >> N >> M;
+    vector<Node> init(N);
+    rep(i, 0, N) {
+        ll a; cin >> a;
+        init[i] = {0, a}; // all barrels start empty
+    }
+    SegTree st(init);
+    while (M--) {
+        int t; cin >> t;
+        if (t == 1) {
+            int B; ll V; cin >> B >> V;
+            int b = B - 1; // 0-indexed
+            // Malbec flows from b towards barrel 0. Find the smallest l such that
+            // the free space in barrels [l, b] is <= V: all of them get filled.
+            // Free space only grows as l decreases, so the condition is monotone.
+            int l = st.min_left(b + 1, [&](Node x) { return x.cap - x.fill <= V; });
+            Node seg = st.prod(l, b + 1);
+            ll leftover = V - (seg.cap - seg.fill);
+            st.apply(l, b + 1, FULL);
+            // The leftover goes into barrel l-1. By the choice of l, it has more free
+            // space than the leftover, so it ends up partially filled.
+            // If l == 0, the leftover falls to the floor.
+            if (l > 0 && leftover > 0) {
+                Node x = st.get(l - 1);
+                st.set(l - 1, {x.fill + leftover, x.cap});
+            }
+        } else {
+            int L, R; cin >> L >> R;
+            cout << st.prod(L - 1, R).fill << '\n';
+            st.apply(L - 1, R, EMPTY);
+        }
+    }
     return 0;
 }

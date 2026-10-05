@@ -42,3 +42,17 @@ _debug*.cpp
 *.png
 __pycache__
 failed_input
+
+# Apple
+.DS_Store
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100u
+.TemporaryItems
+.Trashes
