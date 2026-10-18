@@ -63,5 +63,4 @@ exclude_files:
   - 3D.cpp
   - centroid_decomposition.cpp
   - wavelet_tree.cpp
-  - segment_tree_lazy.cpp
   - advanced_2d_algorithms.cpp
