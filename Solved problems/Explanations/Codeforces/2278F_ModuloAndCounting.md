@@ -6,7 +6,7 @@
 
 **Problem.** Given $n$ and $m$, count the arrays $a$ of length $n$ with
 $m + 2 \ge a_1 \ge a_2 \ge \cdots \ge a_n \ge 1$ and
-$(a_1 \bmod a_2) + (a_2 \bmod a_3) + \cdots + (a_{n-1} \bmod a_n) = m$, modulo $998\,244\,353$.
+$(a_1 \bmod a_2) + (a_2 \bmod a_3) + \cdots + (a_{n-1} \bmod a_n) = m$, modulo $998244353$.
 Limits: $2 \le n \le 4000$, $1 \le m \le 4000$, and the sums of $n$ and of $m$ over all tests are
 each at most 4000.
 
@@ -29,7 +29,7 @@ needs only a simple DP. **Block B** proves the claim.
 
 2. **Count slow chains with a DP over (length, last value).**
    - $dp[i][v]$ is the number of slow chains of length $i$ that start at $m+2$ and end at $v$.
-   - $dp[1][m+2] = 1$, and $dp[i][v] = \sum_{x = v}^{\min(2v-1,\, m+2)} dp[i-1][x]$.
+   - $dp[1][m+2] = 1$, and $dp[i][v] = \sum_{x = v}^{\min(2v-1, m+2)} dp[i-1][x]$.
    - $\text{answer} = \sum_{i=2}^{n} dp[i][2]$. The tail of 1s is forced, so it adds no choices.
 
 3. **Prefix sums give $O(nm)$.**
@@ -39,15 +39,15 @@ needs only a simple DP. **Block B** proves the claim.
 ### Block B: why the claim is true
 
 4. **A modulo is a subtraction.**
-   - $x \bmod y = x - k\,y$ with $k = \lfloor x/y \rfloor$. In a non-increasing array, every
+   - $x \bmod y = x - k y$ with $k = \lfloor x/y \rfloor$. In a non-increasing array, every
      quotient satisfies $k_i \ge 1$.
 
 5. **The sum telescopes into "total drop minus loss".**
-   - $\sum (a_i \bmod a_{i+1}) = (a_1 - a_n) - L$, where $L = \sum (k_i - 1)\,a_{i+1} \ge 0$.
+   - $\sum (a_i \bmod a_{i+1}) = (a_1 - a_n) - L$, where $L = \sum (k_i - 1) a_{i+1} \ge 0$.
    - The condition becomes $L = a_1 - a_n - m$.
 
 6. **The loss budget is at most 1.**
-   - $a_1 \le m+2$ and $a_n \ge 1$ give $L \le 1$, so $L \in \{0, 1\}$.
+   - $a_1 \le m+2$ and $a_n \ge 1$ give $L \le 1$, so $L \in \lbrace 0, 1 \rbrace$.
 
 7. **A step has zero loss exactly when it is slow.**
    - Zero loss means $k_i = 1$, which means $a_{i+1} \le a_i < 2a_{i+1}$.
@@ -55,7 +55,7 @@ needs only a simple DP. **Block B** proves the claim.
      $\lfloor v/2 \rfloor + 1 \ge 2$.
 
 8. **The only affordable lossy step is $2 \to 1$.**
-   - A lossy step costs $(k_i - 1)\,a_{i+1} \ge 1$. The budget allows at most one, and it must
+   - A lossy step costs $(k_i - 1) a_{i+1} \ge 1$. The budget allows at most one, and it must
      cost exactly 1, so $k_i = 2$ and $a_{i+1} = 1$, which means the step is $2 \to 1$.
 
 9. **Putting it together proves the claim, and forces $a_1 = m+2$.**
@@ -100,7 +100,9 @@ $1 + 0$, $1 + 0$, and $0 + 1$, all equal to $m = 1$.
 
 With the claim, the problem reduces to counting slow chains:
 
-$$\text{answer} = \sum_{j=2}^{n} \#\{\text{slow chains of length } j \text{ from } m+2 \text{ to } 2\}.$$
+$$\text{answer} = \sum_{j=2}^{n} C_j,$$
+
+where $C_j$ is the number of slow chains of length $j$ from $m+2$ to 2.
 
 **State.** $dp[i][v]$ is the number of slow chains $a_1, \ldots, a_i$ with $a_1 = m + 2$ and
 $a_i = v$. Only $2 \le v \le m + 2$ is needed, because slow chains never reach 1 (point 7).
@@ -143,7 +145,7 @@ row is needed, so memory is $O(m)$.
 For positive integers $x \ge y$, the division rule (dividend = quotient × divisor + remainder)
 gives
 
-$$x \bmod y = x - k\,y, \qquad k = \left\lfloor \tfrac{x}{y} \right\rfloor \ge 1.$$
+$$x \bmod y = x - k y, \qquad k = \left\lfloor \tfrac{x}{y} \right\rfloor \ge 1.$$
 
 Set $k_i = \lfloor a_i / a_{i+1} \rfloor$. The array is non-increasing, so $k_i \ge 1$ for every
 step.
@@ -153,20 +155,20 @@ $5 \bmod 5 = 5 - 1 \cdot 5 = 0$.
 
 #### 5. The sum telescopes
 
-Substitute point 4 into each term, and split $k_i a_{i+1}$ into $a_{i+1} + (k_i - 1)\,a_{i+1}$:
+Substitute point 4 into each term, and split $k_i a_{i+1}$ into $a_{i+1} + (k_i - 1) a_{i+1}$:
 
 $$\sum_{i=1}^{n-1} (a_i \bmod a_{i+1})
-= \sum_{i=1}^{n-1} (a_i - a_{i+1}) - \sum_{i=1}^{n-1} (k_i - 1)\,a_{i+1}
+= \sum_{i=1}^{n-1} (a_i - a_{i+1}) - \sum_{i=1}^{n-1} (k_i - 1) a_{i+1}
 = (a_1 - a_n) - L.$$
 
-Call $L = \sum (k_i - 1)\,a_{i+1}$ the **loss**. The good-array condition becomes
+Call $L = \sum (k_i - 1) a_{i+1}$ the **loss**. The good-array condition becomes
 
 $$L = a_1 - a_n - m.$$
 
 **Intuition.** Each step contributes its modulo to the sum. That contribution equals how far the
 step falls, minus the step's loss:
 
-$$\text{loss}_i = (a_i - a_{i+1}) - (a_i \bmod a_{i+1}) = (k_i - 1)\,a_{i+1}.$$
+$$\text{loss}_i = (a_i - a_{i+1}) - (a_i \bmod a_{i+1}) = (k_i - 1) a_{i+1}.$$
 
 If $a_{i+1}$ fits into $a_i$ only once ($k_i = 1$), the whole fall counts. Each extra copy of
 $a_{i+1}$ inside $a_i$ is lost.
@@ -182,15 +184,15 @@ Both arrays fall by 3 in total. The first loses all 3, while the second loses on
 
 #### 6. The loss budget is at most 1
 
-- **Lower bound:** every term $(k_i - 1)\,a_{i+1}$ is $\ge 0$, so $L \ge 0$.
+- **Lower bound:** every term $(k_i - 1) a_{i+1}$ is $\ge 0$, so $L \ge 0$.
 - **Upper bound:** $a_1 \le m + 2$ and $a_n \ge 1$, so $L = a_1 - a_n - m \le (m+2) - 1 - m = 1$.
 
-So $L \in \{0, 1\}$. The unusual cap $m + 2$ in the statement is exactly what makes the budget this
+So $L \in \lbrace 0, 1 \rbrace$. The unusual cap $m + 2$ in the statement is exactly what makes the budget this
 small. The bound $L \ge 0$ also forces $a_n \le a_1 - m \le 2$ and $a_1 \ge m + a_n \ge m + 1$.
 
 #### 7. A step has zero loss exactly when it is slow
 
-Since $a_{i+1} \ge 1$, the loss $(k_i - 1)\,a_{i+1}$ is zero exactly when $k_i = 1$, that is,
+Since $a_{i+1} \ge 1$, the loss $(k_i - 1) a_{i+1}$ is zero exactly when $k_i = 1$, that is,
 $1 \le a_i / a_{i+1} < 2$:
 
 $$a_{i+1} \le a_i < 2a_{i+1}.$$
@@ -210,9 +212,9 @@ is not slow, since $2 < 2 \cdot 1$ is false.
 
 Combine the budget (point 6) with the cost of a lossy step:
 
-- A lossy step has $k_i \ge 2$, so it costs $(k_i - 1)\,a_{i+1} \ge a_{i+1} \ge 1$.
+- A lossy step has $k_i \ge 2$, so it costs $(k_i - 1) a_{i+1} \ge a_{i+1} \ge 1$.
 - **At most one lossy step:** two of them would cost at least 2, which is more than the budget.
-- **It costs exactly 1:** $(k_i - 1)\,a_{i+1} = 1$ with both factors positive integers forces
+- **It costs exactly 1:** $(k_i - 1) a_{i+1} = 1$ with both factors positive integers forces
   $k_i = 2$ and $a_{i+1} = 1$.
 - **So it is $2 \to 1$:** $\lfloor a_i / 1 \rfloor = 2$ means $a_i = 2$.
 
@@ -228,7 +230,7 @@ $1 \to 1$ have zero loss. So the lossy step, if there is one, is followed only b
 
 #### 9. Putting it together
 
-**Good $\Rightarrow$ the claim's shape.** By point 6, $a_n \in \{1, 2\}$.
+**Good $\Rightarrow$ the claim's shape.** By point 6, $a_n \in \lbrace 1, 2 \rbrace$.
 
 - **$a_n = 2$:** the array never reaches 1, so it has no lossy step (point 8) and $L = 0$. Every
   step is slow. Take $j = n$.
