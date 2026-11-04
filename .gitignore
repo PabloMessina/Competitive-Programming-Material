@@ -41,6 +41,7 @@ _ignoreme/
 _debug*.cpp
 *.png
 __pycache__
+.venv/
 failed_input
 
 # Apple
