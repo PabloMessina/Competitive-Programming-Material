@@ -41,8 +41,11 @@ signed main() { // signed allows using #define int long long
     int maxs = k * (a.back() - m);
     vi dp(maxs + 1, k + 1);
     dp[0] = 0;
-    rep(i, 1, (int)a.size()) {
-        int v = a[i] - m;
+    rep(i, 1, (int)a.size()) { // i = 0 is the cheapest price (surcharge 0): only a filler
+        int v = a[i] - m; // > 0 after unique, and increasing with i
+        // j >= v so that j - v is a valid index. j <= k*v because at most k products with
+        // surcharges <= v (all processed so far) sum to at most k*v; larger sums are left to
+        // later, larger surcharges. j goes up, so dp[j - v] may already use v (unbounded).
         rep(j, v, k * v + 1) dp[j] = min(dp[j], dp[j - v] + 1);
     }
     rep(s, 0, maxs + 1) if (dp[s] <= k) cout << k * m + s << ' ';
