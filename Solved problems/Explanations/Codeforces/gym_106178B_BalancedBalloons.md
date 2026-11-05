@@ -99,7 +99,8 @@ step, so the code can return 1 immediately. That's the `a_min == a_max` check.
   first range is $[1, K]$.
 - **Transition.**
   $$dp(i, a) = \sum_{a' = a_{\min}}^{a_{\max}} dp(i + 1, a') \pmod{998244353}.$$
-- **Base cases.** $dp(\text{actual\_N}, a) = 1$, and $dp(i, a) = 1$ when $a_{\min} = a_{\max}$.
+- **Base cases.** $dp(i, a) = 1$ when $i$ reaches `actual_N`, and $dp(i, a) = 1$ when
+  $a_{\min} = a_{\max}$.
 
 *Trace* (sample 1: $N = K = 3$):
 

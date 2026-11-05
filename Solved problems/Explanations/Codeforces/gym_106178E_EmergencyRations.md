@@ -19,7 +19,7 @@ Limits: $1 \le Q \le 3 \cdot 10^5$, $1 \le |X_i| \le 10^9$, and every removal is
 1. **Only the number of action-2 days matters.**
    - With $t$ action-2 days, boxes with $c \le t$ are emptied by them, and every box with $c > t$
      needs its own action-1 day.
-   - $\text{answer} = \min_{t \ge 0} f(t)$, where $f(t) = t + \#\lbrace \text{boxes with } c > t \rbrace$.
+   - $\text{answer} = \min_{t \ge 0} f(t)$, where $f(t) = t + \lvert \lbrace \text{boxes with } c > t \rbrace \rvert$.
 
 2. **Only a few values of $t$ need checking.**
    - Between two consecutive box sizes, $f$ only grows, so an optimal $t$ is 0 or a box size.
@@ -48,7 +48,7 @@ Fix any plan and let $t$ be the number of days it uses action 2.
 
 So every plan with $t$ action-2 days takes at least
 
-$$f(t) = t + \#\lbrace \text{boxes with } c > t \rbrace$$
+$$f(t) = t + \lvert \lbrace \text{boxes with } c > t \rbrace \rvert$$
 
 days. The plan "empty every box with $c > t$ using action 1, then use action 2 for $t$ days"
 takes exactly $f(t)$ days, so
@@ -62,7 +62,7 @@ decision is where to draw the line between big and small.
 
 | $t$ | 0 | 1 | 2 | 7 |
 |---|---|---|---|---|
-| $\#\lbrace c > t \rbrace$ | 4 | 3 | 1 | 0 |
+| $\lvert \lbrace c > t \rbrace \rvert$ | 4 | 3 | 1 | 0 |
 | $f(t)$ | 4 | 4 | **3** | 7 |
 
 The best plan is $t = 2$: empty the 7 with action 1, then two days of action 2 finish the rest.
@@ -73,7 +73,7 @@ answer is $\min_j (j + c_{j+1})$.
 
 ### 2. Only a few values of $t$ need checking
 
-Let $s < s'$ be consecutive box sizes. For $s \le t < s'$, the count $\#\lbrace c > t \rbrace$ is the
+Let $s < s'$ be consecutive box sizes. For $s \le t < s'$, the count $\lvert \lbrace c > t \rbrace \rvert$ is the
 same, but $t$ grows, so $f(t)$ is smallest at $t = s$. For $t$ above the largest size, $f(t) = t$
 keeps growing. So an optimal $t$ is either 0 or one of the current box sizes.
 
