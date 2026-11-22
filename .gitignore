@@ -57,3 +57,6 @@ Icon
 .Spotlight-V100u
 .TemporaryItems
 .Trashes
+
+# Playwright MCP snapshots/logs
+.playwright-mcp/

@@ -2,7 +2,7 @@
 // 1) Segment Tree - ITERATIVE
 //=============================
 // source: https://docs.google.com/document/d/1rcex_saP4tExbbU62qGUjR3eenxOh-50i9Y45WtHkc4/
-/* 
+/*
 Se requiere un struct para el nodo (ej: prodsgn).
 Un nodo debe tener tres constructores:
     Aridad 0: Construye el neutro de la operacion
@@ -19,19 +19,19 @@ Query:
  */
 template<class node> struct ST {
     vector<node> t; int n;
-    ST(vector<node> &arr) {
+    ST(const vector<node> &arr) {
         n = arr.size();
-        t.resize(n*2);
-        copy(arr.begin(), arr.end(), t.begin() + n);
+        t.assign(n*2, node());
+        for (int i = 0; i < n; i++) t[n+i] = arr[i]; // leaves (copy() gives a false -Warray-bounds)
         for (int i = n-1; i > 0; --i)
             t[i] = node(t[i<<1], t[i<<1|1]);
     }
     // 0-indexed
     void set_point(int p, const node &value) {
-        for (t[p += n] = value; p > 1; p >>= 1)
-            t[p>>1] = node(t[p], t[p^1]);
+        for (t[p += n] = value; p > 1; p >>= 1) // left child first, for non-commutative ops
+            t[p>>1] = node(t[p&~1], t[p|1]);
     }
-    // inclusive exclusive, 0-indexed
+    // inclusive exclusive [l, r), 0-indexed
     node query(int l, int r) {
         node ansl, ansr;
         for (l += n, r += n; l < r; l >>= 1, r >>= 1) {
@@ -55,8 +55,9 @@ struct rminq {
 //=============================
 // 2) Segment Tree - RECURSIVE
 //=============================
-template<class t> class ST {
-    vector<ll> *arr, st; int n;
+// careful: unlike the iterative version, query(a, b) here is INCLUSIVE [a, b], 0-indexed
+template<class t> class STRec {
+    const vector<ll> *arr; vector<ll> st; int n;
 
     void build(int u, int i, int j) {
         if (i == j) {
@@ -78,7 +79,7 @@ template<class t> class ST {
     }
     void update(int a, ll value, int u, int i, int j) {
         if (j < a or a < i) return;
-        if (i == j) st[a] += value;
+        if (i == j) st[u] += value; // u is the leaf's node (a is its array position)
         else {
             int m = (i+j)/2, l = u*2+1, r = u*2+2;
             update(a, value, l, i, m);
@@ -88,13 +89,13 @@ template<class t> class ST {
     }
 
 public:
-    ST(vector<ll>& v) {
+    STRec(const vector<ll>& v) {
         arr = &v;
         n = v.size();
         st.resize(n*4+5);
         build(0, 0, n-1);
     }
-    ll query(int a, int b) {
+    ll query(int a, int b) { // inclusive [a, b]
         return query(a, b, 0, 0, n-1);
     }
     void update(int a, ll value) { // adding value to position a
@@ -117,9 +118,15 @@ struct RMaxQ { // range maximum query
 
 // usage
 int main() {
-    vector<int> A = { 18, 17, 13, 19, 15, 11, 20 };
-    ST<RSQ> st(A);
-    st.update(2, 100);
-    st.query(1, 3);
+    // 1) iterative: set_point replaces a value, query(l, r) is [l, r)
+    vector<rminq> B = { 18, 17, 13, 19, 15, 11, 20 };
+    ST<rminq> st1(B);
+    st1.set_point(2, rminq(30));
+    cout << st1.query(1, 4).value << '\n'; // min(17, 30, 19) = 17
+    // 2) recursive: update adds to a value, query(a, b) is [a, b]
+    vector<ll> A = { 18, 17, 13, 19, 15, 11, 20 };
+    STRec<RSQ> st2(A);
+    st2.update(2, 100);
+    cout << st2.query(1, 3) << '\n'; // 17 + 113 + 19 = 149
     return 0;
 }
